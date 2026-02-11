@@ -1,6 +1,98 @@
-<form action="http://www.miweb.com/procesaform.php" method=“Get">
-Escribe tu nombre:
-<input type="text" name="nombre" value="" />
-<br/>
-<input type="submit" value="Enviar" />
-</form>
+
+    <!-- Cabecera del documento -->
+
+    <head>
+        <title>PLANIFICACIÓN</title>
+    </head>
+
+     <nav>
+        <p> <!-- Barra de navegación -->
+            <a href=index.html>Inicio</a> |
+            <a href=detalles.html>Detalles</a> |
+            <a href=bocetos.html>Bocetos</a> |
+            <a href=miembros.html>Miembros</a> |
+            <a href=contacto.html>Contacto</a>
+        </p>
+    </nav>
+
+    
+    <style>
+
+     table, th, td {
+        border: 1px solid rgb(0,0,0); /*Bordes de las tablas*/
+    }
+
+    </style>
+
+ <!-- Cuerpo del documento -->
+<body>
+    <table>   <!-- Tabla de las entregas y sus fechas -->
+        <caption>
+            <strong>PRÁCTICA 1</strong> 
+        </caption>
+        <tr>
+            <th colspan= 2> REPARTO</th>
+        </tr>
+        <tr>
+            <th>NOMBRE</th>
+            <th>TRABAJO REALIZADO</th>
+        </tr>
+        <tr>
+            <td> ALBA HERRERA OLIVA</td>
+            <td> detalles.html <p>bocetos.html</p> </td>
+        </tr>
+        <tr>
+            <td> ÓSCAR GONZÁLEZ DE DIOS</td>
+            <td> contacto.html </td>
+        </tr>
+        <tr>
+            <td> ADRIANA MUNICIO IZQUIERDO</td>
+            <td> index.html <p>miembros.html</p> </td>
+        </tr>
+        <tr>
+            <td> NURIA OVIEDO MARTÍN</td>
+            <td> planificación.html </td>
+        </tr>
+    </table>
+
+
+    <p></p> <!--Salto de línea para separar una tabla de otra-->
+
+
+    <table>   <!-- Tabla de las entregas y sus fechas -->
+        <caption>
+        <strong>HITOS Y FECHAS DE TERMINACIÓN </strong> 
+        </caption>
+        <tr>
+            <th colspan=3> Entregas</th>
+        </tr>
+        <tr>
+            <th>Número de entrega</th>
+            <th>Descripción</th>
+            <th>Fecha a entregar</th>
+        </tr>
+        <tr>
+            <td> Práctica Uno</td>
+            <td>Descripción detallada del proyecto en forma de un Sitio Web simple con varios documentos descriptivos. Discusión con el profesor designado como tutor del proyecto sobre el alcance de las funcionalidades </td>
+            <td>13/02/2026</td>
+        </tr>
+        <tr>
+            <td>Práctica Dos</td>
+            <td>Diseño de la aplicación usando HTML (sin CSS), de la arquitectura del lado del servidor y prototipo funcional de parte de la aplicación. El alcance de la entrega será acordado con el tutor del proyecto (se sugiere alrededor del 50% de las funcionalidades). (Uso obligatorio de sistema de control de versiones GitHub). (Despliegue opcional en VPS)</td>
+            <td>06/03/2026</td>
+        </tr>
+        <tr>
+            <td>Práctica Tres</td>
+            <td>Diseño de la apariencia de la aplicación usando hojas de estilos sobre la entrega anterior e incremento de la funcionalidad (se sugiere alrededor del 75% de las funcionalidades). (Uso obligatorio de sistema de control de versiones GitHub). (Despliegue obligatorio en VPS)</td>
+            <td>08/04/2026</td>
+        </tr>
+        <tr>
+            <td>Entrega Final</td>
+            <td>Aplicación Web completa y funcional. (Uso obligatorio de sistema de control de versiones GitHub). (Despliegue obligatorio en VPS)</td>
+            <td>03/05/2026</td>
+        </tr>
+    </table>
+
+
+
+</body>
