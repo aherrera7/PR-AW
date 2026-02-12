@@ -1,150 +1,178 @@
 <!DOCTYPE html>
 <html lang="es">
- <head>
-    <meta charset="UTF-8">
-    <title>Detalles</title>
- </head>
+<head>
+  <meta charset="UTF-8">
+  <title>Detalles</title>
+</head>
 
- <body>
-    <header>
-        <h1>Detalles del proyecto - Bistro FDI</h1>
-    </header>
+<body>
+  <header>
+    <h1>Detalles del proyecto - Bistro FDI</h1>
 
-    <nav> <!-- Barra de navegación -->
-        <a href="index.html">Inicio</a> |
-        <a href="detalles.html">Detalles</a> |
-        <a href="miembros.html">Miembros</a> |
-        <a href="bocetos.html">Bocetos</a> |
-        <a href="planificación.html">Planificación</a> |
-        <a href="contacto.html">Contacto</a>
+    <nav>
+      <a href="index.html">Inicio</a> |
+      <a href="detalles.html">Detalles</a> |
+      <a href="miembros.html">Miembros</a> |
+      <a href="bocetos.html">Bocetos</a> |
+      <a href="planificación.html">Planificación</a> |
+      <a href="contacto.html">Contacto</a>
     </nav>
+  </header>
 
-    <header>
-        <h2><u>Introducción</u></h2>
-    </header>
+  <main>
+    <!-- Introducción -->
+    <section>
+      <h2>Introducción</h2>
+      <p>
+        Bistro FDI es una aplicación web diseñada para gestionar el funcionamiento de una cafetería.
+        Permite a los clientes realizar sus pedidos de forma digital, con sus teléfonos móviles o portátiles,
+        y hacer el seguimiento del estado de sus pedidos.
+      </p>
 
-    <main>
-        <p>
-            Bistro FDI es una aplicación web diseñada para gestionar el funcionamiento de una cafetería.
-            Permite a los clientes realizar sus pedidos de forma digital, con sus teléfonos móviles o portátiles y 
-            poder hacer el seguimiento del estado de sus pedidos.
+      <p>
+        Por otro lado, el sistema también ayuda al personal de la cafetería (cocineros, camareros y gerente)
+        a organizar, preparar y gestionar los pedidos de manera eficiente, reduciendo los tiempos de espera
+        y mejorando la coordinación entre cocina y sala.
+      </p>
+    </section>
 
-            Por otro lado, el sistema también ayuda al personal de la cafetería (cocineros, camareros y gerente) a organizar,
-            preparar y gestionar los pedidos de manera eficiente, reduciendo los tiempos de espera y mejorando la coordinación 
-            entre cocina y sala.
-        </p>
-    </main>
+    <!-- Tipos de usuarios -->
+    <section>
+      <h2>Tipos de usuarios</h2>
 
-    <header>
-        <h2><u>Tipos de usuarios</u></h2>
-    </header>
-    
-    <header>
+      <!-- Cliente -->
+      <section>
         <h3>Cliente</h3>
-    </header>
-    
-    <ul>
-        <li>Registrarse e iniciar sesión.</li>
-        <li>Consultar los productos y servicios de Bistro FDI.</li>
-        <li>Aplicar ofertas y usar recompensas con BistroCoins.</li>
-        <li>Realizar pedidos (en el local o para llevar).</li>
-        <li>Consultar el estado de sus pedidos.</li>
-    </ul>
+        <ul>
+          <li>Registrarse e iniciar sesión.</li>
+          <li>Consultar los productos y servicios de Bistro FDI.</li>
+          <li>Aplicar ofertas y usar recompensas con BistroCoins.</li>
+          <li>Realizar pedidos (en el local o para llevar).</li>
+          <li>Consultar el estado de sus pedidos.</li>
+        </ul>
+      </section>
 
-    <header>
+      <!-- Camarero -->
+      <section>
         <h3>Camarero</h3>
-    </header>
-    
-    <ul>
-        <li>Consultar los pedidos recibidos.</li>
-        <li>Confirmar pagos realizados en persona.</li>
-        <li>Preparar pedidos para su entrega.</li>
-        <li>Marcar pedidos como entregados al cliente.</li>
-    </ul>
+        <ul>
+          <li>Consultar los pedidos recibidos.</li>
+          <li>Confirmar pagos realizados en persona.</li>
+          <li>Preparar pedidos para su entrega.</li>
+          <li>Marcar pedidos como entregados al cliente.</li>
+        </ul>
+      </section>
 
-    <header>
+      <!-- Cocinero -->
+      <section>
         <h3>Cocinero</h3>
-    </header>
-    
-    <ul>
-        <li>Tomar pedidos en estado “En preparación”.</li>
-        <li>Preparar los productos del pedido.</li>
-        <li>Marcar productos como listos.</li>
-        <li>Finalizar pedidos cuando estén preparados.</li>
-    </ul>
+        <ul>
+          <li>Tomar pedidos en estado “En preparación”.</li>
+          <li>Preparar los productos del pedido.</li>
+          <li>Marcar productos como listos.</li>
+          <li>Finalizar pedidos cuando estén preparados.</li>
+        </ul>
+      </section>
 
-    <header>
+      <!-- Gerente -->
+      <section>
         <h3>Gerente</h3>
-    </header>
-    
-    <ul>
-        <li>Gestionar usuarios y sus roles.</li>
-        <li>Crear, modificar y eliminar categorías y productos.</li>
-        <li>Gestionar ofertas y recompensas.</li>
-        <li>Supervisar el estado de todos los pedidos del restaurante.</li>
-    </ul>
-    
-    <header>
-        <h2><u>Funcionalidades</u></h2>
-    </header>
-    
-    <header>
+        <ul>
+          <li>Gestionar usuarios y sus roles.</li>
+          <li>Crear, modificar y eliminar categorías y productos.</li>
+          <li>Gestionar ofertas y recompensas.</li>
+          <li>Supervisar el estado de todos los pedidos del restaurante.</li>
+        </ul>
+      </section>
+    </section>
+
+    <!-- Funcionalidades -->
+    <section>
+      <h2>Funcionalidades</h2>
+
+      <!-- Funcionalidad 0 -->
+      <section>
         <h3>Funcionalidad 0: Gestión de Usuarios</h3>
-    </header>
-   
-    <p>
-    Permite crear, modificar y eliminar usuarios del sistema. Incluye registro de clientes, inicio de sesión, 
-    gestión de perfiles y asignación de roles por parte del gerente.
-    </p>
+        <p>
+          Permite crear, modificar y eliminar usuarios del sistema. Incluye registro de clientes,
+          inicio de sesión, gestión de perfiles y asignación de roles por parte del gerente.
+        </p>
+      </section>
 
-    <header>
+      <!-- Funcionalidad 1 -->
+      <section>
         <h3>Funcionalidad 1: Gestión de Productos</h3>
-    </header>
-    
-    <p>
-    El gerente puede crear, modificar, listar y eliminar (u ocultar) categorías y productos del restaurante, 
-    incluyendo imágenes, precios e IVA.
-    </p>
+        <p>
+          El gerente puede crear, modificar, listar y eliminar (u ocultar) categorías y productos
+          del restaurante, incluyendo imágenes, precios e IVA.
+        </p>
+      </section>
 
-    <header>
+      <!-- Funcionalidad 2 -->
+      <section>
         <h3>Funcionalidad 2: Gestión de Pedidos</h3>
-    </header>
-    
-    <p>
-    Los clientes pueden crear pedidos seleccionando productos, elegir si es para comer en el local o para llevar, 
-    confirmar el pedido y pagar. El sistema gestiona los estados del pedido desde "Nuevo" hasta "Entregado".
-    </p>
+        <p>
+          Los clientes pueden crear pedidos seleccionando productos, elegir si es para comer en el
+          local o para llevar, confirmar el pedido y pagar. El sistema gestiona los estados del pedido
+          desde "Nuevo" hasta "Entregado".
+        </p>
+      </section>
 
-    <header>
+      <!-- Funcionalidad 3 -->
+      <section>
         <h3>Funcionalidad 3: Preparación de Pedidos</h3>
-    </header>
-    
-    <p>
-    Los cocineros gestionan los pedidos en preparación, indican cuándo están cocinando y cuándo el pedido 
-    está listo. El gerente puede supervisar todo el proceso.
-    </p>
+        <p>
+          Los cocineros gestionan los pedidos en preparación, indicando cuándo están cocinando y
+          cuándo el pedido está listo. El gerente puede supervisar todo el proceso.
+        </p>
+      </section>
 
-    <header>
+      <!-- Funcionalidad 4 -->
+      <section>
         <h3>Funcionalidad 4: Gestión de Ofertas</h3>
-    </header>
-    
-    <p>
-    El gerente puede crear ofertas con descuentos sobre packs de productos. Los clientes pueden aplicar 
-    estas ofertas a sus pedidos cuando cumplan las condiciones.
-    </p>
+        <p>
+          El gerente puede crear ofertas con descuentos sobre packs de productos. Los clientes pueden
+          aplicar estas ofertas a sus pedidos cuando cumplan las condiciones.
+        </p>
+      </section>
 
-    <header>
+      <!-- Funcionalidad 5 -->
+      <section>
         <h3>Funcionalidad 5: Gestión de Recompensas</h3>
-    </header>
-    
-    <p>
-    Los clientes ganan BistroCoins por cada euro gastado y pueden canjearlas por productos del menú. 
-    El gerente gestiona las recompensas disponibles.
-    </p>
+        <p>
+          Los clientes ganan BistroCoins por cada euro gastado y pueden canjearlas por productos del menú.
+          El gerente gestiona las recompensas disponibles.
+        </p>
+      </section>
+    </section>
 
-    <footer>
-        <p>&copy; 2026 Bistro FDI</p>
-    </footer>
+  </main>
+
+  <aside>
+    <h2>Enlaces de interés</h2>
+    <ul>
+      <li>
+        <a href="https://informatica.ucm.es" target="_blank" rel="noopener noreferrer">
+          Facultad de Informática UCM
+        </a>
+      </li>
+      <li>
+        <a href="https://www.ucm.es" target="_blank" rel="noopener noreferrer">
+          Universidad Complutense de Madrid
+        </a>
+      </li>
+      <li>
+        <a href="https://developer.mozilla.org/es/docs/Web/HTML" target="_blank" rel="noopener noreferrer">
+          Documentación HTML (MDN)
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+
+  <footer>
+    <p>&copy; 2026 Bistro FDI</p>
+  </footer>
 
 </body>
 </html>
