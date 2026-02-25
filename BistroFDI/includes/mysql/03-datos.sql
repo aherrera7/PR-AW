@@ -1,33 +1,31 @@
-USE BistroFDI;
 
-SET FOREIGN_KEY_CHECKS=0;
+-- 1. Usuarios de prueba
+INSERT INTO usuarios (nombre_usuario, email, password, nombre, apellidos, rol, avatar) VALUES
+('gerente1',  'gerente@bistrofdi.es',  '1234', 'Ana',   'García',  'gerente',  'avatar_gerente.png'),
+('cocinero1', 'chef@bistrofdi.es',     '1234', 'Paco',  'Roncero', 'cocinero', 'avatar_cocinero.png'),
+('camarero1', 'camarero@bistrofdi.es', '1234', 'Luis',  'Sánchez', 'camarero', 'avatar_camarero.png'),
+('cliente1',  'usuario@gmail.com',     '1234', 'Marta', 'López',   'cliente',  'avatar_defecto.png');
 
-TRUNCATE TABLE PedidoProductos;
-TRUNCATE TABLE Pedidos;
-TRUNCATE TABLE Productos;
-TRUNCATE TABLE Categorias;
-TRUNCATE TABLE Usuarios;
+-- 2. Categorías
+INSERT INTO categorias (nombre, descripcion, imagen) VALUES
+('Bebidas',      'Refrescos, cafés y zumos',        'bebidas.jpg'),
+('Hamburguesas', 'Nuestras famosas burgers gourmet', 'burgers.jpg'),
+('Postres',      'Dulces para terminar bien',        'postres.jpg');
 
+-- 3. Productos
+INSERT INTO productos (id_categoria, nombre, descripcion, precio_base, iva, disponible, ofertado, imagen) VALUES
+(1, 'Café con leche', 'Café arábica con leche fresca', 1.25, 10, 1, 1, 'cafe.jpg'),
+(2, 'Burger FDI',     'Carne de buey, queso y salsa secreta', 8.50, 10, 1, 1, 'burger_fdi.jpg'),
+(3, 'Tarta de Queso', 'Receta casera de la abuela', 4.50, 10, 1, 1, 'tarta.jpg');
 
--- USUARIOS
--- Contraseñas:
--- cliente123, camarero123, cocinero123, gerente123
-INSERT INTO Usuarios (id, nombreUsuario, nombre, password) VALUES
-(1,'cliente','Cliente','$2y$10$HASH_CLIENTE'),
-(2,'camarero','Camarero','$2y$10$HASH_CAMARERO'),
-(3,'cocinero','Cocinero','$2y$10$HASH_COCINERO'),
-(4,'gerente','Gerente','$2y$10$HASH_GERENTE');
+-- 4. Pedido (OJO: tras TRUNCATE el cliente1 normalmente será id=4 si lo insertas el 4º)
+-- Si quieres que sea más robusto, usa subconsulta:
+INSERT INTO pedidos (numero_pedido, id_cliente, estado, tipo, total) VALUES
+(1, (SELECT id FROM usuarios WHERE nombre_usuario='cliente1'), 'recibido', 'local', 10.73);
 
-
--- CATEGORÍAS
-INSERT INTO Categorias (id,nombre,descripcion) VALUES
-(1,'Bebidas','Bebidas frías y calientes'),
-(2,'Desayunos','Desayunos y tostadas');
-
--- PRODUCTOS
-INSERT INTO Productos (id,nombre,descripcion,categoria,precioBase,iva) VALUES
-(1,'Café con leche','Café con leche',1,125,10),
-(2,'Té','Té caliente',1,110,10),
-(3,'Tostada con tomate','Tostada de tomate y aceite',2,130,10);
-
-SET FOREIGN_KEY_CHECKS=1;
+-- 5. Detalle del pedido (también robusto con subconsultas)
+INSERT INTO pedidos_productos (id_pedido, id_producto, cantidad_solicitada, precio_historico) VALUES
+((SELECT id FROM pedidos WHERE numero_pedido=1 ORDER BY id DESC LIMIT 1),
+ (SELECT id FROM productos WHERE nombre='Café con leche'), 1, 1.25),
+((SELECT id FROM pedidos WHERE numero_pedido=1 ORDER BY id DESC LIMIT 1),
+ (SELECT id FROM productos WHERE nombre='Burger FDI'), 1, 8.50);

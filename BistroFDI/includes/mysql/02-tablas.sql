@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS categorias;
+DROP TABLE IF EXISTS productos;
+DROP TABLE IF EXISTS pedidos;
+DROP TABLE IF EXISTS pedidos_productos;
+
 -- 1. Tabla de Usuarios (Funcionalidad 0)
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -28,7 +34,7 @@ CREATE TABLE productos (
     iva INT NOT NULL, 
     disponible BOOLEAN DEFAULT TRUE, 
     ofertado BOOLEAN DEFAULT TRUE, 
-    imagen VARCHAR(255) DEFAULT NULL;
+    imagen VARCHAR(255) DEFAULT NULL,
     FOREIGN KEY (id_categoria) REFERENCES categorias(id) ON DELETE SET NULL
 );
 
