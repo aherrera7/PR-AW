@@ -6,16 +6,8 @@ TRUNCATE TABLE PedidoProductos;
 TRUNCATE TABLE Pedidos;
 TRUNCATE TABLE Productos;
 TRUNCATE TABLE Categorias;
-TRUNCATE TABLE RolesUsuario;
-TRUNCATE TABLE Roles;
 TRUNCATE TABLE Usuarios;
 
--- ROLES
-INSERT INTO Roles (id, nombre) VALUES
-(1,'cliente'),
-(2,'camarero'),
-(3,'cocinero'),
-(4,'gerente');
 
 -- USUARIOS
 -- Contraseñas:
@@ -26,11 +18,6 @@ INSERT INTO Usuarios (id, nombreUsuario, nombre, password) VALUES
 (3,'cocinero','Cocinero','$2y$10$HASH_COCINERO'),
 (4,'gerente','Gerente','$2y$10$HASH_GERENTE');
 
-INSERT INTO RolesUsuario (usuario, rol) VALUES
-(1,1),
-(2,2),
-(3,3),
-(4,4);
 
 -- CATEGORÍAS
 INSERT INTO Categorias (id,nombre,descripcion) VALUES

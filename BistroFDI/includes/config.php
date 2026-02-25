@@ -2,7 +2,7 @@
 session_start();
 
 define('RAIZ_APP', dirname(__DIR__));
-define('RUTA_APP', '/Ejemplo1');
+define('RUTA_APP', '/PR-AW/BistroFDI');
 define('RUTA_VISTAS', RUTA_APP.'/includes/vistas');
 define('RUTA_IMGS', RUTA_APP.'/img');
 define('RUTA_CSS', RUTA_APP.'/css');
