@@ -1,89 +1,56 @@
-USE BistroFDI;
+-- 1. Tabla de Usuarios (Funcionalidad 0)
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_usuario VARCHAR(50) NOT NULL UNIQUE, 
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    rol ENUM('cliente', 'camarero', 'cocinero', 'gerente') DEFAULT 'cliente', 
+    avatar VARCHAR(255) DEFAULT NULL 
+);
 
-SET FOREIGN_KEY_CHECKS=0;
+-- 2. Tabla de Categorías (Funcionalidad 1)
+CREATE TABLE categorias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    imagen VARCHAR(255) DEFAULT NULL 
+);
 
-DROP TABLE IF EXISTS PedidoProductos;
-DROP TABLE IF EXISTS Pedidos;
-DROP TABLE IF EXISTS Productos;
-DROP TABLE IF EXISTS Categorias;
-DROP TABLE IF EXISTS RolesUsuario;
-DROP TABLE IF EXISTS Roles;
-DROP TABLE IF EXISTS Usuarios;
+-- 3. Tabla de Productos (Funcionalidad 1)
+CREATE TABLE productos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_categoria INT,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    precio_base DECIMAL(10, 2) NOT NULL,
+    iva INT NOT NULL, 
+    disponible BOOLEAN DEFAULT TRUE, 
+    ofertado BOOLEAN DEFAULT TRUE, 
+    imagen VARCHAR(255) DEFAULT NULL;
+    FOREIGN KEY (id_categoria) REFERENCES categorias(id) ON DELETE SET NULL
+);
 
--- ROLES
-CREATE TABLE Roles (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nombre VARCHAR(20) NOT NULL UNIQUE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- 4. Tabla de Pedidos (Funcionalidad 2)
+CREATE TABLE pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    numero_pedido INT NOT NULL, -- Se incrementa cada día 
+    id_cliente INT,
+    fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP, 
+    estado ENUM('nuevo', 'recibido', 'en preparación', 'cocinando', 'listo cocina', 'terminado', 'entregado') DEFAULT 'nuevo', 
+    tipo ENUM('local', 'llevar') NOT NULL, 
+    total DECIMAL(10, 2) NOT NULL, 
+    FOREIGN KEY (id_cliente) REFERENCES usuarios(id)
+);
 
--- USUARIOS
-CREATE TABLE Usuarios (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nombreUsuario VARCHAR(30) NOT NULL UNIQUE,
-  password VARCHAR(255) NOT NULL,
-  nombre VARCHAR(50) NOT NULL,
-  apellidos VARCHAR(80),
-  email VARCHAR(120),
-  avatar VARCHAR(255)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- RELACIÓN USUARIO–ROL
-CREATE TABLE RolesUsuario (
-  usuario INT NOT NULL,
-  rol INT NOT NULL,
-  PRIMARY KEY (usuario, rol),
-  FOREIGN KEY (usuario) REFERENCES Usuarios(id),
-  FOREIGN KEY (rol) REFERENCES Roles(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- CATEGORÍAS
-CREATE TABLE Categorias (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nombre VARCHAR(80) NOT NULL UNIQUE,
-  descripcion TEXT,
-  imagen VARCHAR(255),
-  activa TINYINT(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- PRODUCTOS
-CREATE TABLE Productos (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nombre VARCHAR(120) NOT NULL,
-  descripcion TEXT,
-  categoria INT NOT NULL,
-  precioBase INT NOT NULL,              
-  iva ENUM('4','10','21') NOT NULL,
-  disponible TINYINT(1) NOT NULL DEFAULT 1,
-  ofertado TINYINT(1) NOT NULL DEFAULT 1,
-  FOREIGN KEY (categoria) REFERENCES Categorias(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- PEDIDOS
-CREATE TABLE Pedidos (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  cliente INT NOT NULL,
-  fecha DATE NOT NULL,
-  numero INT NOT NULL,
-  tipo ENUM('local','llevar') NOT NULL,
-  estado ENUM(
-    'recibido','en_preparacion','cocinando',
-    'listo_cocina','terminado','entregado'
-  ) NOT NULL DEFAULT 'recibido',
-  total INT NOT NULL DEFAULT 0,
-  FOREIGN KEY (cliente) REFERENCES Usuarios(id),
-  UNIQUE (fecha, numero)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- PRODUCTOS DEL PEDIDO
-CREATE TABLE PedidoProductos (
-  pedido INT NOT NULL,
-  producto INT NOT NULL,
-  unidades INT NOT NULL,
-  precioUnidad INT NOT NULL,            -- céntimos (congelado)
-  iva ENUM('4','10','21') NOT NULL,
-  PRIMARY KEY (pedido, producto),
-  FOREIGN KEY (pedido) REFERENCES Pedidos(id),
-  FOREIGN KEY (producto) REFERENCES Productos(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-SET FOREIGN_KEY_CHECKS=1;
+-- 5. Detalle del Pedido (Para los productos y cantidades)
+CREATE TABLE pedidos_productos (
+    id_pedido INT,
+    id_producto INT,
+    cantidad_solicitada INT NOT NULL, 
+    precio_historico DECIMAL(10, 2) NOT NULL, -- Precio al que se vendió en ese momento
+    PRIMARY KEY (id_pedido, id_producto),
+    FOREIGN KEY (id_pedido) REFERENCES pedidos(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_producto) REFERENCES productos(id)
+);
