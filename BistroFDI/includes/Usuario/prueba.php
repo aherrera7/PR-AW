@@ -9,4 +9,4 @@ ob_start();
 
 <?php
 $contenido = ob_get_clean();
-require RAIZ_APP . '/includes/plantilla.php';
+require RAIZ_APP . '/includes/vistas/common/plantilla.php';
