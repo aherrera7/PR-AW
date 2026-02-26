@@ -1,10 +1,10 @@
 <nav id="menu">
-  <a href="index.html">Inicio</a>
-  <a href="detalles.html">Detalles</a>
-  <a href="miembros.html">Miembros</a>
-  <a href="bocetos.html">Bocetos</a>
-  <a href="planificación.html">Planificación</a>
-  <a href="contacto.html">Contacto</a>
+  <a href="index.php">Inicio</a>
+  <a href="detalles.php">Detalles</a>
+  <a href="miembros.php">Miembros</a>
+  <a href="bocetos.php">Bocetos</a>
+  <a href="planificacion.php">Planificación</a>
+  <a href="contacto.php">Contacto</a>
 
   <button id="btnMenu" class="hamburger" type="button">☰</button>
 

@@ -3,6 +3,7 @@
     <head>
         <title><?= $tituloPagina ?></title>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- IMPORTANTE para móvil -->
         <link rel="stylesheet" type="text/css" href="<?php echo RUTA_CSS . '/estilo.css' ?>" />
     </head>
     <body>
@@ -12,15 +13,22 @@
                 include(RAIZ_APP . '/includes/vistas/common/nav.php');
             ?>
 
-            <main>
-                <?= $contenidoPrincipal ?? '' ?>
-            </main>
+            <!-- ZONA CENTRAL: SOLO AQUÍ SE MUEVE EL CONTENIDO -->
+            <div class="contenido">
+                <main>
+                    <?= $contenidoPrincipal ?? '' ?>
+                </main>
+
+                <?php
+                    include(RAIZ_APP . '/includes/vistas/common/aside.php');
+                ?>
+            </div>
 
             <?php
-                include(RAIZ_APP . '/includes/vistas/common/aside.php');
                 include(RAIZ_APP . '/includes/vistas/common/footer.php');
             ?>
-        </div> 
+        </div>
+
         <script src="<?= RUTA_JS ?>/menu.js"></script>
     </body>
 </html>
