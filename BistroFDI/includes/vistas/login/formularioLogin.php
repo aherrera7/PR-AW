@@ -26,13 +26,13 @@ class FormularioLogin extends FormularioBase
 
             <div>
                 <label for="nombreUsuario">Nombre de usuario</label><br>
-                <input id="nombreUsuario" type="text" name="nombreUsuario" value="{$nombreUsuarioEsc}" required>
+                <input id="nombreUsuario" type="text" name="nombreUsuario" value="{$nombreUsuarioEsc}" required autocomplete="username">
                 {$erroresCampos['nombreUsuario']}
             </div>
 
             <div style="margin-top: 10px;">
                 <label for="password">Contraseña</label><br>
-                <input id="password" type="password" name="password" required>
+                <input id="password" type="password" name="password" required autocomplete="current-password">
                 {$erroresCampos['password']}
             </div>
 
@@ -47,13 +47,14 @@ class FormularioLogin extends FormularioBase
     {
         $this->errores = [];
 
-        $nombreUsuario = filter_var(trim($datos['nombreUsuario'] ?? ''), FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        $password = trim($datos['password'] ?? '');
+        // Para login: NO “sanitizar” cambiando caracteres. Solo trim y validación.
+        $nombreUsuario = trim((string)($datos['nombreUsuario'] ?? ''));
+        $password      = trim((string)($datos['password'] ?? ''));
 
-        if (!$nombreUsuario || mb_strlen($nombreUsuario) < 4) {
+        if ($nombreUsuario === '' || mb_strlen($nombreUsuario) < 4) {
             $this->errores['nombreUsuario'] = 'El nombre de usuario debe tener al menos 4 caracteres.';
         }
-        if (!$password || mb_strlen($password) < 4) {
+        if ($password === '' || mb_strlen($password) < 4) {
             $this->errores['password'] = 'La contraseña debe tener al menos 4 caracteres.';
         }
         if ($this->errores) return;
@@ -71,6 +72,9 @@ class FormularioLogin extends FormularioBase
             $_SESSION['usuario_id'] = $usuario->getId();
             $_SESSION['nombre_usuario'] = $usuario->getNombreUsuario();
             $_SESSION['nombre'] = $usuario->getNombre();
+
+            $_SESSION['avatar'] = $usuario->getAvatar();
+
             $_SESSION['roles'] = array_map(fn($r) => $r->getNombre(), $usuario->getRoles());
 
             $_SESSION['esGerente']  = $sa->tieneRol($usuario, 'gerente');

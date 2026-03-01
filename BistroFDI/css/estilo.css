@@ -467,3 +467,105 @@ th, td {
   color: #0f1a24;
 }
 
+#avatarPreview {
+    width: 100px;   
+    height: 100px;    
+    object-fit: cover;  
+    border-radius: 50%;  
+    border: 3px solid #ddd;
+    display: block;
+}
+
+/* ===== TEMA STAFF (gerente/cocinero/camarero) ===== */
+body.staff-theme main{
+  background: #4a5058;   /* gris oscuro como la maqueta */
+  color: #fff;
+}
+
+body.staff-theme aside{
+  background: #fff;      /* el aside lo puedes dejar blanco si quieres */
+}
+
+/* panel */
+.staff-panel{
+  padding: 28px 34px;
+}
+
+/* título estilo maqueta */
+.staff-title{
+  display:flex;
+  align-items:center;
+  gap: 14px;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin: 10px 0 18px 0;
+}
+
+/* lista */
+.userlist{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.useritem{
+  display:flex;
+  align-items:center;
+  gap: 14px;
+  padding: 6px 0;
+  font-size: 20px;
+}
+
+.userbullet{
+  width: 18px;
+  display:inline-block;
+  text-align:center;
+  opacity: 0.9;
+}
+
+/* rol + username */
+.userrole{
+  min-width: 120px;
+  font-weight: 700;
+}
+
+.userhandle{
+  min-width: 180px;
+  font-weight: 700;
+}
+
+/* icon buttons */
+.icon-btn{
+  width: 28px;
+  height: 28px;
+  border: 2px solid #111;
+  background: #fff;
+  border-radius: 6px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  padding: 0;
+}
+
+.icon-btn svg{
+  width: 16px;
+  height: 16px;
+}
+
+/* cambiar rol */
+.role-btn{
+  margin-left: 6px;
+  border: 2px solid #111;
+  background: #e6e6e6;
+  color: #111;
+  border-radius: 10px;
+  padding: 4px 10px;
+  font-weight: 800;
+  cursor:pointer;
+}
+
+.role-btn:hover{
+  background: #fff;
+}

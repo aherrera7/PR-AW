@@ -1,33 +1,24 @@
 <?php
 declare(strict_types=1);
 
-// Este fichero asume que config.php ya se cargó antes (para tener RAIZ_APP/RUTA_APP/RUTA_IMGS)
-if (!defined('RAIZ_APP') || !defined('RUTA_APP') || !defined('RUTA_IMGS')) {
-    http_response_code(500);
-    exit('Config no cargada: incluye includes/config.php antes de cargar el formulario.');
-}
-
 require_once RAIZ_APP . '/includes/vistas/common/formularioBase.php';
 require_once RAIZ_APP . '/includes/app/sa/UsuarioSA.php';
 
-class FormularioRegistro extends FormularioBase
-{
-    public function __construct()
-    {
+class FormularioRegistro extends FormularioBase {
+    public function __construct() {
         parent::__construct('formRegistro', [
             'urlRedireccion' => RUTA_APP . '/index.php',
             'enctype' => 'multipart/form-data'
         ]);
     }
 
-    protected function generaCamposFormulario(array &$datos): string
-    {
+    protected function generaCamposFormulario(array &$datos): string {
         $nombreUsuario = $datos['nombreUsuario'] ?? '';
         $email = $datos['email'] ?? '';
         $nombre = $datos['nombre'] ?? '';
         $apellidos = $datos['apellidos'] ?? '';
 
-        $avatarElegido = $datos['avatar_predef'] ?? 'avatares/default.png';
+        $avatarElegido = $datos['avatar_predef'] ?? 'avatares/default.jpg';
 
         $htmlErroresGlobales = self::generaListaErroresGlobales($this->errores);
         $erroresCampos = self::generaErroresCampos(
@@ -84,10 +75,6 @@ class FormularioRegistro extends FormularioBase
         <label for="avatarFile">Subir imagen</label>
         <input id="avatarFile" type="file" name="avatar_file" accept="image/*">
       </div>
-
-      <div class="perfil-avatar-hint">
-        Rol: <strong>Cliente</strong> (no modificable)
-      </div>
     </div>
   </div>
 
@@ -143,7 +130,7 @@ class FormularioRegistro extends FormularioBase
 
       if (sel) {
         sel.addEventListener("change", function() {
-          const val = sel.value || "avatares/default.png";
+          const val = sel.value || "avatares/default.jpg";
           img.src = IMG_BASE + "/" + val.replace(/^\\/+/, "");
         });
       }

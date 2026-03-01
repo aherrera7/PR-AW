@@ -5,6 +5,8 @@ $estaLogueado = !empty($_SESSION['login']);
 $nombreUsuario = $_SESSION['nombre_usuario'] ?? '';
 $avatar = $_SESSION['avatar'] ?? null;
 
+$esGerente = !empty($_SESSION['esGerente']) && $_SESSION['esGerente'] === true;
+
 // avatar por defecto
 $avatarUrl = $avatar
     ? (RUTA_IMGS . '/' . ltrim($avatar, '/'))
@@ -22,7 +24,7 @@ $avatarUrlEsc = htmlspecialchars($avatarUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8
   <a href="<?= RUTA_APP ?>/planificacion.php">Planificación</a>
   <a href="<?= RUTA_APP ?>/contacto.php">Contacto</a>
 
-  <!-- Acceso rápido visible SIEMPRE en la barra (no solo en el desplegable) -->
+  <!-- Acceso rápido visible SIEMPRE en la barra -->
   <span class="nav-right">
     <?php if (!$estaLogueado): ?>
       <a class="nav-cta" href="<?= RUTA_APP ?>/login.php">Login/Register</a>
@@ -41,5 +43,11 @@ $avatarUrlEsc = htmlspecialchars($avatarUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8
   <div id="desplegable">
     <a href="<?= RUTA_APP ?>/recompensas.html">Recompensas</a>
     <a href="<?= RUTA_APP ?>/pedidos.html">Pedidos</a>
+
+    <?php if ($estaLogueado): ?>
+      <?php if ($esGerente): ?>
+        <a href="<?= RUTA_APP ?>/usuarios.php">Usuarios</a>
+      <?php endif; ?>
+    <?php endif; ?>
   </div>
 </nav>

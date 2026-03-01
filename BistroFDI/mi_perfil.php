@@ -19,7 +19,7 @@ $roles = $usuario->getRoles();
 $rolNombre = (count($roles) > 0 && $roles[0]->getNombre()) ? $roles[0]->getNombre() : 'cliente';
 
 $avatar = $usuario->getAvatar();
-$avatarUrl = $avatar ? (RUTA_IMGS . '/' . ltrim($avatar, '/')) : (RUTA_IMGS . '/avatares/default.png');
+$avatarUrl = $avatar ? (RUTA_IMGS . '/' . ltrim($avatar, '/')) : (RUTA_IMGS . '/avatares/default.jpg');
 
 function h(string $s): string { return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 

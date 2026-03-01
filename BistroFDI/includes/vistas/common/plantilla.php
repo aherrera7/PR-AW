@@ -6,7 +6,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- IMPORTANTE para móvil -->
         <link rel="stylesheet" type="text/css" href="<?php echo RUTA_CSS . '/estilo.css' ?>" />
     </head>
-    <body>
+    <?php
+        // Tema oscuro para personal (gerente/cocinero/camarero)
+        $staffTheme =
+            !empty($_SESSION['login']) &&
+            (
+                (!empty($_SESSION['esGerente'])  && $_SESSION['esGerente'] === true) ||
+                (!empty($_SESSION['esCocinero']) && $_SESSION['esCocinero'] === true) ||
+                (!empty($_SESSION['esCamarero']) && $_SESSION['esCamarero'] === true)
+            );
+    ?>
+    <body class="<?= $staffTheme ? 'staff-theme' : '' ?>">
         <div id="contenedor">
             <?php
                 include(RAIZ_APP . '/includes/vistas/common/header.php');

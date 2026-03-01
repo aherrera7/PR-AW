@@ -8,7 +8,25 @@ if (empty($_SESSION['login']) || empty($_SESSION['usuario_id'])) {
 }
 
 $sa = new UsuarioSA();
-$usuario = $sa->getById((int)$_SESSION['usuario_id']);
+
+function h(string $s): string { return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
+
+$esGerente = !empty($_SESSION['esGerente']) && $_SESSION['esGerente'] === true;
+
+// Si viene ?id=..., solo el gerente puede editar a otro usuario
+$idObjetivo = (int)($_SESSION['usuario_id']);
+if ($esGerente && isset($_GET['id'])) {
+  $idObjetivo = (int)$_GET['id'];
+}
+
+// Si no eres gerente y pasan id, ignóralo por seguridad
+if (!$esGerente && isset($_GET['id'])) {
+  $idObjetivo = (int)($_SESSION['usuario_id']);
+}
+
+$editandoPropio = ($idObjetivo === (int)$_SESSION['usuario_id']);
+
+$usuario = $sa->getById($idObjetivo);
 if (!$usuario) {
   header('Location: ' . RUTA_APP . '/logout.php');
   exit;
@@ -16,9 +34,7 @@ if (!$usuario) {
 
 $errores = [];
 
-function h(string $s): string { return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
-
-$avatarActual = $usuario->getAvatar() ?: 'avatares/default.png';
+$avatarActual = $usuario->getAvatar() ?: 'avatares/default.jpg';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $nombreUsuario = trim($_POST['nombreUsuario'] ?? '');
@@ -32,11 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($nombre === '') $errores[] = 'Nombre obligatorio.';
   if ($apellidos === '') $errores[] = 'Apellidos obligatorios.';
 
+  // ✅ IMPORTANTÍSIMO: si NO se sube archivo, se guarda el avatar seleccionado
   $avatarFinal = $avatarPredef;
 
   // opcional: subir imagen
   if (!empty($_FILES['avatar_file']) && is_uploaded_file($_FILES['avatar_file']['tmp_name'])) {
     $f = $_FILES['avatar_file'];
+
     if (($f['size'] ?? 0) > 2 * 1024 * 1024) $errores[] = 'La imagen supera 2MB.';
     $mime = mime_content_type($f['tmp_name']);
     $permitidos = ['image/png','image/jpeg','image/webp','image/gif'];
@@ -46,8 +64,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $ext = strtolower(pathinfo($f['name'] ?? '', PATHINFO_EXTENSION) ?: 'png');
       $nombreArchivo = 'avatares/u_' . bin2hex(random_bytes(8)) . '.' . $ext;
       $destinoAbs = RAIZ_APP . '/img/' . $nombreArchivo;
-      if (!move_uploaded_file($f['tmp_name'], $destinoAbs)) $errores[] = 'No se pudo guardar la imagen.';
-      else $avatarFinal = $nombreArchivo;
+
+      if (!move_uploaded_file($f['tmp_name'], $destinoAbs)) {
+        $errores[] = 'No se pudo guardar la imagen.';
+      } else {
+        $avatarFinal = $nombreArchivo; // ✅ si sube, manda sobre el predef
+      }
     }
   }
 
@@ -56,19 +78,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$nuevo) {
       $errores[] = 'No se pudo actualizar (¿usuario ya existe?).';
     } else {
-      // refresca sesión para nav
-      $_SESSION['nombre_usuario'] = $nuevo->getNombreUsuario();
-      $_SESSION['nombre'] = $nuevo->getNombre();
-      $_SESSION['avatar'] = $nuevo->getAvatar();
+      if ($editandoPropio) {
+        $_SESSION['nombre_usuario'] = $nuevo->getNombreUsuario();
+        $_SESSION['nombre'] = $nuevo->getNombre();
+        $_SESSION['avatar'] = $nuevo->getAvatar();
+      }
 
-      header('Location: ' . RUTA_APP . '/mi_perfil.php');
+      if ($esGerente && !$editandoPropio) {
+        header('Location: ' . RUTA_APP . '/usuarios.php');
+      } else {
+        header('Location: ' . RUTA_APP . '/mi_perfil.php');
+      }
       exit;
     }
   }
 }
 
 $opciones = [
-  'avatares/default.png' => 'Por defecto',
+  'avatares/default.jpg' => 'Por defecto',
   'avatares/a1.png' => 'Avatar 1',
   'avatares/a2.png' => 'Avatar 2',
   'avatares/a3.png' => 'Avatar 3',
@@ -83,7 +110,7 @@ foreach ($opciones as $value => $label) {
 
 $avatarUrl = RUTA_IMGS . '/' . ltrim($avatarActual, '/');
 
-$tituloPagina = 'Editar perfil';
+$tituloPagina = $esGerente && !$editandoPropio ? 'Editar usuario' : 'Editar perfil';
 
 $erroresHtml = '';
 if ($errores) {
@@ -92,9 +119,11 @@ if ($errores) {
   $erroresHtml = '<ul class="errores">'.$lis.'</ul>';
 }
 
+$btnCancelarUrl = ($esGerente && !$editandoPropio) ? (RUTA_APP . '/usuarios.php') : (RUTA_APP . '/mi_perfil.php');
+
 $contenidoPrincipal = '
 <section id="contenido">
-  <h2>Editar perfil</h2>
+  <h2>'.h($tituloPagina).'</h2>
   '.$erroresHtml.'
 
   <form method="post" enctype="multipart/form-data">
@@ -142,7 +171,7 @@ $contenidoPrincipal = '
 
     <div class="reg-submit">
       <button type="submit">Guardar cambios</button>
-      <a class="perfil-btn" href="'.RUTA_APP.'/mi_perfil.php" style="margin-left:10px;">Cancelar</a>
+      <a class="perfil-btn" href="'.h($btnCancelarUrl).'" style="margin-left:10px;">Cancelar</a>
     </div>
 
     <script>

@@ -67,4 +67,22 @@ class RolDAO
         $stmt->execute();
         $stmt->close();
     }
+
+    public function setRolUnicoUsuario(int $idUsuario, int $idRol): void {
+        $conn = Aplicacion::getInstance()->getConexionBd();
+
+        // borra roles previos
+        $sqlDel = "DELETE FROM roles_usuarios WHERE id_usuario = ?";
+        $stmtDel = $conn->prepare($sqlDel);
+        $stmtDel->bind_param("i", $idUsuario);
+        $stmtDel->execute();
+        $stmtDel->close();
+
+        // asigna el único rol
+        $sqlIns = "INSERT INTO roles_usuarios(id_usuario, id_rol) VALUES (?, ?)";
+        $stmtIns = $conn->prepare($sqlIns);
+        $stmtIns->bind_param("ii", $idUsuario, $idRol);
+        $stmtIns->execute();
+        $stmtIns->close();
+}
 }
