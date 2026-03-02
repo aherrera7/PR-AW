@@ -1,30 +1,34 @@
-DROP TABLE IF EXISTS usuarios;
-DROP TABLE IF EXISTS categorias;
-DROP TABLE IF EXISTS productos;
-DROP TABLE IF EXISTS pedidos;
+SET FOREIGN_KEY_CHECKS = 0;
+
 DROP TABLE IF EXISTS pedidos_productos;
-DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS pedidos;
+DROP TABLE IF EXISTS productos_imagenes;
+DROP TABLE IF EXISTS productos;
+DROP TABLE IF EXISTS categorias;
 DROP TABLE IF EXISTS roles_usuarios;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS usuarios;
+
+SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. Tabla de Roles
 CREATE TABLE roles (
     id_rol INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_rol VARCHAR(50) NOT NULL UNIQUE -- 'cliente', 'camarero', 'cocinero', 'gerente'
+    nombre_rol VARCHAR(50) NOT NULL UNIQUE
 );
 
--- 2. Tabla de Usuarios (Modificada: quitamos el campo rol)
+-- 2. Tabla de Usuarios
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_usuario VARCHAR(100) NOT NULL UNIQUE, [cite: 106]
-    email VARCHAR(100) NOT NULL, [cite: 107]
-    password VARCHAR(255) NOT NULL, [cite: 110]
-    nombre VARCHAR(100) NOT NULL, [cite: 108]
-    apellidos VARCHAR(100) NOT NULL, [cite: 109]
-    avatar VARCHAR(255) DEFAULT NULL [cite: 112]
+    nombre_usuario VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    avatar VARCHAR(255) DEFAULT NULL
 );
 
--- 3. Tabla de Relación Rol-Usuario (Nueva)
--- Esta tabla cumple con lo que pidió el profesor para conectar ambos
+-- 3. Tabla de Relación Rol-Usuario
 CREATE TABLE roles_usuarios (
     id_usuario INT,
     id_rol INT,
@@ -36,34 +40,41 @@ CREATE TABLE roles_usuarios (
 -- 4. Tabla de Categorías
 CREATE TABLE categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL, [cite: 132]
-    descripcion TEXT, [cite: 133]
-    imagen VARCHAR(255) DEFAULT NULL [cite: 134]
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    imagen VARCHAR(255) DEFAULT NULL
 );
 
--- 5. Tabla de Productos (Corregida la coma antes del FOREIGN KEY)
+-- 5. Tabla de Productos (sin campo imagen, porque ahora hay múltiples)
 CREATE TABLE productos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_categoria INT,
-    nombre VARCHAR(100) NOT NULL, [cite: 137]
-    descripcion TEXT, [cite: 138]
-    precio_base DECIMAL(10, 2) NOT NULL, [cite: 142]
-    iva INT NOT NULL, [cite: 143]
-    disponible BOOLEAN DEFAULT TRUE, [cite: 144]
-    ofertado BOOLEAN DEFAULT TRUE, [cite: 146, 150]
-    imagen VARCHAR(255) DEFAULT NULL, [cite: 140]
-    FOREIGN KEY (id_categoria) REFERENCES categorias(id) ON DELETE SET NULL
+    id_categoria INT NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    precio_base DECIMAL(10, 2) NOT NULL,
+    iva INT NOT NULL,
+    disponible BOOLEAN DEFAULT TRUE,
+    ofertado BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (id_categoria) REFERENCES categorias(id) ON DELETE RESTRICT
+);
+
+-- 5.1 Tabla de imágenes de productos (1 o más por producto)
+CREATE TABLE productos_imagenes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_producto INT NOT NULL,
+    ruta VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_producto) REFERENCES productos(id) ON DELETE CASCADE
 );
 
 -- 6. Tabla de Pedidos
 CREATE TABLE pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    numero_pedido INT NOT NULL, [cite: 179]
-    id_cliente INT, [cite: 183]
-    fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP, [cite: 181]
-    estado ENUM('nuevo', 'recibido', 'en preparación', 'cocinando', 'listo cocina', 'terminado', 'entregado') DEFAULT 'nuevo', [cite: 161]
-    tipo ENUM('local', 'llevar') NOT NULL, [cite: 173]
-    total DECIMAL(10, 2) NOT NULL, [cite: 184]
+    numero_pedido INT NOT NULL,
+    id_cliente INT,
+    fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
+    estado ENUM('nuevo', 'recibido', 'en preparación', 'cocinando', 'listo cocina', 'terminado', 'entregado') DEFAULT 'nuevo',
+    tipo ENUM('local', 'llevar') NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (id_cliente) REFERENCES usuarios(id)
 );
 
@@ -71,8 +82,8 @@ CREATE TABLE pedidos (
 CREATE TABLE pedidos_productos (
     id_pedido INT,
     id_producto INT,
-    cantidad INT NOT NULL, [cite: 177]
-    precio_historico DECIMAL(10, 2) NOT NULL, 
+    cantidad INT NOT NULL,
+    precio_historico DECIMAL(10, 2) NOT NULL,
     PRIMARY KEY (id_pedido, id_producto),
     FOREIGN KEY (id_pedido) REFERENCES pedidos(id) ON DELETE CASCADE,
     FOREIGN KEY (id_producto) REFERENCES productos(id)
