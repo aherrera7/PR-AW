@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/Aplicacion.php';
+require_once __DIR__ . '/app/util/helper.php';
 
 //Conf general
 define('RAIZ_APP', dirname(__DIR__));

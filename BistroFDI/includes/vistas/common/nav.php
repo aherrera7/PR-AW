@@ -1,12 +1,10 @@
 <?php
 declare(strict_types=1);
-// includes/vistas/common/nav.php
 
 $estaLogueado = !empty($_SESSION['login']);
 $nombreUsuario = $_SESSION['nombre_usuario'] ?? '';
 $avatar = $_SESSION['avatar'] ?? null;
 
-// Tu flag
 $esGerente = !empty($_SESSION['esGerente']) && $_SESSION['esGerente'] === true;
 
 // avatar por defecto
@@ -49,7 +47,7 @@ $avatarUrlEsc = htmlspecialchars((string)$avatarUrl, ENT_QUOTES | ENT_SUBSTITUTE
       <strong style="display:block;margin-bottom:6px;">Gestión</strong>
       <a href="<?= RUTA_APP ?>/gerente/categorias_listar.php">Categorías</a>
       <a href="<?= RUTA_APP ?>/gerente/productos_listar.php">Productos</a>
-      <a href="<?= RUTA_APP ?>/usuarios.php">Usuarios</a>
+      <a href="<?= RUTA_APP ?>/gerente/usuarios.php">Usuarios</a>
     <?php endif; ?>
   </div>
 </nav>
