@@ -5,7 +5,6 @@ require_once __DIR__ . '/RolDTO.php';
 
 class UsuarioDTO implements JsonSerializable
 {
-    /** @param RolDTO[] $roles */
     public function __construct(
         private ?int $id,
         private string $nombreUsuario,

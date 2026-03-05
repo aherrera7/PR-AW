@@ -17,36 +17,29 @@ class UsuarioSA
 
     $guardada = (string)$u->getPasswordHash();
 
-    // Detecta si lo guardado parece un hash válido de password_hash()
     $info = password_get_info($guardada);
     $esHash = ($info['algo'] ?? 0) !== 0;
 
     if ($esHash) {
-        // Caso: hash
         if (!password_verify($passwordPlano, $guardada)) return null;
 
-        // Opcional: rehash si cambia el algoritmo/coste
         if (password_needs_rehash($guardada, PASSWORD_DEFAULT)) {
             $nuevoHash = password_hash($passwordPlano, PASSWORD_DEFAULT);
             $this->usuarioDAO->updatePasswordHash($u->getId(), $nuevoHash);
         }
     } else {
-        // Caso: texto plano
         if (!hash_equals($guardada, $passwordPlano)) return null;
 
-        // Migración automática a hash (para que no vuelvas a tener claros)
         $nuevoHash = password_hash($passwordPlano, PASSWORD_DEFAULT);
         $this->usuarioDAO->updatePasswordHash($u->getId(), $nuevoHash);
     }
 
-    // Recarga (por si se actualizó password)
     $u = $this->usuarioDAO->findById($u->getId()) ?? $u;
 
     $u->setRoles($this->rolDAO->findRolesByUsuarioId($u->getId()));
     return $u;
 }
 
-    // Registra cliente guardando avatar (ya guarda hash)
     public function registrarClienteConAvatar(
         string $nombreUsuario,
         string $email,
@@ -96,10 +89,9 @@ class UsuarioSA
         string $apellidos,
         ?string $avatar
     ): ?UsuarioDTO {
-        // comprobar duplicado de nombre_usuario si cambia
         $exist = $this->usuarioDAO->findByNombreUsuario($nombreUsuario);
         if ($exist && $exist->getId() !== $id) {
-            return null; // nombre ocupado
+            return null; 
         }
 
         $ok = $this->usuarioDAO->updatePerfil($id, $nombreUsuario, $email, $nombre, $apellidos, $avatar);

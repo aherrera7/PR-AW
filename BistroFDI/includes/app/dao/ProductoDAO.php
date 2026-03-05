@@ -7,9 +7,6 @@ class ProductoDAO
 {
     public function __construct(private mysqli $conn) {}
 
-    /**
-     * @return ProductoDTO[]
-     */
     public function findAll(?int $idCategoria = null, bool $soloOfertados = false): array
     {
         $sql = "SELECT p.id, p.id_categoria, p.nombre, p.descripcion, p.precio_base, p.iva, p.disponible, p.ofertado

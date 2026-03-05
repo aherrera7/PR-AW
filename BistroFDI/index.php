@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__.'/includes/config.php';
 
-//Titulo
 $tituloPagina = 'Inicio - Bistro FDI';
 
 ob_start();

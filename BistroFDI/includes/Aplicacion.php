@@ -26,9 +26,6 @@ class Aplicacion
 
     private function __construct() {}
 
-    /**
-     * @param array{host:string,user:string,pass:string,bd:string} $bdDatosConexion
-     */
     public function init(array $bdDatosConexion): void
     {
         if ($this->inicializada) {
@@ -92,7 +89,6 @@ class Aplicacion
         return $this->conn;
     }
 
-    // “Flash” (para mensajes tipo “Usuario creado”, etc.)
     public function putAtributoPeticion(string $clave, mixed $valor): void
     {
         if (!isset($_SESSION[self::ATRIBUTOS_PETICION])) {

@@ -7,7 +7,6 @@ class CategoriaDAO
 {
     public function __construct(private mysqli $conn) {}
 
-    /** @return CategoriaDTO[] */
     public function findAll(): array
     {
         $sql = "SELECT id, nombre, descripcion, imagen

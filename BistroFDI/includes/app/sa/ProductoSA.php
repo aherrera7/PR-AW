@@ -24,9 +24,6 @@ class ProductoSA
         return self::dao()->findById($id);
     }
 
-    /**
-     * @param string[] $rutasImagenes
-     */
     public static function crear(
         int $idCategoria,
         string $nombre,
@@ -57,9 +54,6 @@ class ProductoSA
         return $idProducto;
     }
 
-    /**
-     * @param string[] $rutasImagenesNuevas
-     */
     public static function actualizar(
         int $id,
         int $idCategoria,

@@ -3,7 +3,6 @@
 require_once __DIR__ . '/Aplicacion.php';
 require_once __DIR__ . '/app/util/helper.php';
 
-//Conf general
 define('RAIZ_APP', dirname(__DIR__));
 define('RUTA_APP', '/PR-AW/BistroFDI');
 
@@ -17,13 +16,11 @@ setlocale(LC_ALL, 'es_ES.UTF.8');
 date_default_timezone_set('Europe/Madrid');
 
 
-//Configura BD
 define('BD_HOST', 'localhost');
 define('BD_NAME', 'bistrofdi');
 define('BD_USER', 'root');
-define('BD_PASS', ''); // En XAMPP normalmente vacío
+define('BD_PASS', ''); 
 
-//inicializa app
 $app = Aplicacion::getInstance();
 $app->init([
     'host' => BD_HOST,
@@ -32,5 +29,4 @@ $app->init([
     'pass' => BD_PASS,
 ]);
 
-// Cerrar conexión automáticamente al finalizar el script
 register_shutdown_function([$app, 'shutdown']);

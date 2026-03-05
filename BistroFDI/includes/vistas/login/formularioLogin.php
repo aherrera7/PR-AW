@@ -47,7 +47,6 @@ class FormularioLogin extends FormularioBase
     {
         $this->errores = [];
 
-        // Para login: NO “sanitizar” cambiando caracteres. Solo trim y validación.
         $nombreUsuario = trim((string)($datos['nombreUsuario'] ?? ''));
         $password      = trim((string)($datos['password'] ?? ''));
 

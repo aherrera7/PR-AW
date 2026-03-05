@@ -1,27 +1,14 @@
-/* gerente.css */
-
-.ger-wrap{
-  max-width: 1100px;
-  margin: 0 auto;
+body.staff main{
+  background: #4a5058;
+  color: #fff;
 }
 
-/* Cabecera */
-.ger-head{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 6px 0 18px;
+body.staff .card,
+body.staff table{
+  color: #111;
 }
 
-.ger-head h1{
-  margin: 0;
-  font-size: 30px;
-  letter-spacing: 1px;
-}
-
-/* Flash */
-.ger-flash{
+body.staff .ger-flash{
   border: 1px solid #111;
   background: #e6e6e6;
   padding: 10px 12px;
@@ -30,174 +17,31 @@
   color: #111;
 }
 
-.ger-flash--err{
+body.staff .ger-flash--err{
   background: #fff1f2;
   border-color: #b00020;
 }
 
-/* Texto pequeño */
-.ger-muted{
-  opacity: .75;
-  font-size: 14px;
+body.staff .ger-wrap{
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-/* Botones */
-.ger-btn{
-  display: inline-block;
-  border: 1px solid #111;
-  padding: 8px 12px;
-  border-radius: 8px;
-  text-decoration: none;
-  background: #fff;
-  color: #111;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.ger-btn:hover{
-  text-decoration: underline;
-}
-
-.ger-btn--primary{
-  background: #111;
-  color: #fff;
-}
-
-.ger-btn--danger{
-  border-color: #b00020;
-  color: #b00020;
-}
-
-/* Grid */
-.ger-grid{
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 26px;
-}
-
-/* Card */
-.ger-card{
-  border: 2px solid #111;
-  border-radius: 10px;
-  background: #fff;
-  padding: 14px;
-
+body.staff .row{
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  /* si el staff theme deja el texto blanco, aquí mandamos negro */
-  color: #111;
-}
-
-.ger-card__img{
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  border: 2px solid #111;
-  border-radius: 8px;
-  background: #fff;
-  object-fit: cover;
-}
-
-.ger-card__img--empty{
-  background: repeating-linear-gradient(45deg, #fff, #fff 10px, #f0f0f0 10px, #f0f0f0 20px);
-}
-
-.ger-card__title{
-  margin: 4px 0 0;
-  font-size: 18px;
-  color: inherit;
-}
-
-.ger-card__desc{
-  margin: 0;
-  min-height: 42px;
-  color: inherit;
-}
-
-.ger-card__actions{
-  margin-top: auto;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-/* Panel / Form */
-.ger-panel{
-  border: 2px solid #111;
-  border-radius: 10px;
-  background: #fff;
-  padding: 16px;
-  color: #111;
-}
-
-.ger-form{
-  display: grid;
+  align-items: center;
   gap: 12px;
+  padding: 10px 0;
 }
 
-.ger-label{
-  display: block;
-  font-weight: 800;
-  margin-bottom: 4px;
-  color: inherit;
-}
-
-.ger-input,
-.ger-textarea{
-  width: 100%;
-  border: 1px solid #111;
-  border-radius: 8px;
-  padding: 10px 12px;
-  font-family: monospace;
-  background: #fff;
-  color: #111;
-}
-
-.ger-textarea{
-  min-height: 120px;
-  resize: vertical;
-}
-
-.ger-actions{
-  display: flex;
+body.staff .actions{
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
   gap: 10px;
-  margin-top: 12px;
 }
 
-/* Preview */
-.ger-preview{
-  width: 220px;
-  max-width: 100%;
-  aspect-ratio: 4 / 3;
-  border: 2px solid #111;
-  border-radius: 10px;
-  background: #fff;
-  object-fit: cover;
-}
-
-.ger-preview--empty{
-  background: repeating-linear-gradient(45deg, #fff, #fff 10px, #f0f0f0 10px, #f0f0f0 20px);
-}
-
-/* Enlaces dentro de blanco: heredan negro */
-.ger-card a,
-.ger-panel a{
-  color: inherit;
-}
-
-/* Si tienes reglas globales muy agresivas en estilo.css, esto lo remata */
-body.staff-theme .ger-card,
-body.staff-theme .ger-panel{
-  color: #111;
-}
-
-/* Responsive */
-@media (max-width: 1100px){
-  .ger-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 700px){
-  .ger-grid{ grid-template-columns: 1fr; }
-  .ger-head{ flex-direction: column; align-items: flex-start; }
+body.staff .fig-desc,
+body.staff .fig-desc p{
+  color: #fff;
 }

@@ -1,10 +1,14 @@
 <?php
 declare(strict_types=1);
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 function requireLogin(): void
 {
     if (empty($_SESSION['login'])) {
-        header('Location: ' . RUTA_APP . '/login.php');
+        header('Location: ' . RUTA_VISTAS . '/login.php');
         exit;
     }
 }

@@ -6,7 +6,6 @@ require_once __DIR__ . '/../dto/RolDTO.php';
 
 class RolDAO
 {
-    /** @return RolDTO[] */
     public function findRolesByUsuarioId(int $idUsuario): array
     {
         $conn = Aplicacion::getInstance()->getConexionBd();
@@ -34,7 +33,6 @@ class RolDAO
     {
         $conn = Aplicacion::getInstance()->getConexionBd();
 
-        // 1) buscar
         $sql = "SELECT id_rol FROM roles WHERE nombre_rol = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $nombreRol);
@@ -45,7 +43,6 @@ class RolDAO
 
         if ($row) return (int)$row['id_rol'];
 
-        // 2) crear si no existe
         $sql2 = "INSERT INTO roles(nombre_rol) VALUES (?)";
         $stmt2 = $conn->prepare($sql2);
         $stmt2->bind_param("s", $nombreRol);
@@ -60,7 +57,6 @@ class RolDAO
     {
         $conn = Aplicacion::getInstance()->getConexionBd();
 
-        // evitar duplicados
         $sql = "INSERT IGNORE INTO roles_usuarios(id_usuario, id_rol) VALUES (?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ii", $idUsuario, $idRol);
@@ -71,14 +67,12 @@ class RolDAO
     public function setRolUnicoUsuario(int $idUsuario, int $idRol): void {
         $conn = Aplicacion::getInstance()->getConexionBd();
 
-        // borra roles previos
         $sqlDel = "DELETE FROM roles_usuarios WHERE id_usuario = ?";
         $stmtDel = $conn->prepare($sqlDel);
         $stmtDel->bind_param("i", $idUsuario);
         $stmtDel->execute();
         $stmtDel->close();
 
-        // asigna el único rol
         $sqlIns = "INSERT INTO roles_usuarios(id_usuario, id_rol) VALUES (?, ?)";
         $stmtIns = $conn->prepare($sqlIns);
         $stmtIns->bind_param("ii", $idUsuario, $idRol);

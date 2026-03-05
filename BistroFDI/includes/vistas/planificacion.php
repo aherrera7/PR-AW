@@ -1,4 +1,12 @@
 <?php
+require_once __DIR__ . '/../config.php';
+
+$tituloPagina = 'Planificacion - Bistro FDI';
+
+ob_start();
+?>
+
+<?php
 ?>
 <section>
     <h1>Planificación</h1>
@@ -66,6 +74,12 @@
 
 <section>
     <h2>Gantt Tareas</h2>
-    <img src="img/Gantt.png" alt="Gantt tareas" width="1390">
+    <img src="<?= RUTA_IMGS ?>/Gantt.png" alt="Gantt tareas" width="1390">
     <p>Gantt con las secuencia de prácticas y fechas de terminación</p>
 </section>
+
+
+<?php
+$contenidoPrincipal = ob_get_clean();
+require RAIZ_APP . '/includes/vistas/common/plantilla.php';
+

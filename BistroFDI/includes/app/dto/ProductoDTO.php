@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 class ProductoDTO
 {
-    /**
-     * @param string[] $imagenes
-     */
     public function __construct(
         private ?int $id,
         private int $idCategoria,

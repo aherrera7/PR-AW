@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/../config.php';
 require_once RAIZ_APP . '/includes/vistas/login/formularioRegistro.php';
 
 $form = new FormularioRegistro();
@@ -7,7 +7,7 @@ $htmlFormRegistro = $form->gestiona();
 
 $tituloPagina = 'Registro';
 
-$urlLogin = RUTA_APP . '/login.php';
+$urlLogin = RUTA_APP . '/includes/vistas/login.php';
 
 $contenidoPrincipal = <<<HTML
 <section id="contenido">

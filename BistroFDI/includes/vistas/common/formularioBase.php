@@ -1,14 +1,6 @@
 <?php
 declare(strict_types=1);
 
-/**
- * Base para formularios:
- * - Renderiza el <form> y gestiona POST/GET
- * - Maneja errores globales y por campo
- * - Soporta enctype (multipart/form-data)
- * - CSRF opcional (activado por defecto)
- * - Atributos extra para <form> (class, autocomplete, etc.)
- */
 abstract class FormularioBase
 {
     protected string $formId;
@@ -17,11 +9,9 @@ abstract class FormularioBase
     protected ?string $enctype;
     protected ?string $urlRedireccion;
 
-    /** @var array<string,string>|array<int,string> */
     protected array $errores = [];
 
     protected bool $csrf;
-    /** @var array<string,string> */
     protected array $formAttrs;
 
     public function __construct(string $formId, array $opciones = [])
@@ -29,14 +19,13 @@ abstract class FormularioBase
         $this->formId = $formId;
 
         $opcionesPorDefecto = [
-            'action' => null,                 // si es null, se usa la URL actual
+            'action' => null,                
             'method' => 'POST',
             'enctype' => null,
             'urlRedireccion' => null,
 
-            // extras
             'csrf' => true,
-            'formAttrs' => [],                // ej: ['class'=>'mi-form','autocomplete'=>'on']
+            'formAttrs' => [],              
         ];
 
         $opciones = array_merge($opcionesPorDefecto, $opciones);
@@ -48,7 +37,6 @@ abstract class FormularioBase
         $this->csrf = (bool)$opciones['csrf'];
         $this->formAttrs = is_array($opciones['formAttrs']) ? $opciones['formAttrs'] : [];
 
-        // ✅ ACTION: nunca null (evita el TypeError)
         $actionOpt = $opciones['action'];
         if (is_string($actionOpt) && $actionOpt !== '') {
             $this->action = $actionOpt;
@@ -61,11 +49,6 @@ abstract class FormularioBase
         }
     }
 
-    /**
-     * Procesa el formulario:
-     * - Si no se envió -> devuelve HTML del formulario
-     * - Si se envió -> procesa y si hay errores devuelve HTML; si es válido redirige o devuelve null
-     */
     public function gestiona(): ?string
     {
         $datos = &$_POST;
@@ -141,7 +124,6 @@ HTML;
         return $out;
     }
 
-    // ===== CSRF =====
     private function csrfTokenGenera(): string
     {
         $key = "csrf_{$this->formId}";
@@ -157,8 +139,6 @@ HTML;
         $token = $datos['csrf'] ?? '';
         return isset($_SESSION[$key]) && is_string($_SESSION[$key]) && is_string($token) && hash_equals($_SESSION[$key], $token);
     }
-
-    // ===== Helpers errores =====
 
     public static function generaListaErroresGlobales(array $errores = []): string
     {
@@ -190,7 +170,6 @@ HTML;
         return $out;
     }
 
-    // ===== Abstractos =====
     abstract protected function generaCamposFormulario(array &$datos): string;
     abstract protected function procesaFormulario(array &$datos): void;
 }

@@ -1,6 +1,11 @@
 <?php
-// vistas/miembros_vista.php
+require_once __DIR__ . '/../config.php';
+
+$tituloPagina = 'Miembros - Bistro FDI';
+
+ob_start();
 ?>
+
 <section>
     <h1>Miembros</h1>
     <ul>
@@ -15,7 +20,7 @@
     <h2>Óscar González</h2>
     <p>Email: <a href="mailto:osgonz03@ucm.es">osgonz03@ucm.es</a></p>
     <figure>
-        <img src="img/oscar.jpg" alt="Foto de Óscar González">
+        <img src="<?= RUTA_IMGS ?>/oscar.jpg" alt="Foto de Óscar González">
     </figure>
     <p>
         Óscar es un apasionado de la filosofía y la economía, disciplinas que le gusta
@@ -28,7 +33,7 @@
     <h2>Alba Herrera</h2>
     <p>Email: <a href="mailto:aherre07@ucm.es">aherre07@ucm.es</a></p>
     <figure>
-        <img src="img/alba.jpg" alt="Foto de Alba Herrera">
+        <img src="<?= RUTA_IMGS ?>/alba.jpg" alt="Foto de Alba Herrera">
     </figure>
     <p>
         Alba es una gran amante de la música, especialmente de artistas como Lady Gaga,
@@ -41,7 +46,7 @@
     <h2>Adriana Municio</h2>
     <p>Email: <a href="mailto:admuni01@ucm.es">admuni01@ucm.es</a></p>
     <figure>
-        <img src="img/adriana.jpg" alt="Foto de Adriana Municio">
+        <img src="<?= RUTA_IMGS ?>/adriana.jpg" alt="Foto de Adriana Municio">
     </figure>
     <p>
         Adriana es una gran amante del café y suele tomar varias tazas al día.
@@ -54,7 +59,7 @@
     <h2>Nuria Oviedo</h2>
     <p>Email: <a href="mailto:nurovied@ucm.es">nurovied@ucm.es</a></p>
     <figure>
-        <img src="img/nuria.jpg" alt="Foto de Nuria Oviedo">
+        <img src="<?= RUTA_IMGS ?>/nuria.jpg" alt="Foto de Nuria Oviedo">
     </figure>
     <p>
         Nuria es una gran fan de Taylor Swift y disfruta pasando su tiempo
@@ -63,3 +68,7 @@
         momentos de relax.
     </p>
 </section>
+
+<?php
+$contenidoPrincipal = ob_get_clean();
+require RAIZ_APP . '/includes/vistas/common/plantilla.php';

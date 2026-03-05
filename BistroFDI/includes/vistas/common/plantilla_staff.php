@@ -9,7 +9,6 @@
         
     </head>
     <?php
-        // Tema oscuro para personal (gerente/cocinero/camarero)
         $staffTheme =
             !empty($_SESSION['login']) &&
             (
@@ -18,7 +17,7 @@
                 (!empty($_SESSION['esCamarero']) && $_SESSION['esCamarero'] === true)
             );
     ?>
-    <body class="<?= $staffTheme ? 'staff-theme' : '' ?>">
+    <body class="<?= $staffTheme ? 'staff' : '' ?>">
         <div id="contenedor">
             <?php
                 include(RAIZ_APP . '/includes/vistas/common/header.php');
