@@ -9,6 +9,7 @@ require_once RAIZ_APP . '/includes/app/sa/CategoriaSA.php';
 
 $app  = Aplicacion::getInstance();
 $base = RUTA_APP . '/includes/vistas/gerente';
+$baseUsuarios = RUTA_APP . '/includes/vistas/usuarios';
 
 $id = (int)($_GET['id'] ?? 0);
 $categoria = $id > 0 ? CategoriaSA::obtener($id) : null;
@@ -21,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     CategoriaSA::borrar($id);
 
     $app->putAtributoPeticion('msg', 'Categoría borrada.');
-    header('Location: ' . $base . '/categorias_listar.php');
+    header('Location: ' . $baseUsuarios . '/categorias_listar.php');
     exit;
   } catch (Throwable $e) {
     $errores[] = $e->getMessage();

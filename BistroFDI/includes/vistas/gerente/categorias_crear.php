@@ -9,7 +9,7 @@ require_once RAIZ_APP . '/includes/app/sa/CategoriaSA.php';
 
 $app  = Aplicacion::getInstance();
 $base = RUTA_APP . '/includes/vistas/gerente';
-
+$baseUsuarios = RUTA_APP . '/includes/vistas/usuarios';
 $errores = [];
 $nombre = '';
 $descripcion = '';
@@ -37,7 +37,7 @@ ob_start();
   <section class="ger-wrap">
     <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
       <h1>Nueva categoría</h1>
-      <a class="btn btn-light" href="<?= h($base.'/categorias_listar.php') ?>">Volver</a>
+      <a class="btn btn-light" href="<?= h($baseUsuarios.'/categorias_listar.php') ?>">Volver</a>
     </div>
 
     <?php if (!empty($errores)): ?>

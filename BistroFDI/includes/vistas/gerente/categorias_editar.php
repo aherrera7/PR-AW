@@ -9,6 +9,7 @@ require_once RAIZ_APP . '/includes/app/sa/CategoriaSA.php';
 
 $app  = Aplicacion::getInstance();
 $base = RUTA_APP . '/includes/vistas/gerente';
+$baseUsuarios = RUTA_APP . '/includes/vistas/usuarios';
 
 $id = (int)($_GET['id'] ?? 0);
 $categoria = $id > 0 ? CategoriaSA::obtener($id) : null;
@@ -28,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     CategoriaSA::actualizarConUpload($id, $nombre, $descripcionParam, $_FILES['imagen'] ?? null);
 
     $app->putAtributoPeticion('msg', 'Categoría actualizada.');
-    header('Location: ' . $base . '/categorias_listar.php');
+    header('Location: ' . $baseUsuarios . '/categorias_listar.php');
     exit;
   } catch (Throwable $e) {
     $errores[] = $e->getMessage();
