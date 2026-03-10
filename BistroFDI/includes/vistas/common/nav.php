@@ -24,10 +24,29 @@ $avatarUrlEsc = htmlspecialchars((string)$avatarUrl, ENT_QUOTES | ENT_SUBSTITUTE
   <a href="<?= RUTA_VISTAS ?>/contacto.php">Contacto</a>
   <a href="<?= RUTA_APP ?>/includes/vistas/usuarios/categorias_listar.php">
   Ver Carta </a>
-  <span class="nav-right">
+<span class="nav-right">
     <?php if (!$estaLogueado): ?>
       <a class="nav-cta" href="<?= RUTA_VISTAS ?>/login.php">Login/Register</a>
     <?php else: ?>
+      
+      <?php 
+        $numItems = 0;
+        if (isset($_SESSION['carrito'])) {
+            foreach ($_SESSION['carrito'] as $cantidad) {
+                $numItems += $cantidad;
+            }
+        }
+      ?>
+      <a href="<?= RUTA_APP ?>/includes/vistas/usuarios/carrito_ver.php" 
+         class="nav-carrito" 
+         style="margin-right: 15px; text-decoration: none; font-size: 1.2rem; position: relative; display: inline-flex; align-items: center;">
+         🛒
+         <?php if ($numItems > 0): ?>
+           <span style="background: #d32f2f; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.65rem; position: absolute; top: -8px; right: -10px; font-weight: bold;">
+              <?= $numItems ?>
+           </span>
+         <?php endif; ?>
+      </a>
       <a class="nav-user" href="<?= RUTA_VISTAS ?>/mi_perfil.php" title="Mi perfil">
         <img class="nav-avatar" src="<?= $avatarUrlEsc ?>" alt="Avatar">
         <span class="nav-username"><?= $nombreUsuarioEsc ?></span>
