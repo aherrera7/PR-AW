@@ -22,7 +22,7 @@ $avatarUrlEsc = htmlspecialchars((string)$avatarUrl, ENT_QUOTES | ENT_SUBSTITUTE
   <a href="<?= RUTA_VISTAS ?>/bocetos.php">Bocetos</a>
   <a href="<?= RUTA_VISTAS ?>/planificacion.php">Planificación</a>
   <a href="<?= RUTA_VISTAS ?>/contacto.php">Contacto</a>
-  <a href="<?= RUTA_APP ?>/includes/vistas/usuarios/categorias_listar_usuario.php">
+  <a href="<?= RUTA_APP ?>/includes/vistas/usuarios/categorias_listar.php">
   Ver Carta </a>
   <span class="nav-right">
     <?php if (!$estaLogueado): ?>

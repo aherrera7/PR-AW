@@ -10,6 +10,7 @@ require_once RAIZ_APP . '/includes/app/sa/CategoriaSA.php';
 
 $app  = Aplicacion::getInstance();
 $base = RUTA_APP . '/includes/vistas/gerente';
+$baseUsuarios = RUTA_APP . '/includes/vistas/usuarios';
 
 $id = (int)($_GET['id'] ?? 0);
 $producto = $id > 0 ? ProductoSA::obtener($id) : null;
@@ -58,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         ProductoSA::actualizar($id, $idCategoria, $nombre, $descripcion, $precioBase, $iva, $disponible, $rutasNuevas);
         $app->putAtributoPeticion('msg', 'Producto actualizado con éxito.');
-        header("Location: $base/productos_listar.php");
+        header("Location:" . $baseUsuarios . "/productos_carta.php?id_cat=" . $idCategoria);
         exit;
     } catch (Throwable $e) {
         $errores[] = $e->getMessage();
@@ -72,7 +73,7 @@ ob_start();
 <section class="ger-wrap">
     <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
         <h1>Editar Producto</h1>
-        <a class="btn btn-light" href="<?= h($base.'/productos_listar.php') ?>">Volver</a>
+        <a class="btn btn-light" href="<?= h($baseUsuarios.'/productos_carta.php') ?>">Volver</a>
     </div>
 
     <?php if (!empty($errores)): ?>
@@ -154,7 +155,7 @@ ob_start();
 
             <div class="form-actions">
                 <button class="btn" type="submit">Guardar cambios</button>
-                <a class="btn btn-light" href="<?= h($base.'/productos_listar.php') ?>">Cancelar</a>
+                <a class="btn btn-light" href="<?= h($baseUsuarios.'/productos_carta.php') ?>">Cancelar</a>
             </div>
         </form>
     </div>

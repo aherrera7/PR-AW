@@ -13,7 +13,7 @@ $idCat = (int)($_GET['id_cat'] ?? 0);
 $categoria = $idCat > 0 ? CategoriaSA::obtener($idCat) : null;
 
 if (!$categoria) {
-    header('Location: categorias_listar_usuario.php');
+    header('Location: categorias_listar.php');
     exit;
 }
 
@@ -39,7 +39,7 @@ ob_start();
             <?php if ($esGerente): ?>
                 <a class="btn" href="<?= RUTA_APP ?>/includes/vistas/gerente/productos_crear.php?id_cat=<?= $idCat ?>">+ Nuevo Producto</a>
             <?php endif; ?>
-            <a class="btn btn-light" href="categorias_listar_usuario.php">Volver</a>
+            <a class="btn btn-light" href="categorias_listar.php">Volver</a>
         </div>
     </div>
 
@@ -80,10 +80,11 @@ ob_start();
                         <?php if ($esGerente): ?>
                             <div class="form-actions" style="display: flex; gap: 8px;">
                                 <a class="btn btn-light" href="<?= RUTA_APP ?>/includes/vistas/gerente/productos_editar.php?id=<?= $id ?>" style="flex:1; text-align:center;">Editar</a>
-                                <a class="btn btn-light" href="<?= RUTA_APP ?>/includes/vistas/gerente/productos_listar.php?retirar=<?= $id ?>" 
-                                   style="color: #d32f2f; border-color: #d32f2f; flex:1; text-align:center;"
-                                   onclick="return confirm('¿Retirar de la carta?')">
-                                   <?= $p->isOfertado() ? 'Retirar' : 'Reofertar' ?>
+                                <a class="btn btn-light" 
+                                    href="<?= RUTA_APP ?>/includes/vistas/gerente/productos_retirar.php?id=<?= $id ?>&id_cat=<?= $idCat ?>" 
+                                    style="color: #d32f2f; border-color: #d32f2f; flex:1; text-align:center;"
+                                    onclick="return confirm('¿Cambiar estado de este producto?')">
+                                    <?= $p->isOfertado() ? 'Retirar' : 'Reofertar' ?>
                                 </a>
                             </div>
                         <?php else: ?>
