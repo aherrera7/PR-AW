@@ -24,6 +24,10 @@ $avatarUrlEsc = htmlspecialchars((string)$avatarUrl, ENT_QUOTES | ENT_SUBSTITUTE
   <a href="<?= RUTA_VISTAS ?>/contacto.php">Contacto</a>
   <a href="<?= RUTA_APP ?>/includes/vistas/usuarios/categorias_listar.php">
   Ver Carta </a>
+  <a href="<?= RUTA_APP ?>/includes/vistas/cocinero/productos_pedido.php?id_pedido=123" 
+   style="background: orange; padding: 5px; border-radius: 5px;">
+   🧪 Probar Vista Cocina (Pedido #123)
+  </a>
 <span class="nav-right">
     <?php if (!$estaLogueado): ?>
       <a class="nav-cta" href="<?= RUTA_VISTAS ?>/login.php">Login/Register</a>
