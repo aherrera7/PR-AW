@@ -22,18 +22,17 @@ $avatarUrlEsc = htmlspecialchars((string)$avatarUrl, ENT_QUOTES | ENT_SUBSTITUTE
   <a href="<?= RUTA_VISTAS ?>/bocetos.php">Bocetos</a>
   <a href="<?= RUTA_VISTAS ?>/planificacion.php">Planificación</a>
   <a href="<?= RUTA_VISTAS ?>/contacto.php">Contacto</a>
-  <a href="<?= RUTA_APP ?>/includes/vistas/usuarios/categorias_listar.php">
-  Ver Carta </a>
-  <a href="<?= RUTA_APP ?>/includes/vistas/cocinero/productos_pedido.php?id_pedido=123" 
-   style="background: orange; padding: 5px; border-radius: 5px;">
-   🧪 Probar Vista Cocina (Pedido #123)
+  <a href="<?= RUTA_VISTAS ?>/usuarios/categorias_listar.php">Ver Carta</a>
+  <a href="<?= RUTA_VISTAS ?>/cocinero/productos_pedido.php?id_pedido=123">
+    Probar Vista Cocina (Pedido #123)
   </a>
-<span class="nav-right">
+
+  <span class="nav-right">
     <?php if (!$estaLogueado): ?>
       <a class="nav-cta" href="<?= RUTA_VISTAS ?>/login.php">Login/Register</a>
     <?php else: ?>
-      
-      <?php 
+
+      <?php
         $numItems = 0;
         if (isset($_SESSION['carrito'])) {
             foreach ($_SESSION['carrito'] as $cantidad) {
@@ -41,20 +40,19 @@ $avatarUrlEsc = htmlspecialchars((string)$avatarUrl, ENT_QUOTES | ENT_SUBSTITUTE
             }
         }
       ?>
-      <a href="<?= RUTA_APP ?>/includes/vistas/usuarios/carrito_ver.php" 
-         class="nav-carrito" 
-         style="margin-right: 15px; text-decoration: none; font-size: 1.2rem; position: relative; display: inline-flex; align-items: center;">
-         🛒
-         <?php if ($numItems > 0): ?>
-           <span style="background: #d32f2f; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.65rem; position: absolute; top: -8px; right: -10px; font-weight: bold;">
-              <?= $numItems ?>
-           </span>
-         <?php endif; ?>
+
+      <a href="<?= RUTA_APP ?>/includes/vistas/usuarios/carrito_ver.php" class="nav-carrito">
+        🛒
+        <?php if ($numItems > 0): ?>
+          <span class="nav-carrito-badge"><?= $numItems ?></span>
+        <?php endif; ?>
       </a>
+
       <a class="nav-user" href="<?= RUTA_VISTAS ?>/mi_perfil.php" title="Mi perfil">
         <img class="nav-avatar" src="<?= $avatarUrlEsc ?>" alt="Avatar">
         <span class="nav-username"><?= $nombreUsuarioEsc ?></span>
       </a>
+
       <a class="nav-cta" href="<?= RUTA_VISTAS ?>/logout.php">Logout</a>
     <?php endif; ?>
   </span>
@@ -66,9 +64,9 @@ $avatarUrlEsc = htmlspecialchars((string)$avatarUrl, ENT_QUOTES | ENT_SUBSTITUTE
     <a href="<?= RUTA_APP ?>/pedidos.html">Pedidos</a>
 
     <?php if ($estaLogueado && $esGerente): ?>
-      <hr style="border:0;border-top:1px solid #111;margin:10px 0;">
-      <strong style="display:block;margin-bottom:6px;">Gestión</strong>
-      <a href="<?= RUTA_VISTAS ?>/gerente/categorias_listar.php">Categorías</a>
+      <hr class="menu-divider">
+      <strong class="menu-title">Gestión</strong>
+      <a href="<?= RUTA_VISTAS ?>/usuarios/categorias_listar.php">Categorías</a>
       <a href="<?= RUTA_VISTAS ?>/gerente/productos_listar.php">Productos</a>
       <a href="<?= RUTA_VISTAS ?>/gerente/usuarios.php">Usuarios</a>
     <?php endif; ?>

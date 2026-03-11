@@ -30,13 +30,13 @@ class FormularioLogin extends FormularioBase
                 {$erroresCampos['nombreUsuario']}
             </div>
 
-            <div style="margin-top: 10px;">
+            <div>
                 <label for="password">Contraseña</label><br>
                 <input id="password" type="password" name="password" required autocomplete="current-password">
                 {$erroresCampos['password']}
             </div>
 
-            <div style="margin-top: 10px;">
+            <div>
                 <button type="submit" name="login">Entrar</button>
             </div>
         </fieldset>

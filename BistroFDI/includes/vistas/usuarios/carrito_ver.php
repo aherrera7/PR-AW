@@ -5,7 +5,6 @@ require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
 require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
 
-// Solo usuarios logueados pueden ver su carrito
 if (!isset($_SESSION['login'])) {
     header('Location: ' . RUTA_VISTAS . '/login.php');
     exit;
@@ -17,7 +16,6 @@ $productosCarrito = [];
 $total = 0;
 $errores = [];
 
-// Cargamos los datos reales de los productos que hay en la sesión
 foreach ($carrito as $id => $cantidad) {
     $p = ProductoSA::obtener((int)$id);
     if ($p) {
@@ -31,15 +29,12 @@ foreach ($carrito as $id => $cantidad) {
     }
 }
 
-// Confirmacion
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmar'])) {
     try {
-
         if (empty($_SESSION['carrito'])) throw new InvalidArgumentException("El carrito está vacío.");
         if (empty($_SESSION['pedido_tipo'])) throw new InvalidArgumentException("Debes elegir antes si el pedido es local o para llevar.");
 
         $idCliente = (int)($_SESSION['usuario_id'] ?? 0);
-
         if ($idCliente <= 0) throw new InvalidArgumentException("No se pudo identificar al usuario.");
 
         $idPedido = PedidoSA::crearDesdeCarrito(
@@ -48,20 +43,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmar'])) {
             $_SESSION['carrito']
         );
 
-        // guardamos el último pedido
         $_SESSION['ultimo_pedido'] = $idPedido;
-
-        // vaciamos carrito
         unset($_SESSION['carrito']);
 
         header("Location: categorias_listar.php");
         exit;
-
     } catch (Throwable $e) {
         $errores[] = $e->getMessage();
     }
 }
-
 
 ob_start();
 ?>
@@ -79,65 +69,68 @@ ob_start();
     <?php endif; ?>
 
     <?php if (empty($productosCarrito)): ?>
-        <div class="card stack" style="text-align: center; padding: 40px;">
+        <div class="card stack empty-state">
             <p class="muted">Tu carrito está vacío.</p>
             <a href="categorias_listar.php" class="btn">Ver la carta</a>
         </div>
     <?php else: ?>
-        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-            
-            <div style="flex: 2; min-width: 300px;">
+        <div class="cart-layout">
+
+            <div class="cart-main">
                 <div class="stack">
-                    <?php foreach ($productosCarrito as $item): 
+                    <?php foreach ($productosCarrito as $item):
                         $p = $item['obj'];
                         $imgs = $p->getImagenes();
                         $img = !empty($imgs) ? $imgs[0] : 'default_producto.jpg';
                     ?>
-                        <div class="card" style="display: flex; align-items: center; gap: 15px; padding: 15px;">
-                            <img src="<?= h(RUTA_IMGS.'/productos/'.$img) ?>" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
-                            
-                            <div style="flex: 1;">
-                                <h3 style="margin: 0;"><?= h($p->getNombre()) ?></h3>
-                                <p class="muted" style="margin: 5px 0;"><?= number_format($p->getPrecioFinal(), 2) ?>€ / ud.</p>
+                        <div class="card cart-item">
+                            <img class="cart-thumb" src="<?= h(RUTA_IMGS.'/productos/'.$img) ?>" alt="">
+
+                            <div class="cart-item-info">
+                                <h3 class="cart-item-title"><?= h($p->getNombre()) ?></h3>
+                                <p class="muted cart-item-price"><?= number_format($p->getPrecioFinal(), 2) ?>€ / ud.</p>
                             </div>
 
-                            <div style="text-align: center; font-weight: bold;">
+                            <div class="cart-item-qty">
                                 Cant: <?= $item['cantidad'] ?>
                             </div>
 
-                            <div style="width: 80px; text-align: right; font-weight: bold;">
+                            <div class="cart-item-subtotal">
                                 <?= number_format($item['subtotal'], 2) ?>€
                             </div>
 
-                            <a href="carrito_gestion.php?action=remove&id=<?= $p->getId() ?>" style="color: #d32f2f; text-decoration: none; font-size: 1.2em; padding: 10px;">&times;</a>
+                            <a class="cart-remove" href="carrito_gestion.php?action=remove&id=<?= $p->getId() ?>">&times;</a>
                         </div>
                     <?php endforeach; ?>
                 </div>
             </div>
 
-            <div style="flex: 1; min-width: 250px;">
-                <div class="card stack" style="padding: 20px; position: sticky; top: 20px;">
+            <div class="cart-side">
+                <div class="card stack summary-card">
                     <h3>Resumen</h3>
-                    <div style="display: flex; justify-content: space-between;">
+
+                    <div class="summary-row">
                         <span>Subtotal:</span>
                         <span><?= number_format($total / 1.10, 2) ?>€</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between;">
+
+                    <div class="summary-row">
                         <span>IVA (10%):</span>
                         <span><?= number_format($total - ($total / 1.10), 2) ?>€</span>
                     </div>
+
                     <hr>
-                    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2em;">
+
+                    <div class="summary-total">
                         <span>Total:</span>
-                        <span style="color: #d32f2f;"><?= number_format($total, 2) ?>€</span>
+                        <span class="summary-total-value"><?= number_format($total, 2) ?>€</span>
                     </div>
 
                     <form method="post">
-                        <button class="btn" style="width: 100%; margin-top: 20px;" name="confirmar">
-                            Confirmar Pedido
-                        </button>
+                        <button class="btn summary-submit" name="confirmar">Confirmar Pedido</button>
                     </form>
-                    <a href="carrito_gestion.php?action=clear" class="muted" style="display: block; text-align: center; margin-top: 15px; font-size: 0.9em;">Vaciar carrito</a>
+
+                    <a href="carrito_gestion.php?action=clear" class="muted summary-link">Vaciar carrito</a>
                 </div>
             </div>
         </div>
