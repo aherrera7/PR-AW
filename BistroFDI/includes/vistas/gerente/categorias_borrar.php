@@ -33,40 +33,47 @@ $tituloPagina = 'Borrar categoría';
 
 ob_start();
 ?>
-  <section class="ger-wrap">
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
-      <h1>Borrar categoría</h1>
-      <a class="btn btn-light" href="<?= h($base.'/categorias_listar.php') ?>">Volver</a>
-    </div>
 
-    <?php if (!empty($errores)): ?>
-      <div class="ger-flash ger-flash--err">
-        <strong>No se pudo borrar:</strong>
-        <ul>
-          <?php foreach ($errores as $er): ?>
-            <li><?= h((string)$er) ?></li>
-          <?php endforeach; ?>
-        </ul>
-        <div class="muted">Si tiene productos asignados, primero reasigna o retira esos productos.</div>
+<section class="ger-wrap">
+
+  <div class="header-bar">
+    <h1>Borrar categoría</h1>
+    <a class="btn btn-light" href="<?= h($base.'/categorias_listar.php') ?>">Volver</a>
+  </div>
+
+  <?php if (!empty($errores)): ?>
+    <div class="ger-flash ger-flash--err">
+      <strong>No se pudo borrar:</strong>
+      <ul>
+        <?php foreach ($errores as $er): ?>
+          <li><?= h((string)$er) ?></li>
+        <?php endforeach; ?>
+      </ul>
+      <div class="muted">Si tiene productos asignados, primero reasigna o retira esos productos.</div>
+    </div>
+  <?php endif; ?>
+
+  <div class="card stack">
+    <p>Vas a borrar la categoría:</p>
+    <p><strong><?= h((string)$categoria->getNombre()) ?></strong></p>
+    <p class="muted">Esta acción no se puede deshacer.</p>
+
+    <form method="post">
+      <div class="form-actions">
+        <button class="btn btn-danger" type="submit"
+          onclick="return confirm('¿Seguro que quieres borrar esta categoría?');">
+          Sí, borrar
+        </button>
+
+        <a class="btn btn-light" href="<?= h($base.'/categorias_listar.php') ?>">
+          Cancelar
+        </a>
       </div>
-    <?php endif; ?>
+    </form>
+  </div>
 
-    <div class="card stack">
-      <p>Vas a borrar la categoría:</p>
-      <p><strong><?= h((string)$categoria->getNombre()) ?></strong></p>
-      <p class="muted">Esta acción no se puede deshacer.</p>
+</section>
 
-      <form method="post">
-        <div class="form-actions">
-          <button class="btn btn-danger" type="submit"
-                  onclick="return confirm('¿Seguro que quieres borrar esta categoría?');">
-            Sí, borrar
-          </button>
-          <a class="btn btn-light" href="<?= h($base.'/categorias_listar.php') ?>">Cancelar</a>
-        </div>
-      </form>
-    </div>
-  </section>
 <?php
 $contenidoPrincipal = ob_get_clean();
 require RAIZ_APP . '/includes/vistas/common/plantilla_staff.php';

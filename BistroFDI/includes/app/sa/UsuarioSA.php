@@ -1,44 +1,51 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/../../Aplicacion.php';
 require_once __DIR__ . '/../dao/UsuarioDAO.php';
 require_once __DIR__ . '/../dao/RolDAO.php';
 
 class UsuarioSA
 {
-    public function __construct(
-        private UsuarioDAO $usuarioDAO = new UsuarioDAO(),
-        private RolDAO $rolDAO = new RolDAO()
-    ) {}
+    private UsuarioDAO $usuarioDAO;
+    private RolDAO $rolDAO;
+
+    public function __construct(?UsuarioDAO $usuarioDAO = null, ?RolDAO $rolDAO = null)
+    {
+        $conn = Aplicacion::getInstance()->getConexionBd();
+
+        $this->usuarioDAO = $usuarioDAO ?? new UsuarioDAO($conn);
+        $this->rolDAO = $rolDAO ?? new RolDAO($conn);
+    }
 
     public function login(string $nombreUsuario, string $passwordPlano): ?UsuarioDTO {
-    $u = $this->usuarioDAO->findByNombreUsuario($nombreUsuario);
-    if (!$u) return null;
+        $u = $this->usuarioDAO->findByNombreUsuario($nombreUsuario);
+        if (!$u) return null;
 
-    $guardada = (string)$u->getPasswordHash();
+        $guardada = (string)$u->getPasswordHash();
 
-    $info = password_get_info($guardada);
-    $esHash = ($info['algo'] ?? 0) !== 0;
+        $info = password_get_info($guardada);
+        $esHash = ($info['algo'] ?? 0) !== 0;
 
-    if ($esHash) {
-        if (!password_verify($passwordPlano, $guardada)) return null;
+        if ($esHash) {
+            if (!password_verify($passwordPlano, $guardada)) return null;
 
-        if (password_needs_rehash($guardada, PASSWORD_DEFAULT)) {
+            if (password_needs_rehash($guardada, PASSWORD_DEFAULT)) {
+                $nuevoHash = password_hash($passwordPlano, PASSWORD_DEFAULT);
+                $this->usuarioDAO->updatePasswordHash($u->getId(), $nuevoHash);
+            }
+        } else {
+            if (!hash_equals($guardada, $passwordPlano)) return null;
+
             $nuevoHash = password_hash($passwordPlano, PASSWORD_DEFAULT);
             $this->usuarioDAO->updatePasswordHash($u->getId(), $nuevoHash);
         }
-    } else {
-        if (!hash_equals($guardada, $passwordPlano)) return null;
 
-        $nuevoHash = password_hash($passwordPlano, PASSWORD_DEFAULT);
-        $this->usuarioDAO->updatePasswordHash($u->getId(), $nuevoHash);
+        $u = $this->usuarioDAO->findById($u->getId()) ?? $u;
+
+        $u->setRoles($this->rolDAO->findRolesByUsuarioId($u->getId()));
+        return $u;
     }
-
-    $u = $this->usuarioDAO->findById($u->getId()) ?? $u;
-
-    $u->setRoles($this->rolDAO->findRolesByUsuarioId($u->getId()));
-    return $u;
-}
 
     public function registrarClienteConAvatar(
         string $nombreUsuario,
@@ -91,7 +98,7 @@ class UsuarioSA
     ): ?UsuarioDTO {
         $exist = $this->usuarioDAO->findByNombreUsuario($nombreUsuario);
         if ($exist && $exist->getId() !== $id) {
-            return null; 
+            return null;
         }
 
         $ok = $this->usuarioDAO->updatePerfil($id, $nombreUsuario, $email, $nombre, $apellidos, $avatar);

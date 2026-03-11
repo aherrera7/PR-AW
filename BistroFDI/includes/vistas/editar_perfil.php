@@ -116,59 +116,58 @@ ob_start();
   <h2><?= h($tituloPagina) ?></h2>
   <?= $erroresHtml ?>
 
-      <div class="card">
-        <form method="post" enctype="multipart/form-data" class="stack">
+  <div class="card">
+    <form method="post" enctype="multipart/form-data" class="stack">
 
-          <div style="display:flex; gap:40px; align-items:flex-start;">
-
-      <img id="avatarPreview"
+      <div class="form-media">
+        <img
+          id="avatarPreview"
+          class="avatar-edit"
           src="<?= h($avatarUrl) ?>"
           alt="Avatar"
-          style="width:110px;height:110px;border-radius:50%;border:2px solid #111;object-fit:cover;background:#fff;">
+        >
 
-      <div class="stack" style="max-width:420px;">
+        <div class="stack form-panel">
+          <div>
+            <label>Avatares</label>
+            <select id="avatarSelect" name="avatar_predef">
+              <?php foreach ($opciones as $value => $label): ?>
+                <option value="<?= h((string)$value) ?>" <?= ((string)$value === (string)$avatarActual) ? 'selected' : '' ?>>
+                  <?= h((string)$label) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+          </div>
 
-        <div>
-          <label>Avatares</label>
-          <select id="avatarSelect" name="avatar_predef">
-            <?php foreach ($opciones as $value => $label): ?>
-              <option value="<?= h((string)$value) ?>" <?= ((string)$value === (string)$avatarActual) ? 'selected' : '' ?>>
-                <?= h((string)$label) ?>
-              </option>
-            <?php endforeach; ?>
-          </select>
+          <div>
+            <label>Subir</label>
+            <input id="avatarFile" type="file" name="avatar_file" accept="image/*">
+          </div>
+
+          <div>
+            <label>Usuario</label>
+            <input type="text" name="nombreUsuario" value="<?= h((string)$usuario->getNombreUsuario()) ?>" required>
+          </div>
+
+          <div>
+            <label>Email</label>
+            <input type="email" name="email" value="<?= h((string)$usuario->getEmail()) ?>" required>
+          </div>
+
+          <div>
+            <label>Nombre</label>
+            <input type="text" name="nombre" value="<?= h((string)$usuario->getNombre()) ?>" required>
+          </div>
+
+          <div>
+            <label>Apellidos</label>
+            <input type="text" name="apellidos" value="<?= h((string)$usuario->getApellidos()) ?>" required>
+          </div>
         </div>
-
-        <div>
-          <label>Subir</label>
-          <input id="avatarFile" type="file" name="avatar_file" accept="image/*">
-        </div>
-
-        <div>
-          <label>Usuario</label>
-          <input type="text" name="nombreUsuario" value="<?= h((string)$usuario->getNombreUsuario()) ?>" required>
-        </div>
-
-        <div>
-          <label>Email</label>
-          <input type="email" name="email" value="<?= h((string)$usuario->getEmail()) ?>" required>
-        </div>
-
-        <div>
-          <label>Nombre</label>
-          <input type="text" name="nombre" value="<?= h((string)$usuario->getNombre()) ?>" required>
-        </div>
-
-        <div>
-          <label>Apellidos</label>
-          <input type="text" name="apellidos" value="<?= h((string)$usuario->getApellidos()) ?>" required>
-        </div>
-
       </div>
-    </div>
 
       <div class="form-actions">
-        <button class="btn btn-primary" type="submit"> Guardar cambios</button>
+        <button class="btn btn-primary" type="submit">Guardar cambios</button>
         <a class="btn btn-light" href="<?= h($btnCancelarUrl) ?>">Cancelar</a>
       </div>
 
