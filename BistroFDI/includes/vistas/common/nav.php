@@ -31,6 +31,7 @@ if (isset($_SESSION['carrito'])) {
   <a href="<?= RUTA_VISTAS ?>/bocetos.php">Bocetos</a>
   <a href="<?= RUTA_VISTAS ?>/planificacion.php">Planificación</a>
   <a href="<?= RUTA_VISTAS ?>/contacto.php">Contacto</a>
+  
   <a href="<?= RUTA_VISTAS ?>/usuarios/categorias_listar.php">Ver Carta</a>
 
   <span class="nav-right">
@@ -46,12 +47,10 @@ if (isset($_SESSION['carrito'])) {
            </span>
          <?php endif; ?>
       </a>
-
       <a class="nav-user" href="<?= RUTA_VISTAS ?>/mi_perfil.php" title="Mi perfil">
         <img class="nav-avatar" src="<?= $avatarUrlEsc ?>" alt="Avatar">
         <span class="nav-username"><?= $nombreUsuarioEsc ?></span>
       </a>
-
       <a class="nav-cta" href="<?= RUTA_VISTAS ?>/logout.php">Logout</a>
     <?php endif; ?>
   </span>
@@ -61,7 +60,7 @@ if (isset($_SESSION['carrito'])) {
   <div id="desplegable">
     <?php if ($estaLogueado): ?>
         <a href="<?= RUTA_VISTAS ?>/usuarios/recompensas.php">Recompensas</a>
-        <a href="<?= RUTA_VISTAS ?>/usuarios/pedidos_listar_clientes.php">Mis Pedidos</a>
+        <a href="<?= RUTA_VISTAS ?>/cliente/pedidos_listar_cliente.php">Mis Pedidos</a>
 
         <?php if ($esCocinero || $esGerente): ?>
             <hr style="border:0; border-top:1px solid #444; margin:10px 0;">
@@ -72,8 +71,9 @@ if (isset($_SESSION['carrito'])) {
         <?php if ($esGerente): ?>
             <hr style="border:0; border-top:1px solid #444; margin:10px 0;">
             <strong style="display:block; margin: 5px 15px; color: #aaa; font-size: 0.8rem; text-transform: uppercase;">Gestión</strong>
-            <a href="<?= RUTA_VISTAS ?>/gerente/categorias_listar.php">Categorías</a>
-            <a href="<?= RUTA_VISTAS ?>/gerente/productos_listar.php">Productos</a>
+            
+            <a href="<?= RUTA_VISTAS ?>/usuarios/categorias_listar.php?modo=1" style="color: #ffb74d;">⚙️ Gestionar Carta</a>
+            
             <a href="<?= RUTA_VISTAS ?>/gerente/usuarios_listar.php">Usuarios</a>
             <a href="<?= RUTA_VISTAS ?>/gerente/pedidos_listar_gerentes.php">Listado Pedidos</a>
         <?php endif; ?>

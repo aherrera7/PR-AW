@@ -30,7 +30,7 @@ ob_start();
 <section class="ger-wrap">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
         <h1>Mis Pedidos</h1>
-        <a href="<?= RUTA_VISTAS ?>/tienda/categorias_listar.php" class="btn btn-light" style="font-size: 0.9em;">+ Nuevo Pedido</a>
+        <a href="<?= RUTA_VISTAS ?>/usuarios/categorias_listar.php" class="btn btn-light" style="font-size: 0.9em;">+ Nuevo Pedido</a>
     </div>
 
     <?php if (isset($errorCarga)): ?>
@@ -95,4 +95,4 @@ ob_start();
 
 <?php
 $contenidoPrincipal = ob_get_clean();
-require RAIZ_APP . '/includes/vistas/plantilla.php';
+require RAIZ_APP . '/includes/vistas/common/plantilla.php';
