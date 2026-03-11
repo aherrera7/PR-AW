@@ -3,110 +3,135 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../../config.php';
 require_once RAIZ_APP . '/includes/vistas/common/auth.php';
+require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
+require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
 
-
-// --- MEJORA DE SEGURIDAD Y MENSAJES ---
 if (!isset($_SESSION['login'])) {
     header('Location: ' . RUTA_VISTAS . '/login.php');
     exit;
 }
 
-// Verificamos si es Gerente o Cocinero (ajusta 'cocinero' según tu BD, p.ej. si es ID 2 o el string 'cocinero')
 $esGerente = (!empty($_SESSION['esGerente']) && $_SESSION['esGerente'] === true);
 $esCocinero = (!empty($_SESSION['esCocinero']) && $_SESSION['esCocinero'] === true);
 
 if (!$esGerente && !$esCocinero) {
-    // Si está logueado pero no tiene permisos, le mandamos al index con un aviso
-    $_SESSION['errores'] = ["No tienes permisos para acceder a la sección de cocina."];
     header('Location: ' . RUTA_APP . '/index.php');
     exit;
 }
 
-// --- DATOS SIMULADOS ---
+// --- LÓGICA DE ACTUALIZACIÓN DE ESTADO ---
 $idPedido = (int)($_GET['id_pedido'] ?? 0);
-$productosPedido = [
-    ['id' => 101, 'nombre' => 'Hamburguesa Especial FDI', 'img' => 'hamb_1.jpg', 'estado' => 'pendiente'],
-    ['id' => 102, 'nombre' => 'Ración Patatas Grandes', 'img' => 'patatas_1.jpg', 'estado' => 'pendiente'],
-    ['id' => 103, 'nombre' => 'Refresco de Cola 500ml', 'img' => 'coca_1.jpg', 'estado' => 'listo'],
-];
 
-$tituloPagina = "Cocina - Pedido #$idPedido";
+if (isset($_GET['finalizar']) && (int)$_GET['finalizar'] > 0) {
+    // Aquí actualizamos la base de datos de verdad
+    PedidoSA::actualizarEstado($idPedido, PedidoSA::ESTADO_LISTO_COCINA);
+    header('Location: pedidos_listar_cocineros.php');
+    exit;
+}
+
+// --- CARGA DE DATOS REALES ---
+$pedidoDTO = PedidoSA::obtener($idPedido);
+if (!$pedidoDTO) {
+    die("Pedido no encontrado.");
+}
+
+// Obtenemos las líneas del pedido (productos, cantidades, etc.)
+// Asumo que tu PedidoSA tiene un método para obtener las líneas o usamos el DAO directamente
+$lineasDTO = PedidoSA::obtenerDetalle($idPedido); 
+
+$productosMostrar = [];
+foreach ($lineasDTO as $linea) {
+    $prod = ProductoSA::obtener($linea->getIdProducto());
+    if ($prod) {
+        $productosMostrar[] = [
+            'id' => $prod->getId(),
+            'nombre' => $prod->getNombre(),
+            'cantidad' => $linea->getCantidad(),
+            'img' => ($prod->getImagenes()[0] ?? 'default.jpg')
+        ];
+    }
+}
+
+$tituloPagina = "Preparando Pedido #" . $pedidoDTO->getNumeroPedido();
 ob_start();
 ?>
 
 <section class="ger-wrap">
-    <div class="card stack" style="margin-bottom: 20px; border-left: 5px solid #2e7d32;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-            <div>
-                <h1 style="margin: 0;">Preparando Pedido #<?= $idPedido ?></h1>
-                <p class="muted">Panel de Control de Cocina</p>
-            </div>
-            <button id="btnFinalizarPedido" class="btn" style="opacity: 0.5; cursor: not-allowed;" onclick="cambiarEstadoPedido(<?= $idPedido ?>)" disabled>
-                Pedido Completo
-            </button>
-        </div>
+    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+        <a href="pedidos_listar_cocineros.php" class="btn-undo" style="text-decoration: none;">← Volver</a>
+        <h1 style="margin: 0;">Comanda #<?= $pedidoDTO->getNumeroPedido() ?></h1>
+        <span class="badge"><?= strtoupper($pedidoDTO->getTipo()) ?></span>
     </div>
 
-    <div class="stack" style="gap: 8px;">
-        <?php foreach ($productosPedido as $prod): ?>
-            <div class="card prod-row" id="fila-<?= $prod['id'] ?>" 
-                 data-estado="<?= $prod['estado'] ?>"
-                 style="display: flex; align-items: center; padding: 10px 20px; gap: 15px; transition: all 0.3s;">
-                
-                <img src="<?= h(RUTA_IMGS.'/productos/'.$prod['img']) ?>" style="width: 45px; height: 45px; object-fit: cover; border-radius: 4px;">
-                
-                <div style="flex: 1;">
-                    <span style="font-weight: 600;"><?= h($prod['nombre']) ?></span>
-                </div>
-
-                <div id="accion-<?= $prod['id'] ?>" style="display: flex; align-items: center; gap: 10px;">
-                    <?php if ($prod['estado'] === 'listo'): ?>
-                        <span style="color: #2e7d32; font-weight: bold;">✓ LISTO</span>
-                        <button class="btn-undo" onclick="deshacerListo(<?= $prod['id'] ?>)">↩</button>
-                    <?php else: ?>
-                        <button class="btn btn-light" onclick="marcarListo(<?= $prod['id'] ?>)" style="border-color: #2e7d32; color: #2e7d32;">
+    <div class="card" style="padding: 0;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead style="background: #f8f9fa; border-bottom: 2px solid #eee;">
+                <tr>
+                    <th style="padding: 15px; text-align: left;">Producto</th>
+                    <th style="padding: 15px; text-align: center;">Cantidad</th>
+                    <th style="padding: 15px; text-align: right;">Estado</th>
+                </tr>
+            </thead>
+            <tbody id="lista-productos">
+                <?php foreach ($productosMostrar as $item): ?>
+                <tr id="fila-<?= $item['id'] ?>" data-estado="pendiente" style="border-bottom: 1px solid #eee; transition: background 0.3s;">
+                    <td style="padding: 15px; display: flex; align-items: center; gap: 15px;">
+                        <img src="<?= RUTA_IMGS ?>/productos/<?= $item['img'] ?>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                        <span style="font-weight: bold;"><?= h($item['nombre']) ?></span>
+                    </td>
+                    <td style="padding: 15px; text-align: center; font-size: 1.2em;">
+                        <strong>x<?= $item['cantidad'] ?></strong>
+                    </td>
+                    <td style="padding: 15px; text-align: right;" id="accion-<?= $item['id'] ?>">
+                        <button class="btn" onclick="marcarListo(<?= $item['id'] ?>)" style="background: #2e7d32; color: white;">
                             LISTO
                         </button>
-                    <?php endif; ?>
-                </div>
-            </div>
-        <?php endforeach; ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-top: 30px; text-align: center;">
+        <button id="btnFinalizarPedido" class="btn" onclick="finalizarPedido(<?= $idPedido ?>)" 
+                style="padding: 15px 40px; font-size: 1.1em; opacity: 0.5; cursor: not-allowed;" disabled>
+            PEDIDO COMPLETADO
+        </button>
     </div>
 </section>
 
 <script>
-let pendientes = document.querySelectorAll('.prod-row[data-estado="pendiente"]').length;
+let pendientes = <?= count($productosMostrar) ?>;
 
 function marcarListo(id) {
-    const contenedor = document.getElementById('accion-' + id);
     const fila = document.getElementById('fila-' + id);
+    const celdaAccion = document.getElementById('accion-' + id);
     
-    // Cambiamos el HTML para mostrar el check y el botón deshacer
-    contenedor.innerHTML = `
-        <span style="color: #2e7d32; font-weight: bold;">✓ LISTO</span>
-        <button class="btn-undo" onclick="deshacerListo(${id})">↩</button>
-    `;
-    
-    fila.style.backgroundColor = "#f0f9f0";
+    fila.style.backgroundColor = "#e8f5e9";
     fila.setAttribute('data-estado', 'listo');
+    
+    celdaAccion.innerHTML = `
+        <span style="color: #2e7d32; font-weight: bold; margin-right: 10px;">✓ LISTO</span>
+        <button class="btn-undo" onclick="deshacerListo(${id})">Deshacer</button>
+    `;
     
     pendientes--;
     actualizarBotonMaestro();
 }
 
 function deshacerListo(id) {
-    const contenedor = document.getElementById('accion-' + id);
     const fila = document.getElementById('fila-' + id);
-    
-    // Volvemos al botón original
-    contenedor.innerHTML = `
-        <button class="btn btn-light" onclick="marcarListo(${id})" style="border-color: #2e7d32; color: #2e7d32;">
-            LISTO
-        </button>
-    `;
+    const celdaAccion = document.getElementById('accion-' + id);
     
     fila.style.backgroundColor = "white";
     fila.setAttribute('data-estado', 'pendiente');
+    
+    celdaAccion.innerHTML = `
+        <button class="btn" onclick="marcarListo(${id})" style="background: #2e7d32; color: white;">
+            LISTO
+        </button>
+    `;
     
     pendientes++;
     actualizarBotonMaestro();
@@ -118,38 +143,27 @@ function actualizarBotonMaestro() {
         btn.disabled = false;
         btn.style.opacity = "1";
         btn.style.cursor = "pointer";
-        btn.style.backgroundColor = "#2e7d32";
+        btn.style.backgroundColor = "#d32f2f";
     } else {
         btn.disabled = true;
         btn.style.opacity = "0.5";
         btn.style.cursor = "not-allowed";
-        btn.style.backgroundColor = ""; // Vuelve al color por defecto de .btn
+        btn.style.backgroundColor = "#333";
     }
 }
 
-function cambiarEstadoPedido(id) {
-    if (confirm('¿Confirmas que el pedido está terminado?')) {
-        window.location.href = 'pedidos_listar_cocineros.php?finalizado=' + id;
+function finalizarPedido(id) {
+    if (confirm('¿Confirmas que toda la comanda está lista para ser servida?')) {
+        window.location.href = 'productos_pedido.php?id_pedido=' + id + '&finalizar=' + id;
     }
 }
-
-// Inicialización
-actualizarBotonMaestro();
 </script>
 
 <style>
-    .btn-undo {
-        background: #eee;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        cursor: pointer;
-        padding: 2px 8px;
-        font-size: 1.1em;
-    }
-    .btn-undo:hover { background: #ddd; }
-    .prod-row { border: 1px solid #eee; margin-bottom: 5px; }
+    .btn-undo { background: #eee; color: #333; border: 1px solid #ccc; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8em; }
+    .badge { background: #333; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8em; }
 </style>
 
 <?php
 $contenidoPrincipal = ob_get_clean();
-require RAIZ_APP . '/includes/vistas/common/plantilla_staff.php';
+require RAIZ_APP . '/includes/vistas/common/plantilla.php';
