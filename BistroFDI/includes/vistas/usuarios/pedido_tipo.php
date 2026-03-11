@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $_SESSION['pedido_tipo'] = $tipo;
 
-        header('Location: ' . RUTA_VISTAS . '/carrito/categorias_listar.php');
+        header('Location: ' . RUTA_VISTAS . '/includes/vistas/usuarios/categorias_listar.php');
         exit;
     }
 }
