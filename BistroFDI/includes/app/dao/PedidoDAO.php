@@ -30,11 +30,11 @@ class PedidoDAO {
         $row = $rs->fetch_assoc();
         $max = $row['max_num'] ?? null;
 
-        return $max ? ((int)$max + 1) : 1;
+        return $max !== null ? ((int)$max + 1) : 1;
     }
 
     // Crear pedido -> insertPedido()
-    public function insertPedido(int $numeroPedido, int $idCliente, string $estado, string $tipo, float $total)(: int){
+    public function insertPedido(int $numeroPedido, int $idCliente, string $estado, string $tipo, float $total): int{ 
         $sql = "INSERT INTO pedidos (numero_pedido, id_cliente, estado, tipo, total)
                 VALUES (?, ?, ?, ?, ?)";
     

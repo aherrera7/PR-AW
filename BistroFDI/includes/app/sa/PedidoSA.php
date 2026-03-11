@@ -135,8 +135,10 @@ class PedidoSA {
     private static function calcularTotal(array $lineas): float {
         $total = 0.0;
 
-        foreach ($lineas as $linea) $total += $linea->getSubtotal();
-
+        foreach ($lineas as $linea) {
+            $total += $linea->getSubtotal();
+        }
+        
         return round($total, 2);
     }
  

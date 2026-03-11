@@ -18,5 +18,7 @@ class PedidoProductoDTO{
     public function getIdProducto(): int { return $this->idProducto; }
     public function getCantidad(): int { return $this->cantidad; }
     public function getPrecioHistorico(): float { return $this->precioHistorico; }
-    public function getSubtotal(): float return round($this->cantidad * $this->precioHistorico, 2); }
+    public function getSubtotal(): float {
+        return round($this->cantidad * $this->precioHistorico, 2);
+    }
 }

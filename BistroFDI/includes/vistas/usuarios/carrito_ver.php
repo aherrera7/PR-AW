@@ -3,6 +3,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../config.php';
 require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
+require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
 
 // Solo usuarios logueados pueden ver su carrito
 if (!isset($_SESSION['login'])) {
@@ -14,6 +15,7 @@ $tituloPagina = 'Mi Carrito';
 $carrito = $_SESSION['carrito'] ?? [];
 $productosCarrito = [];
 $total = 0;
+$errores = [];
 
 // Cargamos los datos reales de los productos que hay en la sesión
 foreach ($carrito as $id => $cantidad) {
@@ -29,10 +31,52 @@ foreach ($carrito as $id => $cantidad) {
     }
 }
 
+// Confirmacion
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmar'])) {
+    try {
+
+        if (empty($_SESSION['carrito'])) throw new InvalidArgumentException("El carrito está vacío.");
+        if (empty($_SESSION['pedido_tipo'])) throw new InvalidArgumentException("Debes elegir antes si el pedido es local o para llevar.");
+
+        $idCliente = (int)($_SESSION['usuario_id'] ?? 0);
+
+        if ($idCliente <= 0) throw new InvalidArgumentException("No se pudo identificar al usuario.");
+
+        $idPedido = PedidoSA::crearDesdeCarrito(
+            $idCliente,
+            $_SESSION['pedido_tipo'],
+            $_SESSION['carrito']
+        );
+
+        // guardamos el último pedido
+        $_SESSION['ultimo_pedido'] = $idPedido;
+
+        // vaciamos carrito
+        unset($_SESSION['carrito']);
+
+        header("Location: categorias_listar.php");
+        exit;
+
+    } catch (Throwable $e) {
+        $errores[] = $e->getMessage();
+    }
+}
+
+
 ob_start();
 ?>
 <section class="ger-wrap">
     <h1>Tu Carrito</h1>
+
+    <?php if (!empty($errores)): ?>
+    <div class="ger-flash ger-flash--err">
+        <ul>
+            <?php foreach ($errores as $e): ?>
+                <li><?= h($e) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
 
     <?php if (empty($productosCarrito)): ?>
         <div class="card stack" style="text-align: center; padding: 40px;">
@@ -88,9 +132,11 @@ ob_start();
                         <span style="color: #d32f2f;"><?= number_format($total, 2) ?>€</span>
                     </div>
 
-                    <button class="btn" style="width: 100%; margin-top: 20px;" onclick="alert('Próximo paso: Procesar pedido en DB')">
-                        Confirmar Pedido
-                    </button>
+                    <form method="post">
+                        <button class="btn" style="width: 100%; margin-top: 20px;" name="confirmar">
+                            Confirmar Pedido
+                        </button>
+                    </form>
                     <a href="carrito_gestion.php?action=clear" class="muted" style="display: block; text-align: center; margin-top: 15px; font-size: 0.9em;">Vaciar carrito</a>
                 </div>
             </div>
