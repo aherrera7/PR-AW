@@ -63,7 +63,8 @@ $avatarUrlEsc = htmlspecialchars((string)$avatarUrl, ENT_QUOTES | ENT_SUBSTITUTE
 
   <div id="desplegable">
     <a href="<?= RUTA_APP ?>/recompensas.html">Recompensas</a>
-    <a href="<?= RUTA_APP ?>/pedidos.html">Pedidos</a>
+    <a href="<?= RUTA_APP ?>/includes/vistas/usuarios/mis_pedidos.php">Mis pedidos</a>
+
 
     <?php if ($estaLogueado && $esGerente): ?>
       <hr style="border:0;border-top:1px solid #111;margin:10px 0;">
