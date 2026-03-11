@@ -75,14 +75,14 @@ if (isset($_SESSION['carrito'])) {
             <a href="<?= RUTA_VISTAS ?>/usuarios/categorias_listar.php?modo=1" style="color: #ffb74d;">⚙️ Gestionar Carta</a>
             
             <a href="<?= RUTA_VISTAS ?>/gerente/usuarios_listar.php">Usuarios</a>
-            <a href="<?= RUTA_VISTAS ?>/gerente/pedidos_listar_gerentes.php">Listado Pedidos</a>
+            <a href="<?= RUTA_VISTAS ?>/gerente/pedidos_listar_gerente.php">Listado Pedidos</a>
         <?php endif; ?>
         
         <hr style="border:0; border-top:1px solid #444; margin:10px 0;">
         <a href="<?= RUTA_VISTAS ?>/logout.php" style="color: #ff5252;">Cerrar Sesión</a>
     <?php else: ?>
         <a href="<?= RUTA_VISTAS ?>/login.php">Login</a>
-        <a href="<?= RUTA_VISTAS ?>/registro.php">Registro</a>
+        <a href="<?= RUTA_VISTAS ?>/registrar.php">Registro</a>
     <?php endif; ?>
   </div>
 </nav>
