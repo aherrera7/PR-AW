@@ -7,13 +7,12 @@ require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
 
 requireLogin();
 
-// id del usuario logueado
 $idCliente = (int)($_SESSION['usuario_id'] ?? 0);
 
-// obtener pedidos del usuario
-$pedidos = PedidoSA::obtenerActivosPorCliente($idCliente);
+// Obtener pedidos activos del cliente
+$pedidos = PedidoSA::listarPorCliente($idCliente);
 
-$tituloPagina = "Mis pedidos";
+$tituloPagina = 'Mis pedidos';
 
 ob_start();
 ?>
@@ -25,11 +24,11 @@ ob_start();
 <?php if (empty($pedidos)): ?>
 
 <div class="card stack" style="text-align:center; padding:30px;">
-    <p class="muted">Todavía no has realizado ningún pedido.</p>
+<p class="muted">No tienes pedidos activos en este momento.</p>
 
-    <a class="btn" href="<?= RUTA_APP ?>/includes/vistas/usuarios/categorias_listar.php">
-        Ver la carta
-    </a>
+<a class="btn" href="<?= RUTA_APP ?>/includes/vistas/usuarios/categorias_listar.php">
+Ver la carta
+</a>
 </div>
 
 <?php else: ?>
@@ -37,6 +36,17 @@ ob_start();
 <div class="stack">
 
 <?php foreach ($pedidos as $p): ?>
+
+<?php
+$estado = $p->getEstado();
+$color = '#777';
+
+if ($estado === 'en preparación') $color = '#2196F3';
+if ($estado === 'cocinando') $color = '#FF9800';
+if ($estado === 'listo cocina') $color = '#4CAF50';
+if ($estado === 'terminado') $color = '#9C27B0';
+if ($estado === 'entregado') $color = '#555';
+?>
 
 <div class="card" style="padding:20px;">
 
@@ -51,7 +61,9 @@ ob_start();
 
 <div>
 Estado:<br>
-<strong><?= ucfirst($p->getEstado()) ?></strong>
+<strong style="color:<?= $color ?>">
+<?= ucfirst($estado) ?>
+</strong>
 </div>
 
 <div>
