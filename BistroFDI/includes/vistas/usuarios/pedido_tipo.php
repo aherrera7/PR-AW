@@ -16,7 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $_SESSION['pedido_tipo'] = $tipo;
 
-        header('Location: ' . RUTA_VISTAS . '/includes/vistas/usuarios/categorias_listar.php');
+        // Redirigimos a las categorias de carta
+        header('Location: ' . RUTA_VISTAS . '/usuarios/categorias_listar.php');
         exit;
     }
 }
