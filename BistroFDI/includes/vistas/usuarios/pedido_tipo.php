@@ -16,7 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $_SESSION['pedido_tipo'] = $tipo;
 
-        header('Location: ' . RUTA_VISTAS . '/carrito/categorias_listar.php');
+        // Redirigimos a las categorias de carta
+        header('Location: ' . RUTA_VISTAS . '/usuarios/categorias_listar.php');
         exit;
     }
 }
@@ -27,7 +28,7 @@ ob_start();
 ?>
 
 <section class="ger-wrap">
-    <div class="card stack" style="max-width: 700px; margin: 40px auto; padding: 30px;">
+    <div class="card stack choice-card">
         <h1>¿Cómo quieres tu pedido?</h1>
         <p class="muted">Selecciona si vas a consumir en Bistro FDI o si prefieres recogerlo para llevar.</p>
 
@@ -43,19 +44,19 @@ ob_start();
         <?php endif; ?>
 
         <form method="post" class="stack">
-            <label class="card" style="cursor:pointer; padding:16px;">
-                <input type="radio" name="tipo" value="local" style="margin-right:10px;">
+            <label class="card choice-option">
+                <input type="radio" name="tipo" value="local">
                 <strong>Local</strong>
                 <div class="muted">Para consumir en Bistro FDI.</div>
             </label>
 
-            <label class="card" style="cursor:pointer; padding:16px;">
-                <input type="radio" name="tipo" value="llevar" style="margin-right:10px;">
+            <label class="card choice-option">
+                <input type="radio" name="tipo" value="llevar">
                 <strong>Llevar</strong>
                 <div class="muted">Para recoger y consumir fuera.</div>
             </label>
 
-            <div class="form-actions" style="margin-top: 10px;">
+            <div class="form-actions">
                 <button class="btn" type="submit">Continuar</button>
             </div>
         </form>

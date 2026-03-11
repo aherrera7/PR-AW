@@ -35,21 +35,23 @@ ob_start();
 <section id="contenido">
   <h2>MI PERFIL</h2>
 
-  <div class="card" style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap;">
-    <div class="stack" style="min-width:220px;">
-      <img src="<?= h($avatarUrl) ?>" alt="Avatar" style="width:90px;height:90px;border-radius:50%;border:1px solid #111;object-fit:cover;background:#fff;">
+  <div class="card profile">
+
+    <div class="stack profile-side">
+      <img src="<?= h($avatarUrl) ?>" alt="Avatar" class="avatar-profile">
       <a class="btn" href="<?= RUTA_VISTAS ?>/editar_perfil.php">Editar perfil</a>
     </div>
 
-    <div class="stack" style="flex:1; min-width:260px;">
+    <div class="stack profile-info">
       <div><strong>Usuario:</strong> <?= h((string)$usuario->getNombreUsuario()) ?></div>
       <div><strong>Email:</strong> <?= h((string)$usuario->getEmail()) ?></div>
       <div><strong>Nombre:</strong> <?= h((string)$usuario->getNombre()) ?></div>
       <div><strong>Apellidos:</strong> <?= h((string)$usuario->getApellidos()) ?></div>
       <div><strong>Contraseña:</strong> ************</div>
       <div><strong>Rol:</strong> <?= h((string)$rolNombre) ?></div>
-      <div><strong>BistroCoins:</strong> </div>
+      <div><strong>BistroCoins:</strong></div>
     </div>
+
   </div>
 </section>
 

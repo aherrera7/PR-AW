@@ -40,58 +40,61 @@ $tituloPagina = 'Editar categoría';
 
 ob_start();
 ?>
-  <section class="ger-wrap">
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
-      <h1>Editar categoría</h1>
-      <a class="btn btn-light" href="<?= h($base.'/categorias_listar.php') ?>">Volver</a>
-    </div>
+<section class="ger-wrap">
+  <div class="header-bar">
+    <h1>Editar categoría</h1>
+    <a class="btn btn-light" href="<?= h($base.'/categorias_listar.php') ?>">Volver</a>
+  </div>
 
-    <?php if (!empty($errores)): ?>
-      <div class="ger-flash ger-flash--err">
-        <strong>Revisa esto:</strong>
-        <ul>
-          <?php foreach ($errores as $er): ?>
-            <li><?= h((string)$er) ?></li>
-          <?php endforeach; ?>
-        </ul>
+  <?php if (!empty($errores)): ?>
+    <div class="ger-flash ger-flash--err">
+      <strong>Revisa esto:</strong>
+      <ul>
+        <?php foreach ($errores as $er): ?>
+          <li><?= h((string)$er) ?></li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+  <?php endif; ?>
+
+  <div class="card">
+    <form class="stack" method="post" enctype="multipart/form-data">
+      <div>
+        <label>Imagen actual</label>
+        <?php if (!empty($imagenActual)): ?>
+          <img
+            class="image-box"
+            src="<?= h(RUTA_IMGS.'/categorias/'.$imagenActual) ?>"
+            alt=""
+          >
+        <?php else: ?>
+          <div class="image-placeholder"></div>
+        <?php endif; ?>
       </div>
-    <?php endif; ?>
 
-    <div class="card">
-      <form class="stack" method="post" enctype="multipart/form-data">
-        <div>
-          <label>Imagen actual</label>
-          <?php if (!empty($imagenActual)): ?>
-            <img src="<?= h(RUTA_IMGS.'/categorias/'.$imagenActual) ?>" alt=""
-                style="width:220px;max-width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid #111;border-radius:10px;background:#fff;">
-          <?php else: ?>
-            <div style="width:220px;max-width:100%;aspect-ratio:4/3;border:1px solid #111;border-radius:10px;background:#fff;"></div>
-          <?php endif; ?>
-        </div>
+      <div>
+        <label for="nombre">Nombre</label>
+        <input id="nombre" name="nombre" type="text" required value="<?= h($nombre) ?>">
+      </div>
 
-        <div>
-          <label for="nombre">Nombre</label>
-          <input id="nombre" name="nombre" type="text" required value="<?= h($nombre) ?>">
-        </div>
+      <div>
+        <label for="descripcion">Descripción (opcional)</label>
+        <textarea id="descripcion" name="descripcion"><?= h($descripcion) ?></textarea>
+      </div>
 
-        <div>
-          <label for="descripcion">Descripción (opcional)</label>
-          <textarea id="descripcion" name="descripcion"><?= h($descripcion) ?></textarea>
-        </div>
+      <div>
+        <label for="imagen">Cambiar imagen (opcional)</label>
+        <input id="imagen" name="imagen" type="file" accept="image/*">
+        <div class="muted">Si subes una nueva imagen, se reemplaza la anterior.</div>
+      </div>
 
-        <div>
-          <label for="imagen">Cambiar imagen (opcional)</label>
-          <input id="imagen" name="imagen" type="file" accept="image/*">
-          <div class="muted">Si subes una nueva imagen, se reemplaza la anterior.</div>
-        </div>
-
-        <div class="form-actions">
-          <button class="btn" type="submit">Guardar</button>
-          <a class="btn btn-light" href="<?= h($base.'/categorias_listar.php') ?>">Cancelar</a>
-        </div>
-      </form>
-    </div>
-  </section>
+      <div class="form-actions">
+        <button class="btn" type="submit">Guardar</button>
+        <a class="btn btn-light" href="<?= h($base.'/categorias_listar.php') ?>">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</section>
 <?php
 $contenidoPrincipal = ob_get_clean();
 require RAIZ_APP . '/includes/vistas/common/plantilla_staff.php';

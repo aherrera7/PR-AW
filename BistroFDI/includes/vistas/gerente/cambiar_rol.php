@@ -46,7 +46,7 @@ ob_start();
 ?>
 
 <section class="ger-wrap">
-  <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
+  <div class="header-bar">
     <h1>Cambiar rol</h1>
     <a class="btn btn-light" href="<?= h(RUTA_VISTAS.'/gerente/usuarios.php') ?>">Volver</a>
   </div>

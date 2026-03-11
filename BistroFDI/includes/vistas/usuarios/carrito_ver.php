@@ -5,7 +5,6 @@ require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
 require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
 
-// Solo usuarios logueados pueden ver su carrito
 if (!isset($_SESSION['login'])) {
     header('Location: ' . RUTA_VISTAS . '/login.php');
     exit;

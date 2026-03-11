@@ -46,10 +46,12 @@ if (isset($_SESSION['carrito'])) {
            </span>
          <?php endif; ?>
       </a>
+
       <a class="nav-user" href="<?= RUTA_VISTAS ?>/mi_perfil.php" title="Mi perfil">
         <img class="nav-avatar" src="<?= $avatarUrlEsc ?>" alt="Avatar">
         <span class="nav-username"><?= $nombreUsuarioEsc ?></span>
       </a>
+
       <a class="nav-cta" href="<?= RUTA_VISTAS ?>/logout.php">Logout</a>
     <?php endif; ?>
   </span>
