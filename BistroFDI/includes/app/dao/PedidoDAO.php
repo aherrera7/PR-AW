@@ -197,4 +197,27 @@ class PedidoDAO {
         $stmt->close();
         return true;
     }
+
+    public function findAll(): array {
+    // Los ordenamos por fecha, los más recientes primero
+    $sql = "SELECT * FROM pedidos ORDER BY fecha_hora DESC";
+    $rs = $this->conn->query($sql);
+
+    if (!$rs) throw new RuntimeException("Error en findAll: " . $this->conn->error);
+
+    $res = [];
+    while ($row = $rs->fetch_assoc()) {
+        $res[] = new PedidoDTO(
+            (int)$row['id'],
+            (int)$row['numero_pedido'],
+            (int)$row['id_cliente'],
+            (string)$row['fecha_hora'],
+            (string)$row['estado'],
+            (string)$row['tipo'],
+            (float)$row['total']
+        );
+    }
+    return $res;
+    }   
+
 }

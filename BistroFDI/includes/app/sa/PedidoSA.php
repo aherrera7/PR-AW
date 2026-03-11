@@ -4,55 +4,55 @@ declare(strict_types=1);
 require_once RAIZ_APP . '/includes/app/dao/PedidoDAO.php';
 require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
 
-/*
-SOBRE PEDIDOS REALES
-- obtener un pedido
-- listar pedidos de un cliente
-- listar pedidos de un cliente para gerente
-- obtener detalle de un pedido
-- crear pedido desde carrito
-- registrar pago
-
-SOBRE EL FLUJO
-- generar número de pedido diario
-- calcular total con IVA
-- insertar cabecera y líneas
-- cambiar de recibido a en preparación
-*/
-
 class PedidoSA {
-    private const ESTADO_RECIBIDO = 'recibido';
-    private const ESTADO_EN_PREPARACION = 'en preparación';
+    // Estados según definición en 02-tablas.sql
+    public const ESTADO_NUEVO           = 'nuevo';
+    public const ESTADO_RECIBIDO        = 'recibido';
+    public const ESTADO_EN_PREPARACION  = 'en preparación';
+    public const ESTADO_COCINANDO       = 'cocinando';
+    public const ESTADO_LISTO_COCINA    = 'listo cocina';
+    public const ESTADO_TERMINADO       = 'terminado';
+    public const ESTADO_ENTREGADO       = 'entregado';
 
-    private static function dao(): PedidoDAO{
+    private static function dao(): PedidoDAO {
         $conn = Aplicacion::getInstance()->getConexionBd();
         return new PedidoDAO($conn);
     }
     
-    public static function obtener(int $id): ?PedidoDTO{
+    public static function obtener(int $id): ?PedidoDTO {
         if ($id <= 0) throw new InvalidArgumentException('ID de pedido inválido.');
-
         return self::dao()->findById($id);
     }
 
     /** @return PedidoDTO[] */
-    public static function listarPorCliente(int $idCliente): array{
+    public static function listarPorCliente(int $idCliente): array {
         if ($idCliente <= 0) throw new InvalidArgumentException('ID de cliente inválido.');
-
         return self::dao()->findByCliente($idCliente);
     }
 
-    /** @return PedidoProductoDTO[] */
-    public static function obtenerDetalle(int $idPedido): array{
-        if ($idPedido <= 0) throw new InvalidArgumentException('ID de pedido inválido.');
+    /** * NUEVO: Lista pedidos pendientes para la vista de cocina
+     * @return PedidoDTO[] 
+     */
+    public static function listarPedidosCocina(): array {
+        // Filtramos por los estados en los que el cocinero debe intervenir
+        $estadosInteres = [self::ESTADO_RECIBIDO, self::ESTADO_EN_PREPARACION, self::ESTADO_COCINANDO];
+        
+        // Nota: He usado el método findByCliente como base, pero para producción 
+        // deberías añadir un método específico en PedidoDAO para filtrar por estados.
+        $todos = self::dao()->listarTodos(); // Asumiendo que añades este método al DAO
+        return array_filter($todos, fn($p) => in_array($p->getEstado(), $estadosInteres));
+    }
 
+    /** @return PedidoProductoDTO[] */
+    public static function obtenerDetalle(int $idPedido): array {
+        if ($idPedido <= 0) throw new InvalidArgumentException('ID de pedido inválido.');
         $pedido = self::dao()->findById($idPedido);
-        if ($pedido === null)throw new InvalidArgumentException('El pedido no existe.');
+        if ($pedido === null) throw new InvalidArgumentException('El pedido no existe.');
 
         return self::dao()->findLineasByPedido($idPedido);
     }
 
-    public static function crearDesdeCarrito(int $idCliente, string $tipo, array $carrito): int{
+    public static function crearDesdeCarrito(int $idCliente, string $tipo, array $carrito): int {
         if ($idCliente <= 0) throw new InvalidArgumentException('Cliente inválido.');
         
         self::validarTipo($tipo);
@@ -65,7 +65,7 @@ class PedidoSA {
         $idPedido = self::dao()->insertPedido(
             $numeroPedido,
             $idCliente,
-            self::ESTADO_RECIBIDO,
+            self::ESTADO_RECIBIDO, // El pedido entra como recibido tras crearse
             $tipo,
             $total
         );
@@ -82,13 +82,32 @@ class PedidoSA {
         return $idPedido;
     }
 
-    public static function registrarPago(int $idPedido): bool{
+    /**
+     * NUEVO: Cambia el estado de un pedido (útil para el flujo de cocina)
+     */
+    public static function cambiarEstado(int $idPedido, string $nuevoEstado): bool {
+        if ($idPedido <= 0) throw new InvalidArgumentException('ID de pedido inválido.');
         
+        // Validar que el estado existe en el ENUM de la BD
+        $estadosValidos = [
+            self::ESTADO_NUEVO, self::ESTADO_RECIBIDO, self::ESTADO_EN_PREPARACION, 
+            self::ESTADO_COCINANDO, self::ESTADO_LISTO_COCINA, self::ESTADO_TERMINADO, self::ESTADO_ENTREGADO
+        ];
+        
+        if (!in_array($nuevoEstado, $estadosValidos)) {
+            throw new InvalidArgumentException('Estado de pedido no válido.');
+        }
+
+        return self::dao()->updateEstado($idPedido, $nuevoEstado);
+    }
+
+    public static function registrarPago(int $idPedido): bool {
         if ($idPedido <= 0) throw new InvalidArgumentException('ID de pedido inválido.');
 
-        $pedido = self::dao()->findById($idPedido); 
+        $pedido = self::dao()->findById($idPedido);
         if ($pedido === null) throw new InvalidArgumentException('El pedido no existe.');
 
+        // Si ya está pagado/recibido, lo pasamos a preparación
         if ($pedido->getEstado() !== self::ESTADO_RECIBIDO) return false;
 
         return self::dao()->updateEstado($idPedido, self::ESTADO_EN_PREPARACION);
@@ -98,28 +117,24 @@ class PedidoSA {
         if ($tipo !== 'local' && $tipo !== 'llevar') throw new InvalidArgumentException('Tipo de pedido inválido.');
     }
  
-     private static function validarCarrito(array $carrito): void{
+    private static function validarCarrito(array $carrito): void {
         if (empty($carrito)) throw new InvalidArgumentException('El carrito está vacío.');
 
         foreach ($carrito as $idProducto => $cantidad) {
-            $idProducto = (int)$idProducto;
-            $cantidad = (int)$cantidad;
-
-            if ($idProducto <= 0) throw new InvalidArgumentException('Producto inválido en el carrito.');
-            if ($cantidad <= 0) throw new InvalidArgumentException('Cantidad inválida en el carrito.');
+            if ((int)$idProducto <= 0 || (int)$cantidad <= 0) {
+                throw new InvalidArgumentException('Producto o cantidad inválida en el carrito.');
+            }
         }
     }
 
     /** @return PedidoProductoDTO[] */
     private static function construirLineasPedido(array $carrito): array {
         $lineas = [];
-
-       foreach ($carrito as $idProducto => $cantidad) {
+        foreach ($carrito as $idProducto => $cantidad) {
             $producto = ProductoSA::obtener((int)$idProducto);
 
-            if ($producto === null) throw new InvalidArgumentException('Uno de los productos del carrito no existe.');
-            
-            if (!$producto->isDisponible()) throw new InvalidArgumentException('Uno de los productos del carrito no está disponible.');
+            if ($producto === null) throw new InvalidArgumentException('El producto no existe.');
+            if (!$producto->isDisponible()) throw new InvalidArgumentException('Producto no disponible.');
         
             $lineas[] = new PedidoProductoDTO(
                 0,
@@ -134,12 +149,22 @@ class PedidoSA {
     /** @param PedidoProductoDTO[] $lineas */
     private static function calcularTotal(array $lineas): float {
         $total = 0.0;
-
         foreach ($lineas as $linea) {
             $total += $linea->getSubtotal();
         }
-        
         return round($total, 2);
     }
- 
+
+    public static function listarTodos(): array {
+        return self::dao()->findAll();
+    }
+
+
+
+    public static function actualizarEstado(int $idPedido, string $nuevoEstado): bool {
+        if ($idPedido <= 0) return false;
+        
+        return self::dao()->updateEstado($idPedido, $nuevoEstado);
+    }
+
 }

@@ -6,6 +6,7 @@ $nombreUsuario = $_SESSION['nombre_usuario'] ?? '';
 $avatar = $_SESSION['avatar'] ?? null;
 
 $esGerente = !empty($_SESSION['esGerente']) && $_SESSION['esGerente'] === true;
+$esCocinero = !empty($_SESSION['esCocinero']) && $_SESSION['esCocinero'] === true;
 
 $avatarUrl = $avatar
     ? (RUTA_IMGS . '/' . ltrim((string)$avatar, '/'))
@@ -13,6 +14,14 @@ $avatarUrl = $avatar
 
 $nombreUsuarioEsc = htmlspecialchars((string)$nombreUsuario, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 $avatarUrlEsc = htmlspecialchars((string)$avatarUrl, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+
+// Conteo de items para el carrito
+$numItems = 0;
+if (isset($_SESSION['carrito'])) {
+    foreach ($_SESSION['carrito'] as $cantidad) {
+        $numItems += $cantidad;
+    }
+}
 ?>
 
 <nav id="menu">
@@ -22,28 +31,14 @@ $avatarUrlEsc = htmlspecialchars((string)$avatarUrl, ENT_QUOTES | ENT_SUBSTITUTE
   <a href="<?= RUTA_VISTAS ?>/bocetos.php">Bocetos</a>
   <a href="<?= RUTA_VISTAS ?>/planificacion.php">Planificación</a>
   <a href="<?= RUTA_VISTAS ?>/contacto.php">Contacto</a>
-  <a href="<?= RUTA_APP ?>/includes/vistas/usuarios/categorias_listar.php">
-  Ver Carta </a>
-  <a href="<?= RUTA_APP ?>/includes/vistas/cocinero/productos_pedido.php?id_pedido=123" 
-   style="background: orange; padding: 5px; border-radius: 5px;">
-   🧪 Probar Vista Cocina (Pedido #123)
-  </a>
-<span class="nav-right">
+  <a href="<?= RUTA_VISTAS ?>/usuarios/categorias_listar.php">Ver Carta</a>
+
+  <span class="nav-right">
     <?php if (!$estaLogueado): ?>
-      <a class="nav-cta" href="<?= RUTA_VISTAS ?>/login.php">Login/Register</a>
+      <a class="nav-cta" href="<?= RUTA_VISTAS ?>/login.php">Login</a>
+      <a class="nav-cta" href="<?= RUTA_VISTAS ?>/registro.php">Registro</a>
     <?php else: ?>
-      
-      <?php 
-        $numItems = 0;
-        if (isset($_SESSION['carrito'])) {
-            foreach ($_SESSION['carrito'] as $cantidad) {
-                $numItems += $cantidad;
-            }
-        }
-      ?>
-      <a href="<?= RUTA_APP ?>/includes/vistas/usuarios/carrito_ver.php" 
-         class="nav-carrito" 
-         style="margin-right: 15px; text-decoration: none; font-size: 1.2rem; position: relative; display: inline-flex; align-items: center;">
+      <a href="<?= RUTA_VISTAS ?>/usuarios/carrito_ver.php" style="margin-right: 15px; text-decoration: none; font-size: 1.2rem; position: relative; display: inline-flex; align-items: center;">
          🛒
          <?php if ($numItems > 0): ?>
            <span style="background: #d32f2f; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.65rem; position: absolute; top: -8px; right: -10px; font-weight: bold;">
@@ -62,15 +57,30 @@ $avatarUrlEsc = htmlspecialchars((string)$avatarUrl, ENT_QUOTES | ENT_SUBSTITUTE
   <button id="btnMenu" class="hamburger" type="button" aria-label="Menú">☰</button>
 
   <div id="desplegable">
-    <a href="<?= RUTA_APP ?>/recompensas.html">Recompensas</a>
-    <a href="<?= RUTA_APP ?>/pedidos.html">Pedidos</a>
+    <?php if ($estaLogueado): ?>
+        <a href="<?= RUTA_VISTAS ?>/usuarios/recompensas.php">Recompensas</a>
+        <a href="<?= RUTA_VISTAS ?>/usuarios/pedidos_listar_clientes.php">Mis Pedidos</a>
 
-    <?php if ($estaLogueado && $esGerente): ?>
-      <hr style="border:0;border-top:1px solid #111;margin:10px 0;">
-      <strong style="display:block;margin-bottom:6px;">Gestión</strong>
-      <a href="<?= RUTA_VISTAS ?>/gerente/categorias_listar.php">Categorías</a>
-      <a href="<?= RUTA_VISTAS ?>/gerente/productos_listar.php">Productos</a>
-      <a href="<?= RUTA_VISTAS ?>/gerente/usuarios.php">Usuarios</a>
+        <?php if ($esCocinero || $esGerente): ?>
+            <hr style="border:0; border-top:1px solid #444; margin:10px 0;">
+            <strong style="display:block; margin: 5px 15px; color: #aaa; font-size: 0.8rem; text-transform: uppercase;">Cocina</strong>
+            <a href="<?= RUTA_VISTAS ?>/cocinero/pedidos_listar_cocineros.php">Pedidos Cocina</a>
+        <?php endif; ?>
+
+        <?php if ($esGerente): ?>
+            <hr style="border:0; border-top:1px solid #444; margin:10px 0;">
+            <strong style="display:block; margin: 5px 15px; color: #aaa; font-size: 0.8rem; text-transform: uppercase;">Gestión</strong>
+            <a href="<?= RUTA_VISTAS ?>/gerente/categorias_listar.php">Categorías</a>
+            <a href="<?= RUTA_VISTAS ?>/gerente/productos_listar.php">Productos</a>
+            <a href="<?= RUTA_VISTAS ?>/gerente/usuarios_listar.php">Usuarios</a>
+            <a href="<?= RUTA_VISTAS ?>/gerente/pedidos_listar_gerentes.php">Listado Pedidos</a>
+        <?php endif; ?>
+        
+        <hr style="border:0; border-top:1px solid #444; margin:10px 0;">
+        <a href="<?= RUTA_VISTAS ?>/logout.php" style="color: #ff5252;">Cerrar Sesión</a>
+    <?php else: ?>
+        <a href="<?= RUTA_VISTAS ?>/login.php">Login</a>
+        <a href="<?= RUTA_VISTAS ?>/registro.php">Registro</a>
     <?php endif; ?>
   </div>
 </nav>
