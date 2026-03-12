@@ -145,6 +145,15 @@ ob_start();
                 <p>Cliente ID: <?= $p->getIdCliente() ?></p>
                 <p><strong><?= number_format($p->getTotal(), 2) ?>€</strong></p>
                 <p>Estado: <strong><?= $estado ?></strong></p>
+
+                <?php if ($estado === 'listo cocina'): ?>
+                <div style="margin: 15px 0; text-align: center;">
+                <a href="<?= RUTA_VISTAS ?>/cliente/pedido_detalle.php?id=<?= $p->getId() ?>"
+                style="display: block; padding: 10px; background: #2196f3; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">
+                🔍 REVISAR PRODUCTOS
+                </a>
+                </div>
+                <?php endif; ?>
                 
                 <!-- Botones -->
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
