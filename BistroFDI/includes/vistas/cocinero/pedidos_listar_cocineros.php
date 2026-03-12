@@ -25,7 +25,7 @@ try {
     foreach ($todosLosPedidos as $p) {
         $estado = $p->getEstado();
         // Solo mostramos pedidos que no estén terminados ni entregados
-        if (in_array($estado, ['recibido', 'en preparación', 'cocinando', 'listo cocina'])) {
+        if (in_array($estado, [ 'en preparación', 'cocinando', 'listo cocina'])) {
             $pedidosCocina[] = $p;
         }
     }
