@@ -23,6 +23,7 @@ $rolNombre = (count($roles) > 0 && $roles[0]->getNombre()) ? $roles[0]->getNombr
 $avatar = $usuario->getAvatar();
 $avatarUrl = $avatar ? (RUTA_IMGS . '/' . ltrim($avatar, '/')) : (RUTA_IMGS . '/avatares/default.jpg');
 
+
 if (!function_exists('h')) {
   function h(string $s): string { return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 }

@@ -40,7 +40,22 @@ try {
 ob_start();
 ?>
 
-
+<div style="background: #333; color: white; padding: 10px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <span style="font-size: 1.5em; font-weight: bold;">BISTRO FDI</span>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <span><?= htmlspecialchars($nombreCamarero) ?></span>
+        
+        <!-- Usamos RUTA_IMGS + '/avatares/' -->
+        <img src="<?= RUTA_IMGS . '/avatares/' . $avatarCamarero ?>" 
+             alt="Avatar" 
+             style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid white;"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        
+        <div style="width: 40px; height: 40px; border-radius: 50%; background: #d32f2f; color: white; display: none; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2em;">
+            <?= strtoupper(substr($nombreCamarero, 0, 1)) ?>
+        </div>
+    </div>
+</div>
 
 
 
@@ -107,10 +122,6 @@ ob_start();
                 
                 <!-- Botones -->
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <a href="detalle_pedido.php?id=<?= $p->getId() ?>" 
-                       style="flex: 1; text-align: center; padding: 8px; background: #666; color: white; text-decoration: none; border-radius: 4px;">
-                        VER DETALLE
-                    </a>
                     
                     <form method="POST" action="procesar_camarero.php" style="flex: 1;">
                         <input type="hidden" name="id_pedido" value="<?= $p->getId() ?>">
