@@ -37,7 +37,7 @@ if (isset($_SESSION['carrito'])) {
   <span class="nav-right">
     <?php if (!$estaLogueado): ?>
       <a class="nav-cta" href="<?= RUTA_VISTAS ?>/login.php">Login</a>
-      <a class="nav-cta" href="<?= RUTA_VISTAS ?>/registro.php">Registro</a>
+      <a class="nav-cta" href="<?= RUTA_VISTAS ?>/registrar.php">Registro</a>
     <?php else: ?>
       <a href="<?= RUTA_VISTAS ?>/usuarios/carrito_ver.php" style="margin-right: 15px; text-decoration: none; font-size: 1.2rem; position: relative; display: inline-flex; align-items: center;">
          🛒
