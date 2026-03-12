@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once RAIZ_APP . '/includes/app/dto/PedidoDTO.php';
 require_once RAIZ_APP . '/includes/app/dto/PedidoProductoDTO.php';
+
 // Habla con la BD -> INSERT, SELECT, UPDATE
 /*
 - Crear pedido -> insertPedido()
@@ -34,17 +35,18 @@ class PedidoDAO {
     }
 
     // Crear pedido -> insertPedido()
-    public function insertPedido(int $numeroPedido, int $idCliente, string $estado, string $tipo, float $total): int{ 
-        $sql = "INSERT INTO pedidos (numero_pedido, id_cliente, estado, tipo, total)
-                VALUES (?, ?, ?, ?, ?)";
+    public function insertPedido(int $numeroPedido, int $idCliente, ?int $idCocinero, string $estado, string $tipo, float $total): int{ 
+        $sql = "INSERT INTO pedidos (numero_pedido, id_cliente, id_cocinero, estado, tipo, total)
+                VALUES (?, ?, ?, ?, ?, ?)";
     
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) throw new RuntimeException("Error prepare (insertPedido): " . $this->conn->error);        
     
         $stmt->bind_param(
-            'iissd',
+            'iisssd',
             $numeroPedido,
             $idCliente,
+            $idCocinero,
             $estado,
             $tipo,
             $total
@@ -83,7 +85,7 @@ class PedidoDAO {
 
     // Buscar pedido por id -> findById()
     public function findById(int $id): ?PedidoDTO{
-        $sql = "SELECT id, numero_pedido, id_cliente, fecha_hora, estado, tipo, total
+        $sql = "SELECT id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total
                 FROM pedidos
                 WHERE id = ?";
 
@@ -105,6 +107,7 @@ class PedidoDAO {
             (int)$row['id'],
             (int)$row['numero_pedido'],
             (int)$row['id_cliente'],
+            $row['id_cocinero'] !== null ? (int)$row['id_cocinero'] : null,
             (string)$row['fecha_hora'],
             (string)$row['estado'],
             (string)$row['tipo'],
@@ -148,7 +151,7 @@ class PedidoDAO {
     // Listar pedidos de un cliente -> findByCliente()
      public function findByCliente(int $idCliente): array{
 
-        $sql = "SELECT id, numero_pedido, id_cliente, fecha_hora, estado, tipo, total
+        $sql = "SELECT id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total
                 FROM pedidos
                 WHERE id_cliente = ?
                 ORDER BY fecha_hora DESC";
@@ -170,6 +173,7 @@ class PedidoDAO {
                 (int)$row['id'],
                 (int)$row['numero_pedido'],
                 (int)$row['id_cliente'],
+                (int)$row['id_cocinero'],
                 (string)$row['fecha_hora'],
                 (string)$row['estado'],
                 (string)$row['tipo'],
@@ -211,6 +215,7 @@ class PedidoDAO {
             (int)$row['id'],
             (int)$row['numero_pedido'],
             (int)$row['id_cliente'],
+            (int)$row['id_cocinero'],
             (string)$row['fecha_hora'],
             (string)$row['estado'],
             (string)$row['tipo'],
@@ -219,5 +224,19 @@ class PedidoDAO {
     }
     return $res;
     }   
+
+    public function updateCocinero(int $idPedido, int $idCocinero): bool {
+    $sql = "UPDATE pedidos SET id_cocinero = ? WHERE id = ?";
+    
+    $stmt = $this->conn->prepare($sql);
+    if (!$stmt) throw new RuntimeException("Error prepare (updateCocinero): " . $this->conn->error);
+    
+    $stmt->bind_param('ii', $idCocinero, $idPedido);
+    
+    if (!$stmt->execute()) throw new RuntimeException("Error execute (updateCocinero): " . $stmt->error);
+    
+    $stmt->close();
+    return true;
+}
 
 }

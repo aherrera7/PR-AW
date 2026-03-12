@@ -5,6 +5,8 @@ require_once __DIR__ . '/../../config.php';
 require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
 require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
+require_once RAIZ_APP . '/includes/app/sa/UsuarioSA.php';
+
 
 if (!isset($_SESSION['login'])) {
     header('Location: ' . RUTA_VISTAS . '/login.php');
@@ -13,6 +15,8 @@ if (!isset($_SESSION['login'])) {
 
 $esGerente = (!empty($_SESSION['esGerente']) && $_SESSION['esGerente'] === true);
 $esCocinero = (!empty($_SESSION['esCocinero']) && $_SESSION['esCocinero'] === true);
+$idCocineroActual = (int)$_SESSION['usuario_id'];
+$nombreCocineroActual = $_SESSION['nombre'] ?? 'Cocinero';
 
 if (!$esGerente && !$esCocinero) {
     header('Location: ' . RUTA_APP . '/index.php');
@@ -21,6 +25,13 @@ if (!$esGerente && !$esCocinero) {
 
 // --- LÓGICA DE ACTUALIZACIÓN DE ESTADO ---
 $idPedido = (int)($_GET['id_pedido'] ?? 0);
+
+if (isset($_GET['asignar']) && $_GET['asignar'] == 1) {
+    // Asignar este pedido al cocinero actual
+    PedidoSA::asignarCocinero($idPedido, $idCocineroActual);
+    header('Location: productos_pedido.php?id_pedido=' . $idPedido);
+    exit;
+}
 
 if (isset($_GET['finalizar']) && (int)$_GET['finalizar'] > 0) {
     // Aquí actualizamos la base de datos de verdad
@@ -33,6 +44,14 @@ if (isset($_GET['finalizar']) && (int)$_GET['finalizar'] > 0) {
 $pedidoDTO = PedidoSA::obtener($idPedido);
 if (!$pedidoDTO) {
     die("Pedido no encontrado.");
+}
+
+$idCocineroAsignado = $pedidoDTO->getIdCocinero();
+$nombreCocineroAsignado = null;
+if ($idCocineroAsignado) {
+    $usuarioSA = new UsuarioSA();
+    $cocinero = $usuarioSA->getById($idCocineroAsignado);
+    $nombreCocineroAsignado = $cocinero ? $cocinero->getNombre() : 'Cocinero #' . $idCocineroAsignado;
 }
 
 // Obtenemos las líneas del pedido (productos, cantidades, etc.)
@@ -61,6 +80,25 @@ ob_start();
         <a href="pedidos_listar_cocineros.php" class="btn-undo" style="text-decoration: none;">← Volver</a>
         <h1 style="margin: 0;">Comanda #<?= $pedidoDTO->getNumeroPedido() ?></h1>
         <span class="badge"><?= strtoupper($pedidoDTO->getTipo()) ?></span>
+        <!-- SECCIÓN DE ASIGNACIÓN DE COCINERO -->
+<?php if ($idCocineroAsignado): ?>
+    <div style="margin-left: auto; display: flex; align-items: center; gap: 10px; background: #e8f5e9; padding: 8px 15px; border-radius: 30px;">
+        <span style="font-size: 1.2em;">👨‍🍳</span>
+        <div>
+            <div style="font-weight: bold; color: #2e7d32;">
+                <?= $idCocineroAsignado == $idCocineroActual ? 'Tú' : htmlspecialchars($nombreCocineroAsignado) ?>
+            </div>
+            <div style="font-size: 0.8em; color: #666;">Cocinero asignado</div>
+        </div>
+    </div>
+<?php else: ?>
+    <div style="margin-left: auto;">
+        <a href="productos_pedido.php?id_pedido=<?= $idPedido ?>&asignar=1" 
+           style="display: inline-block; padding: 8px 20px; background: #ff9800; color: white; text-decoration: none; border-radius: 30px; font-weight: bold;">
+            📋 ASIGNARME ESTE PEDIDO
+        </a>
+    </div>
+<?php endif; ?>
     </div>
 
     <div class="card" style="padding: 0;">

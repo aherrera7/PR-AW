@@ -10,6 +10,7 @@ class PedidoDTO{
         private ?int $id,
         private int $numeroPedido,
         private ?int $idCliente,
+        private ?int $idCocinero, 
         private string $fechaHora,
         private string $estado,
         private string $tipo,
@@ -24,6 +25,7 @@ class PedidoDTO{
     public function getEstado(): string { return $this->estado; }
     public function getTipo(): string { return $this->tipo; }
     public function getTotal(): float { return $this->total; }
+    public function getIdCocinero(): ?int { return $this->idCocinero; }
 
 
 

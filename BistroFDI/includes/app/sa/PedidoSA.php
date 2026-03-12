@@ -65,6 +65,7 @@ class PedidoSA {
         $idPedido = self::dao()->insertPedido(
             $numeroPedido,
             $idCliente,
+            $idCocinero, 
             self::ESTADO_RECIBIDO, // El pedido entra como recibido tras crearse
             $tipo,
             $total
@@ -166,5 +167,12 @@ class PedidoSA {
         
         return self::dao()->updateEstado($idPedido, $nuevoEstado);
     }
+
+
+    public static function asignarCocinero(int $idPedido, int $idCocinero): bool {
+    if ($idPedido <= 0 || $idCocinero <= 0) return false;
+    
+    return self::dao()->updateCocinero($idPedido, $idCocinero);
+}
 
 }
