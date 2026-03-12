@@ -79,7 +79,7 @@ if (isset($_SESSION['carrito'])) {
             <hr style="border:0; border-top:1px solid #444; margin:10px 0;">
             <strong style="display:block; margin: 5px 15px; color: #aaa; font-size: 0.8rem; text-transform: uppercase;">Gestión</strong>
             
-            <a href="<?= RUTA_VISTAS ?>/usuarios/categorias_listar.php?modo=1" style="color: #ffb74d;">⚙️ Gestionar Carta</a>
+            <a href="<?= RUTA_VISTAS ?>/gerente/categorias_listar.php?modo=1" style="color: #ffb74d;">⚙️ Gestionar Carta</a>
             
             <a href="<?= RUTA_VISTAS ?>/gerente/usuarios_listar.php">Usuarios</a>
             <a href="<?= RUTA_VISTAS ?>/gerente/pedidos_listar_gerente.php">Listado Pedidos</a>

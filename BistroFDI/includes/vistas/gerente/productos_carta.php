@@ -17,12 +17,13 @@ if (!$categoria) {
     exit;
 }
 
-// 2. Detectar si está logueado para añadir al carrito
+// 2. Detectar rol
+$esGerente = !empty($_SESSION['esGerente']) && $_SESSION['esGerente'] === true;
 $estaLogueado = !empty($_SESSION['login']);
 
 // 3. Listar productos de esa categoría
-// Al ser la vista exclusiva de cliente/compra, forzamos que solo se listen los ofertados (pasando true)
-$productos = ProductoSA::listar($idCat, true);
+// Si es gerente, mostramos todos. Si es cliente, solo los ofertados.
+$productos = ProductoSA::listar($idCat, !$esGerente);
 
 $tituloPagina = 'Productos: ' . $categoria->getNombre();
 ob_start();
@@ -35,6 +36,9 @@ ob_start();
             <p class="muted"><?= h($categoria->getDescripcion() ?? '') ?></p>
         </div>
         <div style="display:flex; gap:10px;">
+            <?php if ($esGerente): ?>
+                <a class="btn" href="<?= RUTA_APP ?>/includes/vistas/gerente/productos_crear.php?id_cat=<?= $idCat ?>">+ Nuevo Producto</a>
+            <?php endif; ?>
             <a class="btn btn-light" href="categorias_listar.php">Volver</a>
         </div>
     </div>
@@ -45,8 +49,9 @@ ob_start();
                 $id = $p->getId();
                 $imagenes = $p->getImagenes();
                 if (empty($imagenes)) $imagenes = ['default_producto.jpg'];
+                $claseEstado = (!$p->isOfertado()) ? 'style="opacity: 0.6;"' : '';
             ?>
-            <div class="card stack" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+            <div class="card stack" <?= $claseEstado ?> style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
                 
                 <div style="position: relative; width: 100%; aspect-ratio: 1/1; background: #f0f0f0; border-bottom: 1px solid #ddd;">
                     <?php foreach ($imagenes as $index => $ruta): ?>
@@ -72,14 +77,26 @@ ob_start();
                     </p>
 
                     <div style="margin-top: auto;">
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <div style="display: flex; align-items: center; justify-content: center; border: 1px solid #ccc; border-radius: 8px; width: fit-content; margin: 0 auto;">
-                                <button class="btn-light" onclick="modCant(<?= $id ?>, -1)" style="border:none; padding: 5px 12px;">-</button>
-                                <input type="text" id="cant-<?= $id ?>" value="1" readonly style="width: 40px; text-align: center; border: none; font-weight: bold; background: transparent; color: #333; margin: 0;">
-                                <button class="btn-light" onclick="modCant(<?= $id ?>, 1)" style="border:none; padding: 5px 12px;">+</button>
+                        <?php if ($esGerente): ?>
+                            <div class="form-actions" style="display: flex; gap: 8px;">
+                                <a class="btn btn-light" href="<?= RUTA_APP ?>/includes/vistas/gerente/productos_editar.php?id=<?= $id ?>" style="flex:1; text-align:center;">Editar</a>
+                                <a class="btn btn-light" 
+                                    href="<?= RUTA_APP ?>/includes/vistas/gerente/productos_retirar.php?id=<?= $id ?>&id_cat=<?= $idCat ?>" 
+                                    style="color: #d32f2f; border-color: #d32f2f; flex:1; text-align:center;"
+                                    onclick="return confirm('¿Cambiar estado de este producto?')">
+                                    <?= $p->isOfertado() ? 'Retirar' : 'Reofertar' ?>
+                                </a>
                             </div>
-                            <button class="btn" onclick="addCarrito(<?= $id ?>)">Añadir al carrito</button>
-                        </div>
+                        <?php else: ?>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <div style="display: flex; align-items: center; justify-content: center; border: 1px solid #ccc; border-radius: 8px; width: fit-content; margin: 0 auto;">
+                                    <button class="btn-light" onclick="modCant(<?= $id ?>, -1)" style="border:none; padding: 5px 12px;">-</button>
+                                    <input type="text" id="cant-<?= $id ?>" value="1" readonly style="width: 40px; text-align: center; border: none; font-weight: bold; background: transparent; color: #333; margin: 0;">
+                                    <button class="btn-light" onclick="modCant(<?= $id ?>, 1)" style="border:none; padding: 5px 12px;">+</button>
+                                </div>
+                                <button class="btn" onclick="addCarrito(<?= $id ?>)">Añadir al carrito</button>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
