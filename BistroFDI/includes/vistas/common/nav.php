@@ -5,6 +5,7 @@ $estaLogueado = !empty($_SESSION['login']);
 $nombreUsuario = $_SESSION['nombre_usuario'] ?? '';
 $avatar = $_SESSION['avatar'] ?? null;
 
+$esCamarero = !empty($_SESSION['esCamarero']) && $_SESSION['esCamarero'] === true;
 $esGerente = !empty($_SESSION['esGerente']) && $_SESSION['esGerente'] === true;
 $esCocinero = !empty($_SESSION['esCocinero']) && $_SESSION['esCocinero'] === true;
 
@@ -66,6 +67,12 @@ if (isset($_SESSION['carrito'])) {
             <hr style="border:0; border-top:1px solid #444; margin:10px 0;">
             <strong style="display:block; margin: 5px 15px; color: #aaa; font-size: 0.8rem; text-transform: uppercase;">Cocina</strong>
             <a href="<?= RUTA_VISTAS ?>/cocinero/pedidos_listar_cocineros.php">Pedidos Cocina</a>
+        <?php endif; ?>
+
+        <?php if ($esCamarero || $esGerente): ?>
+            <hr style="border:0; border-top:1px solid #444; margin:10px 0;">
+            <strong style="display:block; margin: 5px 15px; color: #aaa; font-size: 0.8rem; text-transform: uppercase;">Cocina</strong>
+            <a href="<?= RUTA_VISTAS ?>/camarero/camarero_pedidos.php">Pedidos Camarero</a>
         <?php endif; ?>
 
         <?php if ($esGerente): ?>
