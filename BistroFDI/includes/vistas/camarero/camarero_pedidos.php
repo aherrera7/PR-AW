@@ -20,6 +20,33 @@ if (!isset($_SESSION['login']) || (!$esGerente && !$esCamarero)) {
 $tituloPagina = "Estado de los pedidos (Camarero)";
 
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $idPedido = filter_input(INPUT_POST, 'id_pedido', FILTER_VALIDATE_INT);
+    $accion = $_POST['accion'] ?? '';
+    
+    if ($idPedido) {
+        try {
+            switch($accion) {
+                case 'cobrar':
+                    PedidoSA::registrarPago($idPedido);
+                    break;
+                case 'preparar_entrega':
+                    PedidoSA::cambiarEstado($idPedido, PedidoSA::ESTADO_TERMINADO);
+                    break;
+                case 'entregar':
+                    PedidoSA::cambiarEstado($idPedido, PedidoSA::ESTADO_ENTREGADO);
+                    break;
+            }
+            header('Location: ' . $_SERVER['PHP_SELF']);
+            exit;
+        } catch (Exception $e) {
+            $error = $e->getMessage();
+        }
+    }
+}
+
+
+
 try {
     // Obtenemos todos los pedidos para filtrar los que necesita el camarero
     $todosLosPedidos = PedidoSA::listarTodos(); 
@@ -45,7 +72,6 @@ ob_start();
     <div style="display: flex; align-items: center; gap: 10px;">
         <span><?= htmlspecialchars($nombreCamarero) ?></span>
         
-        <!-- Usamos RUTA_IMGS + '/avatares/' -->
         <img src="<?= RUTA_IMGS . '/avatares/' . $avatarCamarero ?>" 
              alt="Avatar" 
              style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid white;"
@@ -123,7 +149,7 @@ ob_start();
                 <!-- Botones -->
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
                     
-                    <form method="POST" action="procesar_camarero.php" style="flex: 1;">
+                    <form method="POST" action="" style="flex: 1;">
                         <input type="hidden" name="id_pedido" value="<?= $p->getId() ?>">
                         <input type="hidden" name="accion" value="<?= $accion ?>">
                         <button type="submit" 
