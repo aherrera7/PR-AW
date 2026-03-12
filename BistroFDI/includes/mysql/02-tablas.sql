@@ -71,11 +71,13 @@ CREATE TABLE pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     numero_pedido INT NOT NULL,
     id_cliente INT,
+    id_camarero INT,
     fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
     estado ENUM('nuevo', 'recibido', 'en preparación', 'cocinando', 'listo cocina', 'terminado', 'entregado') DEFAULT 'nuevo',
     tipo ENUM('local', 'llevar') NOT NULL,
     total DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (id_cliente) REFERENCES usuarios(id)
+    FOREIGN KEY (id_cliente) REFERENCES usuarios(id),
+    FOREIGN KEY (id_camarero) REFERENCES usuarios(id)
 );
 
 -- 7. Detalle del Pedido
