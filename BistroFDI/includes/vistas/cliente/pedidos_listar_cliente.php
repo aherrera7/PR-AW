@@ -42,7 +42,7 @@ ob_start();
             <p class="muted" style="font-size: 1.2em;">Aún no has realizado ningún pedido.</p>
             <p>¡Explora nuestra carta y haz tu primer pedido hoy mismo!</p>
             <br>
-            <a href="<?= RUTA_VISTAS ?>/tienda/categorias_listar.php" class="btn">Ver la Carta</a>
+            <a href="<?= RUTA_VISTAS ?>/usuarios/categorias_listar.php" class="btn">Ver la Carta</a>
         </div>
     <?php else: ?>
         <div class="stack" style="gap: 15px;">
