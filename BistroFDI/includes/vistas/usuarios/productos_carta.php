@@ -91,7 +91,7 @@ ob_start();
                             <div style="display: flex; flex-direction: column; gap: 10px;">
                                 <div style="display: flex; align-items: center; justify-content: center; border: 1px solid #ccc; border-radius: 8px; width: fit-content; margin: 0 auto;">
                                     <button class="btn-light" onclick="modCant(<?= $id ?>, -1)" style="border:none; padding: 5px 12px;">-</button>
-                                    <input type="number" id="cant-<?= $id ?>" value="1" min="1" readonly style="width: 40px; text-align: center; border: none; font-weight: bold; background:transparent; margin:0;">
+                                    <input type="text" id="cant-<?= $id ?>" value="1" readonly style="width: 40px; text-align: center; border: none; font-weight: bold; background: transparent; color: #333; margin: 0;">
                                     <button class="btn-light" onclick="modCant(<?= $id ?>, 1)" style="border:none; padding: 5px 12px;">+</button>
                                 </div>
                                 <button class="btn" onclick="addCarrito(<?= $id ?>)">Añadir al carrito</button>
