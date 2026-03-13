@@ -17,7 +17,7 @@ $tituloPagina = 'Nuestra Carta';
 ob_start();
 ?>
 <section class="ger-wrap">
-  <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px;">
+  <div class="header-bar">
     <h1><?= h($tituloPagina) ?></h1>
   </div>
 
@@ -32,18 +32,20 @@ ob_start();
       <?php foreach ($categorias as $c): ?>
         <?php $id = (int)$c->getId(); $img = $c->getImagen(); ?>
         
-        <div class="card" style="display:flex; gap:14px; align-items:flex-start; flex-wrap:wrap;">
+        <div class="card cat-card">
           <?php if ($img): ?>
-            <img src="<?= h(RUTA_IMGS . '/' . ltrim((string)$img, '/')) ?>" alt=""
-                 style="width:220px;max-width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid #111;border-radius:10px;background:#fff;">
+            <img
+              src="<?= h(RUTA_IMGS . '/' . ltrim((string)$img, '/')) ?>"
+              alt=""
+              class="cat-img">
           <?php endif; ?>
 
-          <div class="stack" style="flex:1; min-width:240px;">
-            <h3 style="margin:0;"><?= h((string)$c->getNombre()) ?></h3>
+          <div class="stack flex-1 minw-240">
+            <h3 class="title-reset"><?= h((string)$c->getNombre()) ?></h3>
             <p class="muted"><?= h((string)($c->getDescripcion() ?? '')) ?></p>
 
             <div class="form-actions">
-              <a class="btn" href="<?= h($baseUsuario.'/productos_carta.php?id_cat='.$id) ?>">Acceder</a>
+              <a class="btn" href="<?= h($baseUsuario . '/productos_carta.php?id_cat=' . $id) ?>">Acceder</a>
             </div>
           </div>
         </div>

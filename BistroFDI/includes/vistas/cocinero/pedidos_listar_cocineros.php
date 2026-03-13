@@ -18,14 +18,12 @@ $tituloPagina = "Panel de Pedidos - Cocina";
 
 // CARGA DE DATOS REALES
 try {
-    // Obtenemos todos los pedidos para filtrar los que están en proceso
     $todosLosPedidos = PedidoSA::listarTodos(); 
     $pedidosCocina = [];
 
     foreach ($todosLosPedidos as $p) {
         $estado = $p->getEstado();
-        // Solo mostramos pedidos que no estén terminados ni entregados
-        if (in_array($estado, [ 'en preparación', 'cocinando', 'listo cocina'])) {
+        if (in_array($estado, ['en preparación', 'cocinando', 'listo cocina'])) {
             $pedidosCocina[] = $p;
         }
     }
@@ -42,44 +40,44 @@ ob_start();
     <p class="muted">Gestión de comandas en tiempo real.</p>
 
     <?php if (isset($error)): ?>
-        <div style="color: red; padding: 10px; background: #fee; border-radius: 5px;"><?= $error ?></div>
+        <div class="alert-error-soft"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+    <div class="orders-grid kitchen-grid">
         <?php foreach ($pedidosCocina as $p): 
             $estado = $p->getEstado();
-            
-            // Color de fondo dinámico según urgencia o estado
-            $bgColor = match($estado) {
-                'recibido' => '#fff3e0',       // Naranja claro (Nuevo)
-                'en preparación' => '#e3f2fd', // Azul claro
-                'cocinando' => '#f3e5f5',      // Morado claro
-                'listo cocina' => '#e8f5e9',   // Verde claro
-                default => '#ffffff'
+
+            $cardClass = match($estado) {
+                'recibido' => 'order-card order-card--recibido',
+                'en preparación' => 'order-card order-card--preparacion',
+                'cocinando' => 'order-card order-card--cocinando',
+                'listo cocina' => 'order-card order-card--listo',
+                default => 'order-card'
             };
         ?>
-            <div class="card" style="padding: 0; border: 1px solid #ddd; background-color: <?= $bgColor ?>; overflow: hidden;">
-                <div style="padding: 15px; border-bottom: 1px solid rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center;">
+            <div class="<?= $cardClass ?>">
+                <div class="order-card-head kitchen-card-head">
                     <div>
-                        <h3 style="margin: 0;">Pedido #<?= $p->getNumeroPedido() ?></h3>
-                        <span style="font-size: 0.8em; font-weight: bold; text-transform: uppercase; color: #555;">
+                        <h3 class="title-reset">Pedido #<?= $p->getNumeroPedido() ?></h3>
+                        <span class="kitchen-order-type">
                             <?= ($p->getTipo() === 'local') ? '🏠 LOCAL' : '🥡 LLEVAR' ?>
                         </span>
                     </div>
-                    <p class="muted" style="margin: 0; font-size: 0.9em;">
+                    <p class="muted kitchen-order-time">
                         <strong><?= date('H:i', strtotime($p->getFechaHora())) ?></strong>
                     </p>
                 </div>
 
-                <div style="padding: 15px;">
-                    <p style="margin: 5px 0;">Estado: 
-                        <span style="font-weight: bold; color: #d32f2f; text-transform: uppercase; font-size: 0.85em;">
-                            <?= $estado ?>
+                <div class="order-card-body">
+                    <p class="kitchen-order-status">
+                        Estado:
+                        <span class="kitchen-order-status-value">
+                            <?= htmlspecialchars($estado) ?>
                         </span>
                     </p>
                     
-                    <div style="margin-top: 15px; display: flex; gap: 10px;">
-                        <a href="productos_pedido.php?id_pedido=<?= $p->getId() ?>" class="btn" style="flex: 1; text-align: center; text-decoration: none; padding: 10px;">
+                    <div class="catalog-actions mt-15">
+                        <a href="productos_pedido.php?id_pedido=<?= $p->getId() ?>" class="btn w-100 text-center">
                             <?= ($estado === 'recibido') ? 'EMPEZAR' : 'GESTIONAR' ?>
                         </a>
                     </div>
@@ -89,19 +87,12 @@ ob_start();
     </div>
 
     <?php if (empty($pedidosCocina)): ?>
-        <div class="card" style="text-align: center; padding: 60px; background: #f9f9f9;">
-            <p style="font-size: 1.2em; color: #666;">No hay pedidos pendientes en cocina.</p>
+        <div class="card kitchen-empty-state">
+            <p class="text-large text-muted-3">No hay pedidos pendientes en cocina.</p>
             <p class="muted">¡Buen trabajo! Descansa un poco.</p>
         </div>
     <?php endif; ?>
 </section>
-
-<style>
-    .card { transition: transform 0.2s, box-shadow 0.2s; }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
-    .btn { background: #333; color: white; border-radius: 4px; border: none; cursor: pointer; }
-    .btn:hover { background: #d32f2f; }
-</style>
 
 <?php
 $contenidoPrincipal = ob_get_clean();

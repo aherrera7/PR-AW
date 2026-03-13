@@ -62,40 +62,40 @@ try {
 ob_start();
 ?>
 
-<div style="background: #333; color: white; padding: 10px 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-    <span style="font-size: 1.5em; font-weight: bold;">BISTRO FDI</span>
-    <div style="display: flex; align-items: center; gap: 10px;">
+<div class="camarero-topbar">
+    <span class="camarero-brand">BISTRO FDI</span>
+    <div class="camarero-user">
         <span><?= htmlspecialchars($nombreCamarero) ?></span>
         
         <img src="<?= h($avatarCamareroUrl) ?>" 
-             alt="Avatar" 
-             style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid white;"
+             alt="Avatar"
+             class="camarero-avatar"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         
-        <div style="width: 40px; height: 40px; border-radius: 50%; background: #d32f2f; color: white; display: none; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2em;">
+        <div class="camarero-avatar-fallback">
             <?= strtoupper(substr($nombreCamarero, 0, 1)) ?>
         </div>
     </div>
 </div>
 
-<h2 style="padding: 0 20px;">ESTADO DE LOS PEDIDOS (CAMARERO)</h2>
+<h2 class="page-title-pad">ESTADO DE LOS PEDIDOS (CAMARERO)</h2>
 
 <?php if (isset($error)): ?>
-    <div style="color: red; padding: 10px; margin: 20px; background: #fee; border-radius: 5px;">
-        <?= $error ?>
+    <div class="alert-error-soft">
+        <?= htmlspecialchars($error) ?>
     </div>
 <?php endif; ?>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 20px;">
+<div class="orders-grid">
     
     <?php foreach ($pedidosCamarero as $p): 
         $estado = $p->getEstado();
         
-        $bgColor = match($estado) {
-           'recibido' => '#fff3e0',
-            'listo cocina' => '#e8f5e9',
-            'terminado' => '#e3f2fd',
-            default => '#ffffff'
+        $cardClass = match($estado) {
+            'recibido' => 'order-card order-card--recibido',
+            'listo cocina' => 'order-card order-card--listo',
+            'terminado' => 'order-card order-card--terminado',
+            default => 'order-card'
         };
         
         $accion = match($estado) {
@@ -110,44 +110,43 @@ ob_start();
             'terminado' => '✅ ENTREGAR'
         };
         
-        $colorBoton = match($estado) {
-            'recibido' => '#ff9800',
-            'listo cocina' => '#4caf50',
-            'terminado' => '#2196f3'
+        $btnClass = match($estado) {
+            'recibido' => 'btn-order btn-order--recibido',
+            'listo cocina' => 'btn-order btn-order--listo',
+            'terminado' => 'btn-order btn-order--terminado'
         };
     ?>
     
-        <div style="border: 1px solid #ddd; border-radius: 8px; background: <?= $bgColor ?>; overflow: hidden;">
-            <div style="padding: 15px; border-bottom: 1px solid rgba(0,0,0,0.1);">
-                <div style="display: flex; justify-content: space-between;">
-                    <h3 style="margin: 0; color:#444;">Pedido #<?= $p->getNumeroPedido() ?></h3>
-                    <span style="background: #333; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8em;">
+        <div class="<?= $cardClass ?>">
+            <div class="order-card-head">
+                <div class="order-card-head-top">
+                    <h3 class="title-reset order-info-strong">Pedido #<?= $p->getNumeroPedido() ?></h3>
+                    <span class="order-type-badge">
                         <?= $p->getTipo() === 'local' ? 'LOCAL' : 'LLEVAR' ?>
                     </span>
                 </div>
-                <p style="margin: 5px 0 0 0; color: #666;"><?= date('H:i', strtotime($p->getFechaHora())) ?></p>
+                <p class="order-time"><?= date('H:i', strtotime($p->getFechaHora())) ?></p>
             </div>
             
-            <div style="padding: 15px;">
-                <p style="color:#555;">Cliente ID: <?= $p->getIdCliente() ?></p>
-                <p style="color:#444;"><strong><?= number_format($p->getTotal(), 2) ?>€</strong></p>
-                <p style="color:#555;">Estado: <strong><?= $estado ?></strong></p>
+            <div class="order-card-body">
+                <p class="order-info">Cliente ID: <?= $p->getIdCliente() ?></p>
+                <p class="order-info-strong"><strong><?= number_format($p->getTotal(), 2) ?>€</strong></p>
+                <p class="order-info">Estado: <strong><?= htmlspecialchars($estado) ?></strong></p>
 
                 <?php if ($estado === 'listo cocina'): ?>
-                <div style="margin: 15px 0; text-align: center;">
-                <a href="<?= RUTA_VISTAS ?>/cliente/pedido_detalle.php?id=<?= $p->getId() ?>"
-                style="display: block; padding: 10px; background: #2196f3; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">
-                🔍 REVISAR PRODUCTOS
-                </a>
-                </div>
+                    <div class="order-review-wrap">
+                        <a href="<?= RUTA_VISTAS ?>/cliente/pedido_detalle.php?id=<?= $p->getId() ?>"
+                           class="order-review-link">
+                            🔍 REVISAR PRODUCTOS
+                        </a>
+                    </div>
                 <?php endif; ?>
                 
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <form method="POST" action="" style="flex: 1;">
+                <div class="order-actions">
+                    <form method="POST" action="" class="inline-form">
                         <input type="hidden" name="id_pedido" value="<?= $p->getId() ?>">
                         <input type="hidden" name="accion" value="<?= $accion ?>">
-                        <button type="submit" 
-                                style="width: 100%; padding: 8px; background: <?= $colorBoton ?>; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer;">
+                        <button type="submit" class="<?= $btnClass ?>">
                             <?= $textoBoton ?>
                         </button>
                     </form>
@@ -158,8 +157,8 @@ ob_start();
     <?php endforeach; ?>
     
     <?php if (empty($pedidosCamarero)): ?>
-        <div style="grid-column: 1/-1; text-align: center; padding: 60px; background: #f9f9f9; border-radius: 8px;">
-            <p style="font-size: 1.2em; color: #666;">No hay pedidos que gestionar.</p>
+        <div class="order-empty">
+            <p class="text-large text-muted-3">No hay pedidos que gestionar.</p>
         </div>
     <?php endif; ?>
     

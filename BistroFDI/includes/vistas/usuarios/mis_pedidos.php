@@ -9,7 +9,6 @@ requireLogin();
 
 $idCliente = (int)($_SESSION['usuario_id'] ?? 0);
 
-// Obtener pedidos activos del cliente
 $pedidos = PedidoSA::listarPorCliente($idCliente);
 
 $tituloPagina = 'Mis pedidos';
@@ -23,7 +22,7 @@ ob_start();
 
 <?php if (empty($pedidos)): ?>
 
-<div class="card stack" style="text-align:center; padding:30px;">
+<div class="card stack text-center p-30">
 <p class="muted">No tienes pedidos activos en este momento.</p>
 
 <a class="btn" href="<?= RUTA_APP ?>/includes/vistas/usuarios/categorias_listar.php">
@@ -39,18 +38,18 @@ Ver la carta
 
 <?php
 $estado = $p->getEstado();
-$color = '#777';
+$estadoClass = 'user-order-status-default';
 
-if ($estado === 'en preparación') $color = '#2196F3';
-if ($estado === 'cocinando') $color = '#FF9800';
-if ($estado === 'listo cocina') $color = '#4CAF50';
-if ($estado === 'terminado') $color = '#9C27B0';
-if ($estado === 'entregado') $color = '#555';
+if ($estado === 'en preparación') $estadoClass = 'user-order-status-preparacion';
+if ($estado === 'cocinando') $estadoClass = 'user-order-status-cocinando';
+if ($estado === 'listo cocina') $estadoClass = 'user-order-status-listo';
+if ($estado === 'terminado') $estadoClass = 'user-order-status-terminado';
+if ($estado === 'entregado') $estadoClass = 'user-order-status-entregado';
 ?>
 
-<div class="card" style="padding:20px;">
+<div class="card p-20">
 
-<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+<div class="user-order-head">
 
 <div>
 <strong>Pedido #<?= $p->getNumeroPedido() ?></strong><br>
@@ -61,7 +60,7 @@ if ($estado === 'entregado') $color = '#555';
 
 <div>
 Estado:<br>
-<strong style="color:<?= $color ?>">
+<strong class="<?= $estadoClass ?>">
 <?= ucfirst($estado) ?>
 </strong>
 </div>

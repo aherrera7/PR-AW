@@ -352,7 +352,7 @@ a.btn-light{
 }
 
 .btn-danger:hover{
-  background: #c81c1c;
+  background: #634c4c;
 }
 
 .btn-outline-danger,
@@ -360,6 +360,11 @@ a.btn-light{
   background: #fff;
   color: #d32f2f;
   border-color: #d32f2f;
+}
+
+a.btn-outline-danger,
+a.btn-danger-light{
+  color: #d32f2f;
 }
 
 .btn-outline-danger:hover{
@@ -1716,4 +1721,348 @@ main figcaption{
   background:#fff5f5;
   color:#d32f2f;
   font-weight:bold;
+}
+
+.page-head-back{
+  font-size: 0.9em;
+}
+
+.pedido-detail-meta{
+  margin: 5px 0 0 0;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.pedido-detail-subtitle{
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #444;
+}
+
+.pedidos-error-card{
+  border-left: 5px solid #d32f2f;
+  color: #d32f2f;
+}
+
+.order-card--preparacion{
+  background: #e3f2fd;
+}
+
+.order-card--cocinando{
+  background: #f3e5f5;
+}
+
+.kitchen-grid{
+  margin-top: 20px;
+  padding: 0;
+}
+
+.kitchen-card-head .title-reset{
+  color: #333;
+}
+
+.kitchen-order-status{
+  color: #333;
+}
+
+.kitchen-order-type{
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #333;
+}
+
+.kitchen-order-time{
+  margin: 0;
+  font-size: 0.9em;
+}
+
+.kitchen-order-status-value{
+  font-weight: bold;
+  color: #d32f2f;
+  text-transform: uppercase;
+  font-size: 0.85em;
+}
+
+.kitchen-empty-state{
+  padding: 60px;
+  text-align: center;
+  background: #f9f9f9;
+}
+
+.kitchen-detail-head{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.kitchen-badge{
+  display: inline-block;
+  padding: 4px 12px;
+  background: #333;
+  color: #fff;
+  border-radius: 20px;
+  font-size: 0.8em;
+}
+
+.kitchen-assigned{
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 15px;
+  background: #e8f5e9;
+  border-radius: 30px;
+}
+
+.kitchen-assigned-icon{
+  font-size: 1.2em;
+}
+
+.kitchen-assigned-name{
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.kitchen-assigned-label{
+  font-size: 0.8em;
+  color: #666;
+}
+
+.kitchen-assigned-wrap{
+  margin-left: auto;
+}
+
+.kitchen-assign-btn{
+  background: #ff9800;
+  border-color: #ff9800;
+  color: #fff;
+}
+
+.kitchen-assign-btn:hover{
+  background: #e68900;
+}
+
+.kitchen-products-card{
+  padding: 0;
+}
+
+.kitchen-products-table{
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.kitchen-products-table thead{
+  background: #f8f9fa;
+  border-bottom: 2px solid #eee;
+}
+
+.kitchen-products-table th{
+  padding: 15px;
+}
+
+.kitchen-product-row{
+  border-bottom: 1px solid #eee;
+  transition: background 0.3s;
+}
+
+.kitchen-product-row-ready{
+  background: #e8f5e9;
+}
+
+.kitchen-product-main{
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+}
+
+.kitchen-product-thumb{
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.kitchen-product-name{
+  font-weight: bold;
+}
+
+.kitchen-product-qty{
+  padding: 15px;
+  font-size: 1.2em;
+}
+
+.kitchen-products-table td.cell-right{
+  padding: 15px;
+}
+
+.kitchen-ready-label{
+  margin-right: 10px;
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.kitchen-undo-btn{
+  padding: 5px 10px;
+  font-size: 0.8em;
+}
+
+.kitchen-finish-wrap{
+  margin-top: 30px;
+  text-align: center;
+}
+
+.kitchen-finish-btn{
+  padding: 15px 40px;
+  font-size: 1.1em;
+}
+
+.kitchen-finish-btn-disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.kitchen-finish-btn-enabled{
+  background: #d32f2f;
+  border-color: #d32f2f;
+  opacity: 1;
+  cursor: pointer;
+}
+
+.kitchen-finish-btn-enabled:hover{
+  background: #b71c1c;
+}
+
+.menu-divider-dark{
+  border: 0;
+  border-top: 1px solid #444;
+  margin: 10px 0;
+}
+
+.menu-section-title{
+  display: block;
+  margin: 5px 15px;
+  color: #aaa;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.minw-240{
+  min-width: 240px;
+}
+
+.pedido-cell-strong{
+  font-weight: bold;
+}
+
+.pedido-cell-small{
+  font-size: 0.9em;
+}
+
+.estado-recibido{
+  color: #ff9800;
+}
+
+.estado-preparacion{
+  color: #2196f3;
+}
+
+.estado-listo{
+  color: #4caf50;
+}
+
+.estado-terminado{
+  color: #1b5e20;
+}
+
+.estado-entregado{
+  color: #757575;
+}
+
+.estado-default{
+  color: #333;
+}
+
+.cart-error-box{
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.cart-error-text{
+  margin: 0;
+}
+
+.cart-stack-tight > * + *{
+  margin-top: 10px;
+}
+
+.cart-item-subtotal-wide{
+  min-width: 80px;
+}
+
+.cart-side-wide{
+  min-width: 280px;
+}
+
+.cart-choice-title{
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+}
+
+.cart-choice-grid{
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.cart-radio-hidden{
+  display: none;
+}
+
+.cart-choice-icon{
+  font-size: 1.5em;
+}
+
+.cart-confirm-btn{
+  padding: 12px;
+}
+
+.cart-clear-link{
+  font-size: 0.8em;
+}
+
+.user-order-head{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.user-order-status-default{
+  color: #777;
+}
+
+.user-order-status-preparacion{
+  color: #2196F3;
+}
+
+.user-order-status-cocinando{
+  color: #FF9800;
+}
+
+.user-order-status-listo{
+  color: #4CAF50;
+}
+
+.user-order-status-terminado{
+  color: #9C27B0;
+}
+
+.user-order-status-entregado{
+  color: #555;
 }

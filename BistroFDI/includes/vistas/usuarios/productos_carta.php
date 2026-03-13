@@ -24,54 +24,54 @@ ob_start();
 ?>
 
 <section class="ger-wrap">
-    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px;">
+    <div class="page-head">
         <div>
-            <h1 style="margin:0;"><?= h($categoria->getNombre()) ?></h1>
+            <h1 class="title-reset"><?= h($categoria->getNombre()) ?></h1>
             <p class="muted"><?= h($categoria->getDescripcion() ?? '') ?></p>
         </div>
-        <div style="display:flex; gap:10px;">
+        <div class="catalog-actions">
             <a class="btn btn-light" href="categorias_listar.php">Volver</a>
         </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+    <div class="product-grid">
         <?php foreach ($productos as $p): ?>
             <?php 
                 $id = $p->getId();
                 $imagenes = $p->getImagenes();
                 if (empty($imagenes)) $imagenes = ['productos/default_producto.jpg'];
             ?>
-            <div class="card stack" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+            <div class="card stack product-card2">
                 
-                <div style="position: relative; width: 100%; aspect-ratio: 1/1; background: #f0f0f0; border-bottom: 1px solid #ddd;">
+                <div class="product-gallery2">
                     <?php foreach ($imagenes as $index => $ruta): ?>
-                        <img src="<?= h(RUTA_IMGS . '/' . ltrim((string)$ruta, '/')) ?>" 
-                             class="img-carrusel-<?= $id ?>" 
-                             style="width: 100%; height: 100%; object-fit: cover; display: <?= $index === 0 ? 'block' : 'none' ?>;">
+                        <img
+                            src="<?= h(RUTA_IMGS . '/' . ltrim((string)$ruta, '/')) ?>"
+                            class="img-carrusel-<?= $id ?><?= $index === 0 ? '' : ' product-gallery-img is-hidden' ?>">
                     <?php endforeach; ?>
 
                     <?php if (count($imagenes) > 1): ?>
-                        <button onclick="navImg(<?= $id ?>, -1)" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer;">&#10094;</button>
-                        <button onclick="navImg(<?= $id ?>, 1)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4); color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer;">&#10095;</button>
+                        <button onclick="navImg(<?= $id ?>, -1)" class="gallery-btn prev">&#10094;</button>
+                        <button onclick="navImg(<?= $id ?>, 1)" class="gallery-btn next">&#10095;</button>
                     <?php endif; ?>
                 </div>
 
-                <div class="stack" style="padding: 16px; flex-grow: 1;">
-                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                        <h3 style="margin: 0;"><?= h($p->getNombre()) ?></h3>
-                        <span style="color: #d32f2f; font-weight: bold;"><?= number_format($p->getPrecioFinal(), 2) ?>€</span>
+                <div class="stack product-content">
+                    <div class="product-line">
+                        <h3 class="title-reset"><?= h($p->getNombre()) ?></h3>
+                        <span class="price-red"><?= number_format($p->getPrecioFinal(), 2) ?>€</span>
                     </div>
                     
-                    <p class="muted" style="font-size: 0.9em; margin: 10px 0; min-height: 3em;">
+                    <p class="muted product-text">
                         <?= h($p->getDescripcion() ?? '') ?>
                     </p>
 
-                    <div style="margin-top: auto;">
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <div style="display: flex; align-items: center; justify-content: center; border: 1px solid #ccc; border-radius: 8px; width: fit-content; margin: 0 auto;">
-                                <button class="btn-light" onclick="modCant(<?= $id ?>, -1)" style="border:none; padding: 5px 12px;">-</button>
-                                <input type="text" id="cant-<?= $id ?>" value="1" readonly style="width: 40px; text-align: center; border: none; font-weight: bold; background: transparent; color: #333; margin: 0;">
-                                <button class="btn-light" onclick="modCant(<?= $id ?>, 1)" style="border:none; padding: 5px 12px;">+</button>
+                    <div class="product-footer">
+                        <div class="qty-box">
+                            <div class="qty-picker">
+                                <button class="btn-light qty-btn" onclick="modCant(<?= $id ?>, -1)">-</button>
+                                <input type="text" id="cant-<?= $id ?>" value="1" readonly class="qty-input">
+                                <button class="btn-light qty-btn" onclick="modCant(<?= $id ?>, 1)">+</button>
                             </div>
                             <button class="btn" onclick="addCarrito(<?= $id ?>)">Añadir al carrito</button>
                         </div>

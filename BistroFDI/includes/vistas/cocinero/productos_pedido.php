@@ -7,7 +7,6 @@ require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
 require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
 require_once RAIZ_APP . '/includes/app/sa/UsuarioSA.php';
 
-
 if (!isset($_SESSION['login'])) {
     header('Location: ' . RUTA_VISTAS . '/login.php');
     exit;
@@ -27,14 +26,12 @@ if (!$esGerente && !$esCocinero) {
 $idPedido = (int)($_GET['id_pedido'] ?? 0);
 
 if (isset($_GET['asignar']) && $_GET['asignar'] == 1) {
-    // Asignar este pedido al cocinero actual
     PedidoSA::asignarCocinero($idPedido, $idCocineroActual);
     header('Location: productos_pedido.php?id_pedido=' . $idPedido);
     exit;
 }
 
 if (isset($_GET['finalizar']) && (int)$_GET['finalizar'] > 0) {
-    // Aquí actualizamos la base de datos de verdad
     PedidoSA::actualizarEstado($idPedido, PedidoSA::ESTADO_LISTO_COCINA);
     header('Location: pedidos_listar_cocineros.php');
     exit;
@@ -54,8 +51,6 @@ if ($idCocineroAsignado) {
     $nombreCocineroAsignado = $cocinero ? $cocinero->getNombre() : 'Cocinero #' . $idCocineroAsignado;
 }
 
-// Obtenemos las líneas del pedido (productos, cantidades, etc.)
-// Asumo que tu PedidoSA tiene un método para obtener las líneas o usamos el DAO directamente
 $lineasDTO = PedidoSA::obtenerDetalle($idPedido); 
 
 $productosMostrar = [];
@@ -76,52 +71,51 @@ ob_start();
 ?>
 
 <section class="ger-wrap">
-    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
-        <a href="pedidos_listar_cocineros.php" class="btn-undo" style="text-decoration: none;">← Volver</a>
-        <h1 style="margin: 0;">Comanda #<?= $pedidoDTO->getNumeroPedido() ?></h1>
-        <span class="badge"><?= strtoupper($pedidoDTO->getTipo()) ?></span>
-        <!-- SECCIÓN DE ASIGNACIÓN DE COCINERO -->
-<?php if ($idCocineroAsignado): ?>
-    <div style="margin-left: auto; display: flex; align-items: center; gap: 10px; background: #e8f5e9; padding: 8px 15px; border-radius: 30px;">
-        <span style="font-size: 1.2em;">👨‍🍳</span>
-        <div>
-            <div style="font-weight: bold; color: #2e7d32;">
-                <?= $idCocineroAsignado == $idCocineroActual ? 'Tú' : htmlspecialchars($nombreCocineroAsignado) ?>
+    <div class="kitchen-detail-head">
+        <a href="pedidos_listar_cocineros.php" class="btn btn-light">← Volver</a>
+        <h1 class="mb-0">Comanda #<?= $pedidoDTO->getNumeroPedido() ?></h1>
+        <span class="kitchen-badge"><?= strtoupper($pedidoDTO->getTipo()) ?></span>
+
+        <?php if ($idCocineroAsignado): ?>
+            <div class="kitchen-assigned">
+                <span class="kitchen-assigned-icon">👨‍🍳</span>
+                <div>
+                    <div class="kitchen-assigned-name">
+                        <?= $idCocineroAsignado == $idCocineroActual ? 'Tú' : htmlspecialchars($nombreCocineroAsignado) ?>
+                    </div>
+                    <div class="kitchen-assigned-label">Cocinero asignado</div>
+                </div>
             </div>
-            <div style="font-size: 0.8em; color: #666;">Cocinero asignado</div>
-        </div>
-    </div>
-<?php else: ?>
-    <div style="margin-left: auto;">
-        <a href="productos_pedido.php?id_pedido=<?= $idPedido ?>&asignar=1" 
-           style="display: inline-block; padding: 8px 20px; background: #ff9800; color: white; text-decoration: none; border-radius: 30px; font-weight: bold;">
-            📋 ASIGNARME ESTE PEDIDO
-        </a>
-    </div>
-<?php endif; ?>
+        <?php else: ?>
+            <div class="kitchen-assigned-wrap">
+                <a href="productos_pedido.php?id_pedido=<?= $idPedido ?>&asignar=1" class="btn kitchen-assign-btn">
+                    📋 ASIGNARME ESTE PEDIDO
+                </a>
+            </div>
+        <?php endif; ?>
     </div>
 
-    <div class="card" style="padding: 0;">
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead style="background: #f8f9fa; border-bottom: 2px solid #eee;">
+    <div class="card kitchen-products-card">
+        <table class="kitchen-products-table">
+            <thead>
                 <tr>
-                    <th style="padding: 15px; text-align: left;">Producto</th>
-                    <th style="padding: 15px; text-align: center;">Cantidad</th>
-                    <th style="padding: 15px; text-align: right;">Estado</th>
+                    <th>Producto</th>
+                    <th class="cell-center">Cantidad</th>
+                    <th class="cell-right">Estado</th>
                 </tr>
             </thead>
             <tbody id="lista-productos">
                 <?php foreach ($productosMostrar as $item): ?>
-                <tr id="fila-<?= $item['id'] ?>" data-estado="pendiente" style="border-bottom: 1px solid #eee; transition: background 0.3s;">
-                    <td style="padding: 15px; display: flex; align-items: center; gap: 15px;">
-                        <img src="<?= RUTA_IMGS ?>/productos/<?= $item['img'] ?>" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
-                        <span style="font-weight: bold;"><?= h($item['nombre']) ?></span>
+                <tr id="fila-<?= $item['id'] ?>" data-estado="pendiente" class="kitchen-product-row">
+                    <td class="kitchen-product-main">
+                        <img src="<?= h(RUTA_IMGS . '/' . ltrim((string)$item['img'], '/')) ?>"" class="kitchen-product-thumb" alt="<?= h($item['nombre']) ?>">
+                        <span class="kitchen-product-name"><?= h($item['nombre']) ?></span>
                     </td>
-                    <td style="padding: 15px; text-align: center; font-size: 1.2em;">
+                    <td class="cell-center kitchen-product-qty">
                         <strong>x<?= $item['cantidad'] ?></strong>
                     </td>
-                    <td style="padding: 15px; text-align: right;" id="accion-<?= $item['id'] ?>">
-                        <button class="btn" onclick="marcarListo(<?= $item['id'] ?>)" style="background: #2e7d32; color: white;">
+                    <td class="cell-right" id="accion-<?= $item['id'] ?>">
+                        <button class="btn btn-success" onclick="marcarListo(<?= $item['id'] ?>)">
                             LISTO
                         </button>
                     </td>
@@ -131,9 +125,8 @@ ob_start();
         </table>
     </div>
 
-    <div style="margin-top: 30px; text-align: center;">
-        <button id="btnFinalizarPedido" class="btn" onclick="finalizarPedido(<?= $idPedido ?>)" 
-                style="padding: 15px 40px; font-size: 1.1em; opacity: 0.5; cursor: not-allowed;" disabled>
+    <div class="kitchen-finish-wrap">
+        <button id="btnFinalizarPedido" class="btn kitchen-finish-btn kitchen-finish-btn-disabled" onclick="finalizarPedido(<?= $idPedido ?>)" disabled>
             PEDIDO COMPLETADO
         </button>
     </div>
@@ -146,12 +139,12 @@ function marcarListo(id) {
     const fila = document.getElementById('fila-' + id);
     const celdaAccion = document.getElementById('accion-' + id);
     
-    fila.style.backgroundColor = "#e8f5e9";
+    fila.classList.add('kitchen-product-row-ready');
     fila.setAttribute('data-estado', 'listo');
     
     celdaAccion.innerHTML = `
-        <span style="color: #2e7d32; font-weight: bold; margin-right: 10px;">✓ LISTO</span>
-        <button class="btn-undo" onclick="deshacerListo(${id})">Deshacer</button>
+        <span class="kitchen-ready-label">✓ LISTO</span>
+        <button class="btn btn-light kitchen-undo-btn" onclick="deshacerListo(${id})">Deshacer</button>
     `;
     
     pendientes--;
@@ -162,11 +155,11 @@ function deshacerListo(id) {
     const fila = document.getElementById('fila-' + id);
     const celdaAccion = document.getElementById('accion-' + id);
     
-    fila.style.backgroundColor = "white";
+    fila.classList.remove('kitchen-product-row-ready');
     fila.setAttribute('data-estado', 'pendiente');
     
     celdaAccion.innerHTML = `
-        <button class="btn" onclick="marcarListo(${id})" style="background: #2e7d32; color: white;">
+        <button class="btn btn-success" onclick="marcarListo(${id})">
             LISTO
         </button>
     `;
@@ -179,14 +172,12 @@ function actualizarBotonMaestro() {
     const btn = document.getElementById('btnFinalizarPedido');
     if (pendientes === 0) {
         btn.disabled = false;
-        btn.style.opacity = "1";
-        btn.style.cursor = "pointer";
-        btn.style.backgroundColor = "#d32f2f";
+        btn.classList.remove('kitchen-finish-btn-disabled');
+        btn.classList.add('kitchen-finish-btn-enabled');
     } else {
         btn.disabled = true;
-        btn.style.opacity = "0.5";
-        btn.style.cursor = "not-allowed";
-        btn.style.backgroundColor = "#333";
+        btn.classList.remove('kitchen-finish-btn-enabled');
+        btn.classList.add('kitchen-finish-btn-disabled');
     }
 }
 
@@ -196,11 +187,6 @@ function finalizarPedido(id) {
     }
 }
 </script>
-
-<style>
-    .btn-undo { background: #eee; color: #333; border: 1px solid #ccc; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8em; }
-    .badge { background: #333; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8em; }
-</style>
 
 <?php
 $contenidoPrincipal = ob_get_clean();

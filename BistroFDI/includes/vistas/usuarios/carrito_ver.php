@@ -1,5 +1,6 @@
-<?php 
+<?php
 declare(strict_types=1);
+
 require_once __DIR__ . '/../../config.php';
 require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
@@ -18,12 +19,16 @@ $errores = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmar'])) {
     try {
-        if (empty($_SESSION['carrito'])) throw new InvalidArgumentException("El carrito está vacío.");
-        
-        $tipoPedido = $_POST['pedido_tipo'] ?? null;
-        if (!$tipoPedido) throw new InvalidArgumentException("Debes elegir si el pedido es para tomar aquí o para llevar.");
+        if (empty($_SESSION['carrito'])) {
+            throw new InvalidArgumentException("El carrito está vacío.");
+        }
 
-        $idCliente = (int)($_SESSION['usuario_id'] ?? 0); 
+        $tipoPedido = $_POST['pedido_tipo'] ?? null;
+        if (!$tipoPedido) {
+            throw new InvalidArgumentException("Debes elegir si el pedido es para tomar aquí o para llevar.");
+        }
+
+        $idCliente = (int)($_SESSION['usuario_id'] ?? 0);
 
         $idPedido = PedidoSA::crearDesdeCarrito(
             $idCliente,
@@ -35,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmar'])) {
         $_SESSION['mensaje_exito'] = "¡Pedido #$idPedido realizado con éxito!";
         header("Location: " . RUTA_APP . "/index.php");
         exit;
-
     } catch (Throwable $e) {
         $errores[] = $e->getMessage();
     }
@@ -61,111 +65,106 @@ ob_start();
     <h1>Mi Carrito</h1>
 
     <?php if (!empty($errores)): ?>
-        <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-            <?php foreach ($errores as $e) echo "<p style='margin:0;'>$e</p>"; ?>
+        <div class="alert-error cart-error-box">
+            <?php foreach ($errores as $e): ?>
+                <p class="cart-error-text"><?= h((string)$e) ?></p>
+            <?php endforeach; ?>
         </div>
     <?php endif; ?>
 
     <?php if (empty($productosCarrito)): ?>
-        <div class="card" style="text-align: center; padding: 50px;">
+        <div class="card text-center p-50">
             <p>Tu carrito está actualmente vacío.</p>
             <a href="categorias_listar.php" class="btn">Ver la carta</a>
         </div>
     <?php else: ?>
-        <div style="display: flex; flex-wrap: wrap; gap: 30px; align-items: flex-start;">
-            
-            <div style="flex: 2; min-width: 300px;">
-                <div class="stack" style="gap: 10px;">
-                    <?php foreach ($productosCarrito as $item): 
+        <div class="cart-layout">
+
+            <div class="cart-main">
+                <div class="stack cart-stack-tight">
+                    <?php foreach ($productosCarrito as $item): ?>
+                        <?php
                         $prod = $item['obj'];
                         $img = $prod->getImagenes()[0] ?? 'productos/default_producto.jpg';
-                    ?>
-                        <div class="card" style="display: flex; align-items: center; gap: 15px; padding: 10px;">
-                            <img src="<?= h(RUTA_IMGS . '/' . ltrim((string)$img, '/')) ?>" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
-                            <div style="flex: 1;">
-                                <h4 style="margin: 0;"><?= h($prod->getNombre()) ?></h4>
+                        ?>
+                        <div class="card cart-item2">
+                            <img
+                                src="<?= h(RUTA_IMGS . '/' . ltrim((string)$img, '/')) ?>"
+                                class="cart-thumb2"
+                                alt="<?= h($prod->getNombre()) ?>"
+                            >
+
+                            <div class="flex-1">
+                                <h4 class="title-reset"><?= h($prod->getNombre()) ?></h4>
                                 <small class="muted"><?= number_format($prod->getPrecioFinal(), 2) ?>€ / ud.</small>
                             </div>
-                            <div style="text-align: center;">
+
+                            <div class="cart-item-qty">
                                 <span>x<?= $item['cantidad'] ?></span>
                             </div>
-                            <div style="min-width: 80px; text-align: right; font-weight: bold;">
+
+                            <div class="cart-item-subtotal cart-item-subtotal-wide">
                                 <?= number_format($item['subtotal'], 2) ?>€
                             </div>
-                            <a href="carrito_gestion.php?action=remove&id=<?= $prod->getId() ?>" style="color:red; text-decoration:none; padding: 5px;">✕</a>
+
+                            <a href="carrito_gestion.php?action=remove&id=<?= $prod->getId() ?>" class="cart-remove">✕</a>
                         </div>
                     <?php endforeach; ?>
                 </div>
             </div>
 
-            <div style="flex: 1; min-width: 280px;">
-                <div class="card stack" style="padding: 20px; position: sticky; top: 20px;">
-                    <h3 style="margin-top: 0;">Resumen del pedido</h3>
-                    
+            <div class="cart-side cart-side-wide">
+                <div class="card stack summary-card cart-summary">
+                    <h3 class="mt-0">Resumen del pedido</h3>
+
                     <form method="post">
-                        <p style="font-weight: bold; margin-bottom: 10px; font-size: 0.9em;">¿Cómo quieres tu pedido?</p>
-                        <div style="display: flex; gap: 10px; margin-bottom: 25px;">
-                            <label style="flex: 1;">
-                                <input type="radio" name="pedido_tipo" value="local" required style="display: none;" class="radio-tipo">
+                        <p class="cart-choice-title">¿Cómo quieres tu pedido?</p>
+
+                        <div class="cart-choice-grid">
+                            <label class="flex-1">
+                                <input type="radio" name="pedido_tipo" value="local" required class="radio-tipo cart-radio-hidden">
                                 <div class="tipo-btn">
-                                    <span style="font-size: 1.5em;">🏠</span><br>Tomar aquí
+                                    <span class="cart-choice-icon">🏠</span><br>Tomar aquí
                                 </div>
                             </label>
-                            <label style="flex: 1;">
-                                <input type="radio" name="pedido_tipo" value="llevar" required style="display: none;" class="radio-tipo">
+
+                            <label class="flex-1">
+                                <input type="radio" name="pedido_tipo" value="llevar" required class="radio-tipo cart-radio-hidden">
                                 <div class="tipo-btn">
-                                    <span style="font-size: 1.5em;">🥡</span><br>Para llevar
+                                    <span class="cart-choice-icon">🥡</span><br>Para llevar
                                 </div>
                             </label>
                         </div>
 
-                        <div style="display: flex; justify-content: space-between; font-size: 0.9em;">
+                        <div class="summary-row text-small">
                             <span>Subtotal (sin IVA):</span>
                             <span><?= number_format($total / 1.10, 2) ?>€</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.9em;">
+
+                        <div class="summary-row text-small">
                             <span>IVA (10%):</span>
                             <span><?= number_format($total - ($total / 1.10), 2) ?>€</span>
                         </div>
+
                         <hr>
-                        <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.3em;">
+
+                        <div class="summary-total">
                             <span>Total:</span>
-                            <span style="color: #d32f2f;"><?= number_format($total, 2) ?>€</span>
+                            <span class="summary-total-value"><?= number_format($total, 2) ?>€</span>
                         </div>
 
-                        <button type="submit" name="confirmar" class="btn" style="width: 100%; margin-top: 20px; padding: 12px;">
+                        <button type="submit" name="confirmar" class="btn summary-submit cart-confirm-btn">
                             CONFIRMAR Y PAGAR
                         </button>
                     </form>
 
-                    <a href="carrito_gestion.php?action=clear" class="muted" style="display: block; text-align: center; margin-top: 15px; font-size: 0.8em;">Vaciar carrito</a>
+                    <a href="carrito_gestion.php?action=clear" class="summary-link muted cart-clear-link">Vaciar carrito</a>
                 </div>
             </div>
 
         </div>
     <?php endif; ?>
 </section>
-
-<style>
-    .tipo-btn {
-        border: 2px solid #eee;
-        border-radius: 8px;
-        padding: 10px;
-        text-align: center;
-        cursor: pointer;
-        background: #fafafa;
-        transition: all 0.2s;
-        font-size: 0.85em;
-    }
-    .tipo-btn:hover { background: #f0f0f0; border-color: #ccc; }
-
-    .radio-tipo:checked + .tipo-btn {
-        border-color: #d32f2f;
-        background: #fff5f5;
-        color: #d32f2f;
-        font-weight: bold;
-    }
-</style>
 
 <?php
 $contenidoPrincipal = ob_get_clean();
