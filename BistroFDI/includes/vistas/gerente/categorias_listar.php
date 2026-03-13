@@ -45,8 +45,8 @@ ob_start();
         
         <div class="card" style="display:flex; gap:14px; align-items:flex-start; flex-wrap:wrap;">
           <?php if ($img): ?>
-            <img src="<?= h(RUTA_IMGS.'/categorias/'.$img) ?>" alt=""
-                 style="width:220px;max-width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid #111;border-radius:10px;background:#fff;">
+            <img src="<?= h(RUTA_IMGS . '/' . ltrim((string)$img, '/')) ?>" alt=""
+            style="width:220px;max-width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid #111;border-radius:10px;background:#fff;">
           <?php endif; ?>
 
           <div class="stack" style="flex:1; min-width:240px;">

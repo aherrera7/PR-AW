@@ -48,14 +48,14 @@ ob_start();
             <?php 
                 $id = $p->getId();
                 $imagenes = $p->getImagenes();
-                if (empty($imagenes)) $imagenes = ['default_producto.jpg'];
+                if (empty($imagenes)) $imagenes = ['productos/default_producto.jpg'];
                 $claseEstado = (!$p->isOfertado()) ? 'style="opacity: 0.6;"' : '';
             ?>
             <div class="card stack" <?= $claseEstado ?> style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
                 
                 <div style="position: relative; width: 100%; aspect-ratio: 1/1; background: #f0f0f0; border-bottom: 1px solid #ddd;">
                     <?php foreach ($imagenes as $index => $ruta): ?>
-                        <img src="<?= h(RUTA_IMGS.'/productos/'.$ruta) ?>" 
+                        <img src="<?= h(RUTA_IMGS . '/' . ltrim((string)$ruta, '/')) ?>" 
                              class="img-carrusel-<?= $id ?>" 
                              style="width: 100%; height: 100%; object-fit: cover; display: <?= $index === 0 ? 'block' : 'none' ?>;">
                     <?php endforeach; ?>

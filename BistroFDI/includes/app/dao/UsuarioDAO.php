@@ -19,6 +19,7 @@ class UsuarioDAO
         }
 
         $stmt->bind_param("i", $id);
+
         if (!$stmt->execute()) {
             throw new RuntimeException("Error execute (findById usuarios): " . $stmt->error);
         }
@@ -55,8 +56,46 @@ class UsuarioDAO
         }
 
         $stmt->bind_param("s", $nombreUsuario);
+
         if (!$stmt->execute()) {
             throw new RuntimeException("Error execute (findByNombreUsuario usuarios): " . $stmt->error);
+        }
+
+        $res = $stmt->get_result();
+        $row = $res->fetch_assoc();
+        $stmt->close();
+
+        if (!$row) {
+            return null;
+        }
+
+        return new UsuarioDTO(
+            (int)$row['id'],
+            (string)$row['nombre_usuario'],
+            (string)$row['password'],
+            (string)$row['nombre'],
+            (string)$row['email'],
+            (string)$row['apellidos'],
+            $row['avatar'] !== null ? (string)$row['avatar'] : null,
+            []
+        );
+    }
+
+    public function findByEmail(string $email): ?UsuarioDTO
+    {
+        $sql = "SELECT id, nombre_usuario, email, password, nombre, apellidos, avatar
+                FROM usuarios
+                WHERE email = ?";
+
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            throw new RuntimeException("Error prepare (findByEmail usuarios): " . $this->conn->error);
+        }
+
+        $stmt->bind_param("s", $email);
+
+        if (!$stmt->execute()) {
+            throw new RuntimeException("Error execute (findByEmail usuarios): " . $stmt->error);
         }
 
         $res = $stmt->get_result();
@@ -87,7 +126,7 @@ class UsuarioDAO
         string $apellidos,
         ?string $avatar
     ): int {
-        $sql = "INSERT INTO usuarios(nombre_usuario, email, password, nombre, apellidos, avatar)
+        $sql = "INSERT INTO usuarios (nombre_usuario, email, password, nombre, apellidos, avatar)
                 VALUES (?, ?, ?, ?, ?, ?)";
 
         $stmt = $this->conn->prepare($sql);
@@ -96,6 +135,7 @@ class UsuarioDAO
         }
 
         $stmt->bind_param("ssssss", $nombreUsuario, $email, $passwordHash, $nombre, $apellidos, $avatar);
+
         if (!$stmt->execute()) {
             throw new RuntimeException("Error execute (insert usuarios): " . $stmt->error);
         }
@@ -124,9 +164,8 @@ class UsuarioDAO
         }
 
         $stmt->bind_param("sssssi", $nombreUsuario, $email, $nombre, $apellidos, $avatar, $id);
-        $ok = $stmt->execute();
 
-        if (!$ok) {
+        if (!$stmt->execute()) {
             throw new RuntimeException("Error execute (updatePerfil usuarios): " . $stmt->error);
         }
 
@@ -136,7 +175,9 @@ class UsuarioDAO
 
     public function updatePasswordHash(int $id, string $passwordHash): bool
     {
-        $sql = "UPDATE usuarios SET password = ? WHERE id = ?";
+        $sql = "UPDATE usuarios
+                SET password = ?
+                WHERE id = ?";
 
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) {
@@ -144,9 +185,8 @@ class UsuarioDAO
         }
 
         $stmt->bind_param("si", $passwordHash, $id);
-        $ok = $stmt->execute();
 
-        if (!$ok) {
+        if (!$stmt->execute()) {
             throw new RuntimeException("Error execute (updatePasswordHash usuarios): " . $stmt->error);
         }
 
@@ -191,7 +231,8 @@ class UsuarioDAO
 
     public function deleteById(int $id): bool
     {
-        $sql = "DELETE FROM usuarios WHERE id = ?";
+        $sql = "DELETE FROM usuarios
+                WHERE id = ?";
 
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) {
@@ -199,9 +240,8 @@ class UsuarioDAO
         }
 
         $stmt->bind_param("i", $id);
-        $ok = $stmt->execute();
 
-        if (!$ok) {
+        if (!$stmt->execute()) {
             throw new RuntimeException("Error execute (deleteById usuarios): " . $stmt->error);
         }
 

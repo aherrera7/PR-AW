@@ -9,8 +9,8 @@ $esGerente = !empty($_SESSION['esGerente']);
 $esCamarero = !empty($_SESSION['esCamarero']);
 
 $nombreCamarero = $_SESSION['nombre'] ?? 'Camarero';
-$avatarCamarero = $_SESSION['avatar'] ?? 'default.jpg';
-
+$avatarCamarero = $_SESSION['avatar'] ?? 'avatares/default.jpg';
+$avatarCamareroUrl = RUTA_IMGS . '/' . ltrim((string)$avatarCamarero, '/');
 
 if (!isset($_SESSION['login']) || (!$esGerente && !$esCamarero)) {
     header('Location: ' . RUTA_VISTAS . '/login.php');
@@ -18,7 +18,6 @@ if (!isset($_SESSION['login']) || (!$esGerente && !$esCamarero)) {
 }
 
 $tituloPagina = "Estado de los pedidos (Camarero)";
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idPedido = filter_input(INPUT_POST, 'id_pedido', FILTER_VALIDATE_INT);
@@ -45,16 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-
-
 try {
-    // Obtenemos todos los pedidos para filtrar los que necesita el camarero
     $todosLosPedidos = PedidoSA::listarTodos(); 
     $pedidosCamarero = [];
 
     foreach ($todosLosPedidos as $p) {
         $estado = $p->getEstado();
-        // El camarero ve: recibido, listo cocina, terminado
         if (in_array($estado, ['recibido', 'listo cocina', 'terminado'])) {
             $pedidosCamarero[] = $p;
         }
@@ -72,7 +67,7 @@ ob_start();
     <div style="display: flex; align-items: center; gap: 10px;">
         <span><?= htmlspecialchars($nombreCamarero) ?></span>
         
-        <img src="<?= RUTA_IMGS . '/avatares/' . $avatarCamarero ?>" 
+        <img src="<?= h($avatarCamareroUrl) ?>" 
              alt="Avatar" 
              style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid white;"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -83,8 +78,6 @@ ob_start();
     </div>
 </div>
 
-
-
 <h2 style="padding: 0 20px;">ESTADO DE LOS PEDIDOS (CAMARERO)</h2>
 
 <?php if (isset($error)): ?>
@@ -93,13 +86,11 @@ ob_start();
     </div>
 <?php endif; ?>
 
-<!-- Grid de pedidos (como el de cocinero) -->
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 20px;">
     
     <?php foreach ($pedidosCamarero as $p): 
         $estado = $p->getEstado();
         
-        // Color según estado
         $bgColor = match($estado) {
            'recibido' => '#fff3e0',
             'listo cocina' => '#e8f5e9',
@@ -107,7 +98,6 @@ ob_start();
             default => '#ffffff'
         };
         
-        // Botón según estado
         $accion = match($estado) {
             'recibido' => 'cobrar',
             'listo cocina' => 'preparar_entrega',
@@ -128,11 +118,9 @@ ob_start();
     ?>
     
         <div style="border: 1px solid #ddd; border-radius: 8px; background: <?= $bgColor ?>; overflow: hidden;">
-            
-            <!-- Cabecera del pedido -->
             <div style="padding: 15px; border-bottom: 1px solid rgba(0,0,0,0.1);">
                 <div style="display: flex; justify-content: space-between;">
-                    <h3 style="margin: 0;">Pedido #<?= $p->getNumeroPedido() ?></h3>
+                    <h3 style="margin: 0; color:#444;">Pedido #<?= $p->getNumeroPedido() ?></h3>
                     <span style="background: #333; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8em;">
                         <?= $p->getTipo() === 'local' ? 'LOCAL' : 'LLEVAR' ?>
                     </span>
@@ -140,11 +128,10 @@ ob_start();
                 <p style="margin: 5px 0 0 0; color: #666;"><?= date('H:i', strtotime($p->getFechaHora())) ?></p>
             </div>
             
-            <!-- Cuerpo del pedido -->
             <div style="padding: 15px;">
-                <p>Cliente ID: <?= $p->getIdCliente() ?></p>
-                <p><strong><?= number_format($p->getTotal(), 2) ?>€</strong></p>
-                <p>Estado: <strong><?= $estado ?></strong></p>
+                <p style="color:#555;">Cliente ID: <?= $p->getIdCliente() ?></p>
+                <p style="color:#444;"><strong><?= number_format($p->getTotal(), 2) ?>€</strong></p>
+                <p style="color:#555;">Estado: <strong><?= $estado ?></strong></p>
 
                 <?php if ($estado === 'listo cocina'): ?>
                 <div style="margin: 15px 0; text-align: center;">
@@ -155,9 +142,7 @@ ob_start();
                 </div>
                 <?php endif; ?>
                 
-                <!-- Botones -->
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    
                     <form method="POST" action="" style="flex: 1;">
                         <input type="hidden" name="id_pedido" value="<?= $p->getId() ?>">
                         <input type="hidden" name="accion" value="<?= $accion ?>">

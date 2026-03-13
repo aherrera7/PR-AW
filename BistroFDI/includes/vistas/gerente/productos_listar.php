@@ -64,13 +64,13 @@ ob_start();
         <?php
           $id = (int)$p->getId();
           $imagenes = $p->getImagenes();
-          $imgPrincipal = !empty($imagenes) ? $imagenes[0] : 'default_producto.jpg';
+          $imgPrincipal = !empty($imagenes) ? $imagenes[0] : 'productos/default_producto.jpg';
           $cardClass = $p->isOfertado() ? 'card product-card' : 'card product-card product-card-off';
         ?>
         <div class="<?= h($cardClass) ?>">
           <img
             class="product-thumb"
-            src="<?= h(RUTA_IMGS.'/productos/'.$imgPrincipal) ?>"
+            src="<?= h(RUTA_IMGS . '/' . ltrim((string)$imgPrincipal, '/')) ?>"
             alt=""
           >
 

@@ -66,7 +66,7 @@ ob_start();
                         </td>
                         <td style="padding: 15px; font-weight: bold;"><?= number_format($p->getTotal(), 2) ?>€</td>
                         <td style="padding: 15px;">
-                            <a href="../usuarios/pedido_detalle.php?id=<?= $p->getId() ?>" class="btn-sm">Detalles</a>
+                            <a href="../cliente/pedido_detalle.php?id=<?= $p->getId() ?>" class="btn-sm">Detalles</a>
                             </td>
                     </tr>
                 <?php endforeach; ?>

@@ -1,4 +1,4 @@
-<?php
+<?php 
 declare(strict_types=1);
 require_once __DIR__ . '/../../config.php';
 require_once RAIZ_APP . '/includes/vistas/common/auth.php';
@@ -16,29 +16,24 @@ $productosCarrito = [];
 $total = 0;
 $errores = [];
 
-// 1. LÓGICA DE PROCESAMIENTO DEL FORMULARIO (Cuando se pulsa "Confirmar")
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmar'])) {
     try {
         if (empty($_SESSION['carrito'])) throw new InvalidArgumentException("El carrito está vacío.");
         
-        // Obtenemos el tipo elegido (local o llevar)
         $tipoPedido = $_POST['pedido_tipo'] ?? null;
         if (!$tipoPedido) throw new InvalidArgumentException("Debes elegir si el pedido es para tomar aquí o para llevar.");
 
-        // Obtenemos el ID del usuario (ajusta la clave si en tu login es distinta)
         $idCliente = (int)($_SESSION['usuario_id'] ?? 0); 
 
-        // Creamos el pedido real en la BD usando tu SA
         $idPedido = PedidoSA::crearDesdeCarrito(
             $idCliente,
             $tipoPedido,
             $_SESSION['carrito']
         );
 
-        // Si ha ido bien, vaciamos carrito y redirigimos
         unset($_SESSION['carrito']);
         $_SESSION['mensaje_exito'] = "¡Pedido #$idPedido realizado con éxito!";
-        header("Location: " . RUTA_APP . "/index.php"); // O a una vista de "Mis Pedidos"
+        header("Location: " . RUTA_APP . "/index.php");
         exit;
 
     } catch (Throwable $e) {
@@ -46,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmar'])) {
     }
 }
 
-// 2. CARGA DE DATOS PARA MOSTRAR EL CARRITO
 foreach ($carrito as $id => $cantidad) {
     $p = ProductoSA::obtener((int)$id);
     if ($p) {
@@ -84,10 +78,10 @@ ob_start();
                 <div class="stack" style="gap: 10px;">
                     <?php foreach ($productosCarrito as $item): 
                         $prod = $item['obj'];
-                        $img = $prod->getImagenes()[0] ?? 'default.jpg';
+                        $img = $prod->getImagenes()[0] ?? 'productos/default_producto.jpg';
                     ?>
                         <div class="card" style="display: flex; align-items: center; gap: 15px; padding: 10px;">
-                            <img src="<?= RUTA_IMGS ?>/productos/<?= $img ?>" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
+                            <img src="<?= h(RUTA_IMGS . '/' . ltrim((string)$img, '/')) ?>" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
                             <div style="flex: 1;">
                                 <h4 style="margin: 0;"><?= h($prod->getNombre()) ?></h4>
                                 <small class="muted"><?= number_format($prod->getPrecioFinal(), 2) ?>€ / ud.</small>
@@ -165,7 +159,6 @@ ob_start();
     }
     .tipo-btn:hover { background: #f0f0f0; border-color: #ccc; }
 
-    /* Estilo cuando el radio invisible está seleccionado */
     .radio-tipo:checked + .tipo-btn {
         border-color: #d32f2f;
         background: #fff5f5;

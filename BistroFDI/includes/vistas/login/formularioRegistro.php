@@ -4,15 +4,18 @@ declare(strict_types=1);
 require_once RAIZ_APP . '/includes/vistas/common/formularioBase.php';
 require_once RAIZ_APP . '/includes/app/sa/UsuarioSA.php';
 
-class FormularioRegistro extends FormularioBase {
-    public function __construct() {
+class FormularioRegistro extends FormularioBase
+{
+    public function __construct()
+    {
         parent::__construct('formRegistro', [
             'urlRedireccion' => RUTA_APP . '/index.php',
             'enctype' => 'multipart/form-data'
         ]);
     }
 
-    protected function generaCamposFormulario(array &$datos): string {
+    protected function generaCamposFormulario(array &$datos): string
+    {
         $nombreUsuario = $datos['nombreUsuario'] ?? '';
         $email = $datos['email'] ?? '';
         $nombre = $datos['nombre'] ?? '';
@@ -22,7 +25,7 @@ class FormularioRegistro extends FormularioBase {
 
         $htmlErroresGlobales = self::generaListaErroresGlobales($this->errores);
         $erroresCampos = self::generaErroresCampos(
-            ['nombreUsuario','email','nombre','apellidos','password','password2'],
+            ['nombreUsuario', 'email', 'nombre', 'apellidos', 'password', 'password2'],
             $this->errores
         );
 
@@ -38,7 +41,7 @@ class FormularioRegistro extends FormularioBase {
         $imgBaseEsc = htmlspecialchars($imgBase, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 
         $opciones = [
-            'avatares/default.png' => 'Por defecto',
+            'avatares/default.jpg' => 'Por defecto',
             'avatares/a1.png' => 'Avatar 1',
             'avatares/a2.png' => 'Avatar 2',
             'avatares/a3.png' => 'Avatar 3',
@@ -53,17 +56,16 @@ class FormularioRegistro extends FormularioBase {
             $optionsHtml .= "<option value=\"{$vEsc}\" {$sel}>{$lEsc}</option>";
         }
 
-return <<<HTML
+        return <<<HTML
 {$htmlErroresGlobales}
 
 <fieldset>
   <legend>Registro</legend>
 
-  <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap; margin-top:10px;">
-    <img id="avatarPreview" src="{$avatarPreviewUrlEsc}" alt="Avatar"
-         style="width:100px;height:100px;border-radius:50%;border:1px solid #111;object-fit:cover;background:#fff;">
+  <div class="form-media">
+    <img id="avatarPreview" src="{$avatarPreviewUrlEsc}" alt="Avatar" class="avatar">
 
-    <div class="stack" style="min-width:260px; flex:1;">
+    <div class="stack flex-1">
       <div>
         <label for="avatarSelect">Avatares</label>
         <select id="avatarSelect" name="avatar_predef">
@@ -78,7 +80,7 @@ return <<<HTML
     </div>
   </div>
 
-  <div style="display:grid; gap:12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top:12px;">
+  <div class="form-grid mt-15">
     <div>
       <label>Usuario</label>
       <input type="text" name="nombreUsuario" value="{$nombreUsuarioEsc}" required>
@@ -117,7 +119,7 @@ return <<<HTML
   </div>
 
   <div class="form-actions">
-    <button class="btn btn-primary" type="submit" name="registro">Crear cuenta</button>
+    <button class="btn" type="submit" name="registro">Crear cuenta</button>
   </div>
 
   <script>
@@ -160,7 +162,7 @@ HTML;
         $password = trim($datos['password'] ?? '');
         $password2 = trim($datos['password2'] ?? '');
 
-        $avatarPredef = $datos['avatar_predef'] ?? 'avatares/default.png';
+        $avatarPredef = $datos['avatar_predef'] ?? 'avatares/default.jpg';
 
         if (!$nombreUsuario || mb_strlen($nombreUsuario) < 4) $this->errores['nombreUsuario'] = 'Mínimo 4 caracteres.';
         if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) $this->errores['email'] = 'Email no válido.';
@@ -181,7 +183,7 @@ HTML;
                     $this->errores[] = 'La imagen supera 2MB.';
                 } else {
                     $mime = mime_content_type($f['tmp_name']);
-                    $permitidos = ['image/png','image/jpeg','image/webp','image/gif'];
+                    $permitidos = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
                     if (!in_array($mime, $permitidos, true)) {
                         $this->errores[] = 'Formato no permitido (PNG/JPG/WEBP/GIF).';
                     }
@@ -198,7 +200,7 @@ HTML;
                 if (!move_uploaded_file($f['tmp_name'], $destinoAbs)) {
                     $this->errores[] = 'No se pudo guardar la imagen subida.';
                 } else {
-                    $avatarFinal = $nombreArchivo; 
+                    $avatarFinal = $nombreArchivo;
                 }
             }
         }
@@ -220,7 +222,6 @@ HTML;
             $_SESSION['nombre'] = $usuario->getNombre();
             $_SESSION['avatar'] = $usuario->getAvatar();
             $_SESSION['roles'] = array_map(fn($r) => $r->getNombre(), $usuario->getRoles());
-
         } catch (Throwable $e) {
             error_log($e->getMessage());
             $this->errores[] = 'Error interno al registrar.';

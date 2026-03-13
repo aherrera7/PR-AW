@@ -45,10 +45,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_FILES['imagenes']['name'][0])) {
         foreach ($_FILES['imagenes']['tmp_name'] as $key => $tmpName) {
             if ($_FILES['imagenes']['error'][$key] === UPLOAD_ERR_OK) {
-                $nombreArchivo = time() . '_' . $_FILES['imagenes']['name'][$key];
-                $rutaDestino = RAIZ_APP . '/img/productos/' . $nombreArchivo;
+                $nombreArchivo = time() . '_' . basename((string)$_FILES['imagenes']['name'][$key]);
+                $rutaRelativa = 'productos/' . $nombreArchivo;
+                $rutaDestino = RAIZ_APP . '/img/' . $rutaRelativa;
+
                 if (move_uploaded_file($tmpName, $rutaDestino)) {
-                    $rutasNuevas[] = $nombreArchivo;
+                    $rutasNuevas[] = $rutaRelativa;
                 }
             }
         }
@@ -89,7 +91,7 @@ ob_start();
         <div class="thumb-list">
           <?php foreach ($producto->getImagenes() as $img): ?>
             <div class="thumb-card">
-              <img class="thumb-img" src="<?= h(RUTA_IMGS.'/productos/'.$img) ?>" alt="">
+              <img class="thumb-img" src="<?= h(RUTA_IMGS . '/' . ltrim((string)$img, '/')) ?>" alt="">
               <input type="checkbox" name="borrar_fotos[]" value="<?= h($img) ?>"> <small>Borrar</small>
             </div>
           <?php endforeach; ?>

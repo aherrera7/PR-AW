@@ -8,7 +8,6 @@ require_once RAIZ_APP . '/includes/app/sa/CategoriaSA.php';
 
 $app = Aplicacion::getInstance();
 
-// 1. Obtener la categoría de la URL
 $idCat = (int)($_GET['id_cat'] ?? 0);
 $categoria = $idCat > 0 ? CategoriaSA::obtener($idCat) : null;
 
@@ -17,11 +16,7 @@ if (!$categoria) {
     exit;
 }
 
-// 2. Detectar si está logueado para añadir al carrito
 $estaLogueado = !empty($_SESSION['login']);
-
-// 3. Listar productos de esa categoría
-// Al ser la vista exclusiva de cliente/compra, forzamos que solo se listen los ofertados (pasando true)
 $productos = ProductoSA::listar($idCat, true);
 
 $tituloPagina = 'Productos: ' . $categoria->getNombre();
@@ -44,13 +39,13 @@ ob_start();
             <?php 
                 $id = $p->getId();
                 $imagenes = $p->getImagenes();
-                if (empty($imagenes)) $imagenes = ['default_producto.jpg'];
+                if (empty($imagenes)) $imagenes = ['productos/default_producto.jpg'];
             ?>
             <div class="card stack" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
                 
                 <div style="position: relative; width: 100%; aspect-ratio: 1/1; background: #f0f0f0; border-bottom: 1px solid #ddd;">
                     <?php foreach ($imagenes as $index => $ruta): ?>
-                        <img src="<?= h(RUTA_IMGS.'/productos/'.$ruta) ?>" 
+                        <img src="<?= h(RUTA_IMGS . '/' . ltrim((string)$ruta, '/')) ?>" 
                              class="img-carrusel-<?= $id ?>" 
                              style="width: 100%; height: 100%; object-fit: cover; display: <?= $index === 0 ? 'block' : 'none' ?>;">
                     <?php endforeach; ?>

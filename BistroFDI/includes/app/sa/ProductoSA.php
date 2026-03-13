@@ -47,8 +47,10 @@ class ProductoSA
         );
 
         foreach ($rutasImagenes as $ruta) {
-            $ruta = trim($ruta);
-            if ($ruta !== '') self::dao()->addImagen($idProducto, $ruta);
+            $ruta = ltrim(trim((string)$ruta), '/');
+            if ($ruta !== '') {
+                self::dao()->addImagen($idProducto, $ruta);
+            }
         }
 
         return $idProducto;
@@ -80,8 +82,10 @@ class ProductoSA
         if (!$ok) return false;
 
         foreach ($rutasImagenesNuevas as $ruta) {
-            $ruta = trim($ruta);
-            if ($ruta !== '') self::dao()->addImagen($id, $ruta);
+            $ruta = ltrim(trim((string)$ruta), '/');
+            if ($ruta !== '') {
+                self::dao()->addImagen($id, $ruta);
+            }
         }
 
         return true;

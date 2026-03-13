@@ -6,6 +6,7 @@ require_once RAIZ_APP . '/includes/app/dao/CategoriaDAO.php';
 class CategoriaSA
 {
     private const DIR_REL_IMGS = '/img/categorias';
+    private const DIR_BD_IMGS  = 'categorias';
     private const ALLOWED_MIMES = ['image/jpeg','image/png','image/webp','image/gif'];
 
     private static function dao(): CategoriaDAO
@@ -65,7 +66,7 @@ class CategoriaSA
             throw new RuntimeException('No se pudo guardar la imagen.');
         }
 
-        return $nombreFich;
+        return self::DIR_BD_IMGS . '/' . $nombreFich;
     }
 
     private static function borrarFicheroImagen(?string $imagen): void
@@ -73,8 +74,15 @@ class CategoriaSA
         $imagen = $imagen ? trim($imagen) : '';
         if ($imagen === '') return;
 
-        // evita rutas raras
+        $imagen = ltrim(str_replace('\\', '/', $imagen), '/');
+
+        $prefijo = self::DIR_BD_IMGS . '/';
+        if (str_starts_with($imagen, $prefijo)) {
+            $imagen = substr($imagen, strlen($prefijo));
+        }
+
         $imagen = basename($imagen);
+        if ($imagen === '') return;
 
         $path = RAIZ_APP . self::DIR_REL_IMGS . '/' . $imagen;
         if (is_file($path)) {

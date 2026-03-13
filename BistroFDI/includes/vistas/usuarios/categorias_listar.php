@@ -7,13 +7,11 @@ require_once RAIZ_APP . '/includes/app/sa/CategoriaSA.php';
 
 $app  = Aplicacion::getInstance();
 
-// Definimos la ruta base para los enlaces
 $baseUsuario = RUTA_APP . '/includes/vistas/usuarios';
 
 $mensaje    = $app->getAtributoPeticion('msg');
 $categorias = CategoriaSA::listar();
 
-// El título ahora es siempre fijo
 $tituloPagina = 'Nuestra Carta';
 
 ob_start();
@@ -36,7 +34,7 @@ ob_start();
         
         <div class="card" style="display:flex; gap:14px; align-items:flex-start; flex-wrap:wrap;">
           <?php if ($img): ?>
-            <img src="<?= h(RUTA_IMGS.'/categorias/'.$img) ?>" alt=""
+            <img src="<?= h(RUTA_IMGS . '/' . ltrim((string)$img, '/')) ?>" alt=""
                  style="width:220px;max-width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid #111;border-radius:10px;background:#fff;">
           <?php endif; ?>
 

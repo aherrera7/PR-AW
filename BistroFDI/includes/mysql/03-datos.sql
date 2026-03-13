@@ -1,52 +1,115 @@
--- 1. INSERTAR ROLES
-INSERT INTO roles (nombre_rol) VALUES 
-('cliente'),
-('camarero'),
-('cocinero'),
-('gerente');
+-- =========================
+-- 03-datos.sql
+-- Datos de prueba BistroFDI
+-- =========================
 
--- 2. INSERTAR USUARIOS
--- Nota: en un proyecto real la password debería ir hasheada, pero para datos de prueba vale
-INSERT INTO usuarios (nombre_usuario, email, password, nombre, apellidos, avatar) VALUES 
-('ana_gerente',   'ana@bistrofdi.es',   '1234', 'Ana',   'García',  'a1.png'),
-('paco_chef',     'paco@bistrofdi.es',  '1234', 'Paco',  'Roncero', 'a2.png'),
-('luis_camarero', 'luis@bistrofdi.es',  '1234', 'Luis',  'Sánchez', 'a3.png'),
-('marta_cliente', 'marta@gmail.com',    '1234', 'Marta', 'López',   'default.jpg');
+SET FOREIGN_KEY_CHECKS = 0;
 
--- 3. ASIGNAR ROLES A USUARIOS
-INSERT INTO roles_usuarios (id_usuario, id_rol) VALUES 
-(1, 4), -- Ana es Gerente
-(2, 3), -- Paco es Cocinero
-(3, 2), -- Luis es Camarero
-(4, 1); -- Marta es Cliente
+DELETE FROM pedidos_productos;
+DELETE FROM pedidos;
+DELETE FROM productos_imagenes;
+DELETE FROM productos;
+DELETE FROM categorias;
+DELETE FROM roles_usuarios;
+DELETE FROM roles;
+DELETE FROM usuarios;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- 1. ROLES
+INSERT INTO roles (id_rol, nombre_rol) VALUES
+(1, 'cliente'),
+(2, 'camarero'),
+(3, 'cocinero'),
+(4, 'gerente');
+
+-- 2. USUARIOS
+INSERT INTO usuarios (id, nombre_usuario, email, password, nombre, apellidos, avatar) VALUES
+(1, 'ana_gerente',    'ana@bistrofdi.es',    '1234', 'Ana',   'García',   'avatares/a1.png'),
+(2, 'paco_chef',      'paco@bistrofdi.es',   '1234', 'Paco',  'Roncero',  'avatares/a2.png'),
+(3, 'luis_camarero',  'luis@bistrofdi.es',   '1234', 'Luis',  'Sánchez',  'avatares/a3.png'),
+(4, 'marta_cliente',  'marta@gmail.com',     '1234', 'Marta', 'López',    'avatares/default.jpg'),
+(5, 'carlos_cliente', 'carlos@gmail.com',    '1234', 'Carlos','Pérez',    'avatares/default.jpg');
+
+-- 3. ROLES-USUARIOS
+INSERT INTO roles_usuarios (id_usuario, id_rol) VALUES
+(1, 4), -- gerente
+(2, 3), -- cocinero
+(3, 2), -- camarero
+(4, 1), -- cliente
+(5, 1); -- cliente
 
 -- 4. CATEGORÍAS
-INSERT INTO categorias (nombre, descripcion, imagen) VALUES 
-('Desayunos',    'Para empezar bien el día',            'desayuno.jpg'),
-('Hamburguesas', 'Nuestras famosas burgers gourmet',    'hamburguesa.jpg'),
-('Bebidas',      'Refrescos, cafés y más',              'bebida.jpg');
+INSERT INTO categorias (id, nombre, descripcion, imagen) VALUES
+(1, 'Desayunos', 'Para empezar bien el día', 'categorias/desayuno.png'),
+(2, 'Comida', 'Platos principales del Bistro FDI', 'categorias/comida.jpg'),
+(3, 'Bebidas', 'Refrescos y bebidas', 'categorias/bebida.png');
 
--- 5. PRODUCTOS (SIN imagen, porque ya no existe la columna imagen en productos)
-INSERT INTO productos (id_categoria, nombre, descripcion, precio_base, iva, disponible, ofertado) VALUES 
-(1, 'Café con leche', 'Café arábica con leche fresca',                 1.25, 10, 1, 1),
-(2, 'Burger FDI',     'Carne de buey, queso y salsa secreta',          8.50, 10, 1, 1),
-(3, 'Agua Mineral',   'Botella de 50cl',                               1.50, 10, 1, 1);
+-- 5. PRODUCTOS
+INSERT INTO productos (id, id_categoria, nombre, descripcion, precio_base, iva, disponible, ofertado) VALUES
+(1, 2, 'Nachos', 'Nachos con queso y guacamole', 6.50, 10, 1, 1),
+(2, 1, 'Tostada de tomate', 'Pan tostado con aceite y tomate', 1.30, 10, 1, 1),
+(3, 3, 'Agua Mineral', 'Botella de 50cl', 1.50, 10, 1, 1),
+(4, 3, 'Coca-Cola', 'Refresco de cola 33cl', 2.00, 10, 1, 1);
 
--- 5.1 IMÁGENES DE PRODUCTOS (1 o más por producto)
--- Asumiendo que los productos insertados arriba quedan con IDs 1,2,3
 INSERT INTO productos_imagenes (id_producto, ruta) VALUES
-(1, 'cafe.jpg'),
-(2, 'burger.jpg'),
-(3, 'agua.jpg');
+(1, 'productos/nachos.png'),
+(2, 'productos/tostada.png'),
+(3, 'productos/agua.png'),
+(4, 'productos/cocacola.png');
 
--- (Opcional) añadir más imágenes a un producto para cumplir "una o más"
-INSERT INTO productos_imagenes (id_producto, ruta) VALUES (2, 'burger_detalle.jpg');
+-- Pedido 1: RECIBIDO (para cobrar camarero)
+INSERT INTO pedidos (id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total) VALUES
+(1, 1, 4, NULL, '2026-03-13 09:30:00', 'recibido', 'local', 10.00);
 
--- 6. PEDIDO DE PRUEBA
-INSERT INTO pedidos (numero_pedido, id_cliente, estado, tipo, total) VALUES 
-(1, 4, 'recibido', 'local', 11.00);
+-- Pedido 2: EN PREPARACIÓN
+INSERT INTO pedidos (id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total) VALUES
+(2, 2, 4, NULL, '2026-03-13 09:40:00', 'en preparación', 'llevar', 11.80);
 
--- 7. DETALLE DEL PEDIDO
-INSERT INTO pedidos_productos (id_pedido, id_producto, cantidad, precio_historico) VALUES 
-(1, 1, 2, 1.25),
-(1, 2, 1, 8.50);
+-- Pedido 3: COCINANDO
+INSERT INTO pedidos (id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total) VALUES
+(3, 3, 5, 2, '2026-03-13 10:00:00', 'cocinando', 'local', 12.00);
+
+-- Pedido 4: LISTO COCINA
+INSERT INTO pedidos (id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total) VALUES
+(4, 4, 4, 2, '2026-03-13 10:10:00', 'listo cocina', 'llevar', 9.80);
+
+-- Pedido 5: TERMINADO
+INSERT INTO pedidos (id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total) VALUES
+(5, 5, 5, 2, '2026-03-13 10:20:00', 'terminado', 'local', 3.30);
+
+-- Pedido 6: ENTREGADO
+INSERT INTO pedidos (id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total) VALUES
+(6, 6, 4, 2, '2026-03-12 13:15:00', 'entregado', 'local', 10.50);
+
+-- Pedido 1
+INSERT INTO pedidos_productos VALUES
+(1, 1, 1, 6.50),
+(1, 3, 1, 1.50);
+
+-- Pedido 2
+INSERT INTO pedidos_productos VALUES
+(2, 1, 1, 6.50),
+(2, 4, 1, 2.00),
+(2, 3, 1, 1.50);
+
+-- Pedido 3
+INSERT INTO pedidos_productos VALUES
+(3, 1, 1, 6.50),
+(3, 4, 1, 2.00),
+(3, 3, 1, 1.50);
+
+-- Pedido 4
+INSERT INTO pedidos_productos VALUES
+(4, 1, 1, 6.50),
+(4, 3, 1, 1.50);
+
+-- Pedido 5
+INSERT INTO pedidos_productos VALUES
+(5, 2, 1, 1.30),
+(5, 4, 1, 2.00);
+
+-- Pedido 6
+INSERT INTO pedidos_productos VALUES
+(6, 1, 1, 6.50),
+(6, 4, 1, 2.00);
