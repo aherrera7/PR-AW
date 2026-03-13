@@ -1,4 +1,6 @@
-# Practica 1 AW
+# Practica 2 AW
 
-Esta es una practica de la universidad que vamos a hacer 
-Probando el commit 
+Implementadas las funcionalidades:
+0 - Funcionalidad 0: Gestión de Usuarios - 100% 
+1 - Funcionalidad 1: Gestión de Productos - 100% 
+2 - Funcionalidad 2: Gestión de Pedidos  - 100% 

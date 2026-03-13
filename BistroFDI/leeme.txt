@@ -1,4 +1,0 @@
-Implementadas las funcionalidades:
-0 - Funcionalidad 0: Gestión de Usuarios - 100% 
-1 - Funcionalidad 1: Gestión de Productos - 100% 
-2 - Funcionalidad 2: Gestión de Pedidos  - 100% 

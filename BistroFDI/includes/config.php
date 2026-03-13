@@ -4,8 +4,8 @@ require_once __DIR__ . '/Aplicacion.php';
 require_once __DIR__ . '/app/util/helper.php';
 
 define('RAIZ_APP', dirname(__DIR__));
-//define('RUTA_APP', '');
-define('RUTA_APP', '/PR-AW/BistroFDI');
+define('RUTA_APP', '');
+//define('RUTA_APP', '/PR-AW/BistroFDI');
 
 define('RUTA_VISTAS', RUTA_APP . '/includes/vistas');
 define('RUTA_IMGS', RUTA_APP . '/img');
@@ -17,8 +17,8 @@ setlocale(LC_ALL, 'es_ES.UTF.8');
 date_default_timezone_set('Europe/Madrid');
 
 
-//define('BD_HOST', 'vm014.db.swarm.test');
-define('BD_HOST', 'localhost');
+define('BD_HOST', 'vm014.db.swarm.test');
+//define('BD_HOST', 'localhost');
 define('BD_NAME', 'prAW');
 define('BD_USER', 'prAW');
 define('BD_PASS', 'practicaAW1234'); 

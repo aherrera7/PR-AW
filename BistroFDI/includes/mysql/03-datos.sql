@@ -1,8 +1,3 @@
--- =========================
--- 03-datos.sql
--- Datos de prueba BistroFDI
--- =========================
-
 SET FOREIGN_KEY_CHECKS = 0;
 
 DELETE FROM pedidos_productos;
