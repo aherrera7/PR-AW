@@ -206,6 +206,15 @@ class UsuarioSA
 
     public function borrarUsuario(int $idUsuario): bool
     {
+        $u = $this->usuarioDAO->findById($idUsuario);
+        if (!$u) {
+            return false;
+        }
+
+        if ($this->usuarioDAO->tienePedidosAsociados($idUsuario)) {
+            return false;
+        }
+
         return $this->usuarioDAO->deleteById($idUsuario);
     }
 }

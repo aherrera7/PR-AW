@@ -229,6 +229,31 @@ class UsuarioDAO
         return $usuarios;
     }
 
+    public function tienePedidosAsociados(int $id): bool
+    {
+        $sql = "SELECT COUNT(*) AS total
+                FROM pedidos
+                WHERE id_cliente = ?";
+
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            throw new RuntimeException("Error prepare (tienePedidosAsociados usuarios): " . $this->conn->error);
+        }
+
+        $stmt->bind_param("i", $id);
+
+        if (!$stmt->execute()) {
+            throw new RuntimeException("Error execute (tienePedidosAsociados usuarios): " . $stmt->error);
+        }
+
+        $res = $stmt->get_result();
+        $row = $res->fetch_assoc();
+        $stmt->close();
+
+        $total = isset($row['total']) ? (int)$row['total'] : 0;
+        return $total > 0;
+    }
+
     public function deleteById(int $id): bool
     {
         $sql = "DELETE FROM usuarios

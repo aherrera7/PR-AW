@@ -7,6 +7,8 @@ require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 requireGerente();
 
 require_once RAIZ_APP . '/includes/app/sa/UsuarioSA.php';
+require_once RAIZ_APP . '/includes/app/util/usuarios_helper.php';
+
 
 $app = Aplicacion::getInstance();
 $sa  = new UsuarioSA();
@@ -17,8 +19,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['borrar_id'])) {
     if (!empty($_SESSION['usuario_id']) && $idBorrar === (int)$_SESSION['usuario_id']) {
         $app->putAtributoPeticion('msg', 'No puedes borrarte a ti mismo.');
     } else {
-        $sa->borrarUsuario($idBorrar);
-        $app->putAtributoPeticion('msg', 'Usuario eliminado.');
+        try {
+            $ok = $sa->borrarUsuario($idBorrar);
+
+            if ($ok) {
+                $app->putAtributoPeticion('msg', 'Usuario eliminado.');
+            } else {
+                $app->putAtributoPeticion('msg', 'No se puede eliminar el usuario porque tiene pedidos asociados o no existe.');
+            }
+        } catch (Throwable $e) {
+            $app->putAtributoPeticion('msg', 'No se puede eliminar el usuario porque tiene datos relacionados.');
+        }
     }
 
     header('Location: ' . RUTA_VISTAS . '/gerente/usuarios.php');
@@ -50,32 +61,29 @@ $iconTrash = '<svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18" stroke="#11
   <div class="card">
     <ul class="userlist">
       <?php foreach ($usuarios as $u): ?>
-        <?php
-          $roles = $u->getRoles();
-          $rol = (count($roles) > 0) ? $roles[0]->getNombre() : 'cliente';
+        <?php $view = usuarioViewData($u); ?>
 
-          $id = (int)$u->getId();
-          $nombreUsuario = (string)$u->getNombreUsuario();
-
-          $urlEditarUsuario = RUTA_VISTAS . '/editar_perfil.php?id=' . $id; 
-          $urlCambiarRol    = RUTA_VISTAS . '/gerente/cambiar_rol.php?id=' . $id; 
-        ?>
         <li class="row">
-        <span><strong><?= h(ucfirst((string)$rol)) ?>:</strong></span>
-        <span>@<?= h($nombreUsuario) ?></span>
+          <span><strong><?= h(ucfirst((string)$view['rol'])) ?>:</strong></span>
+          <span>@<?= h((string)$view['nombreUsuario']) ?></span>
 
-        <div class="actions">
-          <a class="icon-btn" href="<?= h($urlEditarUsuario) ?>" title="Editar usuario"><?= $iconEdit ?></a>
+          <div class="actions">
+            <a class="icon-btn" href="<?= h((string)$view['urlEditar']) ?>" title="Editar usuario"><?= $iconEdit ?></a>
 
-          <form method="post">
-            <input type="hidden" name="borrar_id" value="<?= $id ?>">
-            <button class="icon-btn" type="submit" title="Eliminar"
-                    onclick="return confirm('¿Eliminar este usuario?');"><?= $iconTrash ?></button>
-          </form>
+            <form method="post">
+              <input type="hidden" name="borrar_id" value="<?= (int)$view['id'] ?>">
+              <button
+                class="icon-btn"
+                type="submit"
+                title="Eliminar"
+                onclick="return confirm('¿Eliminar este usuario?');"
+                <?= !empty($view['esSesionActual']) ? 'disabled' : '' ?>
+              ><?= $iconTrash ?></button>
+            </form>
 
-          <a class="btn" href="<?= h($urlCambiarRol) ?>">Cambiar rol</a>
-        </div>
-      </li>
+            <a class="btn" href="<?= h((string)$view['urlCambiarRol']) ?>">Cambiar rol</a>
+          </div>
+        </li>
       <?php endforeach; ?>
     </ul>
   </div>
