@@ -196,35 +196,25 @@ class ProductoSA
         }
     }
 
-    public static function actualizar(ProductoDTO $producto): bool {
-        $id = $producto->getId();
-        if ($id === null || $id <= 0) {
-            throw new InvalidArgumentException('ID inválido.');
-        }
-    
-        self::validarProducto($producto);
-
-        $ok = self::dao()->update(
-            $id,
-            $producto->getIdCategoria(),
-            trim($producto->getNombre()),
-            $producto->getDescripcion(),
-            $producto->getPrecioBase(),
-            $producto->getIva(),
-            $producto->isDisponible()
-        );
-
-        if (!$ok) return false;
-
-        foreach ($producto->getImagenes() as $ruta) {
-            $rutaNormalizada = self::normalizarRutaImagen((string)$ruta);
-            if ($rutaNormalizada !== '') {
-                self::dao()->addImagen($id, $rutaNormalizada);
-            }
-        }
-
-        return true;
+    public static function actualizar(ProductoDTO $producto): bool
+{
+    $id = $producto->getId();
+    if ($id === null || $id <= 0) {
+        throw new InvalidArgumentException('ID inválido.');
     }
+
+    self::validarProducto($producto);
+
+    return self::dao()->update(
+        $id,
+        $producto->getIdCategoria(),
+        trim($producto->getNombre()),
+        $producto->getDescripcion(),
+        $producto->getPrecioBase(),
+        $producto->getIva(),
+        $producto->isDisponible()
+    );
+}
 
     public static function actualizarConUpload(ProductoDTO $producto, ?array $uploadFiles): bool
     {
