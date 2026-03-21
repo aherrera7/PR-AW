@@ -93,7 +93,7 @@ ob_start();
             <div class="form-actions mt-10">
               <a class="btn" href="<?= h($base.'/productos_editar.php?id='.$id) ?>">Editar</a>
               <?php if ($p->isOfertado()): ?>
-                <form method="post" style="display:inline;">
+                <form method="post" style="inline-form;">
                   <input type="hidden" name="id" value="<?= $id ?>">
                   <input type="hidden" name="accion" value="retirar">
                   <button
@@ -105,7 +105,7 @@ ob_start();
                   </button>
                   </form>
                 <?php else: ?>
-                  <form method="post" style="display:inline;">
+                  <form method="post" style="inline-form;">
                     <input type="hidden" name="id" value="<?= $id ?>">
                     <input type="hidden" name="accion" value="reofertar">
                     <button
@@ -118,7 +118,7 @@ ob_start();
                   </form>
                 <?php endif; ?>
               
-              <form method="post" style="display:inline;">
+              <form method="post" style="inline-form;">
                 <input type="hidden" name="id" value="<?= $id ?>">
                 <input type="hidden" name="accion" value="borrar">
                 <button
@@ -129,6 +129,7 @@ ob_start();
                   Borrar
                 </button>
               </form>
+
             </div>
           </div>
         </div>
