@@ -11,32 +11,34 @@ require_once RAIZ_APP . '/includes/app/sa/CategoriaSA.php';
 $app  = Aplicacion::getInstance();
 $base = RUTA_APP . '/includes/vistas/gerente';
 
-$idRetirar = (int)($_GET['retirar'] ?? 0);
-if ($idRetirar > 0) {
-    try {
-        ProductoSA::retirarDeCarta($idRetirar);
-        $app->putAtributoPeticion('msg', 'Producto retirado de la carta correctamente.');
-    } catch (Throwable $e) {
-        $app->putAtributoPeticion('msg', 'Error: ' . $e->getMessage());
-    }
-    header('Location: ' . $base . '/productos_listar.php');
-    exit;
-}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $accion = trim((string)($_POST['accion'] ?? ''));
+    $idProducto = (int)($_POST['id'] ?? 0);
 
-$idReofertar = (int)($_GET['reofertar'] ?? 0);
-if ($idReofertar > 0) {
-    try {
-        ProductoSA::ponerEnCarta($idReofertar);
-        $app->putAtributoPeticion('msg', 'Producto vuelto a poner en carta.');
-    } catch (Throwable $e) {
-        $app->putAtributoPeticion('msg', 'Error: ' . $e->getMessage());
+    if ($idProducto > 0) {
+        try {
+            if ($accion === 'retirar') {
+                ProductoSA::retirarDeCarta($idProducto);
+                $app->putAtributoPeticion('msg', 'Producto retirado de la carta correctamente.');
+            } elseif ($accion === 'reofertar') {
+                ProductoSA::ponerEnCarta($idProducto);
+                $app->putAtributoPeticion('msg', 'Producto vuelto a poner en carta.');
+            } elseif ($accion === 'borrar') {
+                ProductoSA::borrar($idProducto);
+                $app->putAtributoPeticion('msg', 'Producto borrado correctamente.');
+            }
+        } catch (Throwable $e) {
+            $app->putAtributoPeticion('msg', 'Error: ' . $e->getMessage());
+        }
     }
+
     header('Location: ' . $base . '/productos_listar.php');
     exit;
 }
 
 $mensaje  = $app->getAtributoPeticion('msg');
 $productos = ProductoSA::listar();
+
 $categoriasMap = [];
 foreach (CategoriaSA::listar() as $cat) {
     $categoriasMap[$cat->getId()] = $cat->getNombre();
@@ -90,24 +92,43 @@ ob_start();
 
             <div class="form-actions mt-10">
               <a class="btn" href="<?= h($base.'/productos_editar.php?id='.$id) ?>">Editar</a>
-
               <?php if ($p->isOfertado()): ?>
-                <a
-                  class="btn btn-light btn-outline-danger"
-                  onclick="return confirm('¿Retirar este producto de la carta? Los clientes ya no podrán verlo.')"
-                  href="<?= h($base.'/productos_listar.php?retirar='.$id) ?>"
+                <form method="post" style="display:inline;">
+                  <input type="hidden" name="id" value="<?= $id ?>">
+                  <input type="hidden" name="accion" value="retirar">
+                  <button
+                    class="btn btn-light btn-outline-danger"
+                    type="submit"
+                    onclick="return confirm('¿Retirar este producto de la carta? Los clientes ya no podrán verlo.')"
+                  >
+                    Retirar de carta
+                  </button>
+                  </form>
+                <?php else: ?>
+                  <form method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="<?= $id ?>">
+                    <input type="hidden" name="accion" value="reofertar">
+                    <button
+                      class="btn btn-success"
+                      type="submit"
+                      onclick="return confirm('¿Volver a ofrecer este producto en la carta?')"
+                    >
+                      Reofertar producto
+                    </button>
+                  </form>
+                <?php endif; ?>
+              
+              <form method="post" style="display:inline;">
+                <input type="hidden" name="id" value="<?= $id ?>">
+                <input type="hidden" name="accion" value="borrar">
+                <button
+                  class="btn btn-danger"
+                  type="submit"
+                  onclick="return confirm('¿Seguro que quieres borrar este producto? Se eliminarán también sus imágenes.')"
                 >
-                  Retirar de carta
-                </a>
-              <?php else: ?>
-                <a
-                  class="btn btn-success"
-                  onclick="return confirm('¿Volver a ofrecer este producto en la carta?')"
-                  href="<?= h($base.'/productos_listar.php?reofertar='.$id) ?>"
-                >
-                  Reofertar producto
-                </a>
-              <?php endif; ?>
+                  Borrar
+                </button>
+              </form>
             </div>
           </div>
         </div>

@@ -275,4 +275,30 @@ class ProductoSA
         if ($id <= 0) throw new InvalidArgumentException('ID inválido.');
         return self::dao()->setOfertado($id, true);
     }
+
+    // Borrar
+    public static function borrar(int $id): bool
+    {
+        if ($id <= 0) {
+            throw new InvalidArgumentException('ID inválido.');
+        }
+
+        $producto = self::obtener($id);
+        if (!$producto) {
+            throw new RuntimeException('Producto no encontrado.');
+        }
+
+        $imagenes = $producto->getImagenes();
+
+        self::dao()->deleteImagenesByProducto($id);
+        $ok = self::dao()->delete($id);
+
+        if ($ok) {
+            foreach ($imagenes as $ruta) {
+                self::borrarFicheroImagen((string)$ruta);
+            }
+        }
+
+        return $ok;
+    }
 }

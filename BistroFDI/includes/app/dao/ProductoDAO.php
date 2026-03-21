@@ -224,4 +224,44 @@ class ProductoDAO
         $stmt->close();
         return true;
     }
+
+    // Borrar todas las imagenes de un producto en BD
+    public function deleteImagenesByProducto(int $idProducto): bool
+    {
+        $sql = "DELETE FROM productos_imagenes WHERE id_producto = ?";
+
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            throw new RuntimeException("Error prepare (deleteImagenesByProducto): " . $this->conn->error);
+        }
+
+        $stmt->bind_param('i', $idProducto);
+
+        if (!$stmt->execute()) {
+            throw new RuntimeException("Error execute (deleteImagenesByProducto): " . $stmt->error);
+        }
+
+        $stmt->close();
+        return true;
+    }
+
+    // Borrar el producto
+    public function delete(int $id): bool
+    {
+        $sql = "DELETE FROM productos WHERE id = ?";
+
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            throw new RuntimeException("Error prepare (delete producto): " . $this->conn->error);
+        }
+
+        $stmt->bind_param('i', $id);
+
+        if (!$stmt->execute()) {
+            throw new RuntimeException("Error execute (delete producto): " . $stmt->error);
+        }
+
+        $stmt->close();
+        return true;
+    }
 }
