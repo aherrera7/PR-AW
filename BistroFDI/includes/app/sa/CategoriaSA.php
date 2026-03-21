@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once RAIZ_APP . '/includes/app/dao/CategoriaDAO.php';
+require_once RAIZ_APP . '/includes/app/dto/CategoriaDTO.php';
 
 class CategoriaSA
 {
@@ -90,51 +91,88 @@ class CategoriaSA
         }
     }
 
-    public static function crear(string $nombre, ?string $descripcion, ?string $imagen): int
+    private static function validarDatos(CategoriaDTO $categoria): void
     {
-        $nombre = trim($nombre);
+        $nombre = trim($categoria->getNombre());
         if ($nombre === '') {
             throw new InvalidArgumentException('El nombre de la categoría no puede estar vacío.');
         }
-
-        return self::dao()->insert($nombre, $descripcion, $imagen);
     }
 
-    public static function crearConUpload(string $nombre, ?string $descripcion, ?array $uploadFile): int
+    public static function crear(CategoriaDTO $categoria): int
+    {
+        self::validarDatos($categoria);
+
+        return self::dao()->insert(
+            trim($categoria->getNombre()),
+            $categoria->getDescripcion(),
+            $categoria->getImagen()
+        );
+    }
+
+    public static function crearConUpload(CategoriaDTO $categoria, ?array $uploadFile): int
     {
         $imagen = self::guardarImagenDesdeUpload($uploadFile);
+
+        $categoriaConImagen = new CategoriaDTO(
+            null,
+            $categoria->getNombre(),
+            $categoria->getDescripcion(),
+            $imagen
+        );
+
         try {
-            return self::crear($nombre, $descripcion, $imagen);
+            return self::crear($categoriaConImagen);
         } catch (Throwable $e) {
-            if ($imagen) self::borrarFicheroImagen($imagen);
+            if ($imagen) {
+                self::borrarFicheroImagen($imagen);
+            }
             throw $e;
         }
     }
 
-    public static function actualizar(int $id, string $nombre, ?string $descripcion, ?string $imagen): bool
+    public static function actualizar(CategoriaDTO $categoria): bool
     {
-        if ($id <= 0) throw new InvalidArgumentException('ID inválido.');
-        $nombre = trim($nombre);
-        if ($nombre === '') throw new InvalidArgumentException('El nombre de la categoría no puede estar vacío.');
+        $id = $categoria->getId();
+        if ($id === null || $id <= 0) {
+            throw new InvalidArgumentException('ID inválido.');
+        }
+       
+        self::validarDatos($categoria);
 
-        return self::dao()->update($id, $nombre, $descripcion, $imagen);
+        return self::dao()->update(
+            $id,
+            trim($categoria->getNombre()),
+            $categoria->getDescripcion(),
+            $categoria->getImagen()
+        );        
     }
 
-    public static function actualizarConUpload(int $id, string $nombre, ?string $descripcion, ?array $uploadFile): bool
+    public static function actualizarConUpload(CategoriaDTO $categoria, ?array $uploadFile): bool
     {
-        if ($id <= 0) throw new InvalidArgumentException('ID inválido.');
+        $id = $categoria->getId();
+        if ($id === null || $id <= 0) {
+            throw new InvalidArgumentException('ID inválido.');
+        }
 
-        $cat = self::obtener($id);
-        if (!$cat) {
+        $actual = self::obtener($id);
+        if (!$actual) {
             throw new RuntimeException('Categoría no encontrada.');
         }
 
-        $imagenActual = $cat->getImagen();
+        $imagenActual = $actual->getImagen();
         $nuevaImagen = self::guardarImagenDesdeUpload($uploadFile);
         $imagenFinal = $nuevaImagen ?? $imagenActual;
 
+        $categoriaFinal = new CategoriaDTO(
+            $id,
+            $categoria->getNombre(),
+            $categoria->getDescripcion(),
+            $imagenFinal
+        );
+
         try {
-            $ok = self::actualizar($id, $nombre, $descripcion, $imagenFinal);
+            $ok = self::actualizar($categoriaFinal);
 
             if ($ok && $nuevaImagen && $imagenActual) {
                 self::borrarFicheroImagen($imagenActual);

@@ -11,8 +11,9 @@ $app  = Aplicacion::getInstance();
 $base = RUTA_APP . '/includes/vistas/gerente';
 $baseUsuarios = RUTA_APP . '/includes/vistas/usuarios';
 
-$id = (int)($_GET['id'] ?? 0);
+$id = (int)($_POST['id'] ?? 0);
 $categoria = $id > 0 ? CategoriaSA::obtener($id) : null;
+
 if (!$categoria) { http_response_code(404); exit('Categoría no encontrada.'); }
 
 $errores = [];
@@ -59,6 +60,9 @@ ob_start();
     <p class="muted">Esta acción no se puede deshacer.</p>
 
     <form method="post">
+      <input type="hidden" name="id" value="<?= $id ?>">
+      <input type="hidden" name="confirmar_borrado" value="1">
+    
       <div class="form-actions">
         <button class="btn btn-danger" type="submit"
           onclick="return confirm('¿Seguro que quieres borrar esta categoría?');">
