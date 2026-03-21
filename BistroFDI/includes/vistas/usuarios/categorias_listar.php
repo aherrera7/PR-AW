@@ -19,6 +19,10 @@ ob_start();
 <section class="ger-wrap">
   <div class="header-bar">
     <h1><?= h($tituloPagina) ?></h1>
+
+    <a class="btn" href="<?= h(RUTA_APP . '/includes/vistas/usuarios/productos_carta.php') ?>">
+      Ver todos los productos
+    </a>
   </div>
 
   <?php if (!empty($mensaje)): ?>

@@ -11,6 +11,7 @@ $esGerente = !empty($_SESSION['esGerente']) && $_SESSION['esGerente'] === true;
 
 $baseGerente = RUTA_APP . '/includes/vistas/gerente';
 $baseUsuario = RUTA_APP . '/includes/vistas/usuarios';
+$baseCarta = $esGerente ? $baseGerente : $baseUsuario;
 
 $mensaje    = $app->getAtributoPeticion('msg');
 $categorias = CategoriaSA::listar();
@@ -22,7 +23,7 @@ ob_start();
 <section class="ger-wrap">
   <div class="header-bar">
     <h1><?= h($tituloPagina) ?></h1>
-    
+
     <?php if ($esGerente): ?>
       <a class="btn" href="<?= h($baseGerente . '/categorias_crear.php') ?>">+ Nueva categoría</a>
     <?php endif; ?>
@@ -37,8 +38,11 @@ ob_start();
   <?php else: ?>
     <div class="stack">
       <?php foreach ($categorias as $c): ?>
-        <?php $id = (int)$c->getId(); $img = $c->getImagen(); ?>
-        
+        <?php
+          $id = (int)$c->getId();
+          $img = $c->getImagen();
+        ?>
+
         <div class="card cat-card">
           <?php if ($img): ?>
             <img
@@ -52,11 +56,11 @@ ob_start();
             <p class="muted"><?= h((string)($c->getDescripcion() ?? '')) ?></p>
 
             <div class="form-actions">
-              <a class="btn" href="<?= h($baseGerente . '/productos_carta.php?id_cat=' . $id) ?>">Acceder</a>
+              <a class="btn" href="<?= h($baseCarta . '/productos_carta.php?id_cat=' . $id) ?>">Acceder</a>
 
               <?php if ($esGerente): ?>
                 <a class="btn btn-light" href="<?= h($baseGerente . '/categorias_editar.php?id=' . $id) ?>">Editar</a>
-                
+
                 <form action="<?= h($baseGerente . '/categorias_borrar.php') ?>" method="post" class="inline-form"
                       onsubmit="return confirm('¿Seguro que quieres borrar esta categoría?');">
                   <input type="hidden" name="id" value="<?= $id ?>">
