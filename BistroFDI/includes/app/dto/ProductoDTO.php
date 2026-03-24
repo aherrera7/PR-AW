@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+
 class ProductoDTO
 {
     public function __construct(

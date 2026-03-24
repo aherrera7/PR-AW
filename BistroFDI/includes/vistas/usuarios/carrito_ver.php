@@ -24,21 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmar'])) {
         }
 
         $tipoPedido = $_POST['pedido_tipo'] ?? null;
-        if (!$tipoPedido) {
+        if (!$tipoPedido || !in_array($tipoPedido, ['local', 'llevar'], true)) {
             throw new InvalidArgumentException("Debes elegir si el pedido es para tomar aquí o para llevar.");
         }
 
-        $idCliente = (int)($_SESSION['usuario_id'] ?? 0);
+        $_SESSION['pedido_tipo'] = $tipoPedido;
 
-        $idPedido = PedidoSA::crearDesdeCarrito(
-            $idCliente,
-            $tipoPedido,
-            $_SESSION['carrito']
-        );
-
-        unset($_SESSION['carrito']);
-        $_SESSION['mensaje_exito'] = "¡Pedido #$idPedido realizado con éxito!";
-        header("Location: " . RUTA_APP . "/index.php");
+        header('Location: pago.php');
         exit;
     } catch (Throwable $e) {
         $errores[] = $e->getMessage();

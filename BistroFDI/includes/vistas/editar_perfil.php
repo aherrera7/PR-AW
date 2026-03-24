@@ -33,3 +33,4 @@ ob_start();
 <?php
 $contenidoPrincipal = ob_get_clean();
 require RAIZ_APP . '/includes/vistas/common/plantilla.php';
+
