@@ -37,9 +37,7 @@ class PedidoSA {
         // Filtramos por los estados en los que el cocinero debe intervenir
         $estadosInteres = [self::ESTADO_RECIBIDO, self::ESTADO_EN_PREPARACION, self::ESTADO_COCINANDO];
         
-        // Nota: He usado el método findByCliente como base, pero para producción 
-        // deberías añadir un método específico en PedidoDAO para filtrar por estados.
-        $todos = self::dao()->listarTodos(); // Asumiendo que añades este método al DAO
+        $todos = self::dao()->findAll(); 
         return array_filter($todos, fn($p) => in_array($p->getEstado(), $estadosInteres));
     }
 
