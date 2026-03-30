@@ -5,6 +5,7 @@ require_once __DIR__ . '/RolDTO.php';
 
 class UsuarioDTO implements JsonSerializable
 {
+    // Atributos
     public function __construct(
         private ?int $id,
         private string $nombreUsuario,
@@ -16,6 +17,7 @@ class UsuarioDTO implements JsonSerializable
         private array $roles = []
     ) {}
 
+    // Getters
     public function getId(): ?int { return $this->id; }
     public function getNombreUsuario(): string { return $this->nombreUsuario; }
     public function getPasswordHash(): string { return $this->passwordHash; }
@@ -24,7 +26,6 @@ class UsuarioDTO implements JsonSerializable
     public function getApellidos(): string { return $this->apellidos; }
     public function getAvatar(): ?string { return $this->avatar; }
 
-    /** @return RolDTO[] */
     public function getRoles(): array { return $this->roles; }
     public function setRoles(array $roles): void { $this->roles = $roles; }
 

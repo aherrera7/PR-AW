@@ -3,6 +3,7 @@
 require_once __DIR__ . '/Aplicacion.php';
 require_once __DIR__ . '/app/util/helper.php';
 
+//Definimos rutas globales
 define('RAIZ_APP', dirname(__DIR__));
 //define('RUTA_APP', '');
 define('RUTA_APP', '/PR-AW/BistroFDI');
@@ -16,6 +17,7 @@ ini_set('default_charset', 'UTF-8');
 setlocale(LC_ALL, 'es_ES.UTF.8');
 date_default_timezone_set('Europe/Madrid');
 
+//Acceso a la base de datos
 define('BD_HOST', 'localhost');
 define('BD_NAME', 'prAW');
 define('BD_USER', 'prAW');
@@ -27,7 +29,7 @@ define('BD_USER', 'prAW');
 define('BD_PASS', 'practicaAW1234'); 
 */
 
-
+//Inicializamos la aplicación
 $app = Aplicacion::getInstance();
 $app->init([
     'host' => BD_HOST,

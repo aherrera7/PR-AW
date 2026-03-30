@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 class ProductoDTO
 {
+    // Atributos
     public function __construct(
         private ?int $id,
         private int $idCategoria,
@@ -16,6 +17,7 @@ class ProductoDTO
         private array $imagenes = []
     ) {}
 
+    // Getters
     public function getId(): ?int { return $this->id; }
     public function getIdCategoria(): int { return $this->idCategoria; }
     public function getNombre(): string { return $this->nombre; }
@@ -24,12 +26,6 @@ class ProductoDTO
     public function getIva(): int { return $this->iva; }
     public function isDisponible(): bool { return $this->disponible; }
     public function isOfertado(): bool { return $this->ofertado; }
-
-    /** @return string[] */
     public function getImagenes(): array { return $this->imagenes; }
-
-    public function getPrecioFinal(): float
-    {
-        return round($this->precioBase * (1.0 + ($this->iva / 100.0)), 2);
-    }
+    public function getPrecioFinal(): float { return round($this->precioBase * (1.0 + ($this->iva / 100.0)), 2);}
 }

@@ -1,14 +1,12 @@
 <?php
 declare(strict_types=1);
-
 require_once RAIZ_APP . '/includes/app/dto/CategoriaDTO.php';
 
-class CategoriaDAO
-{
+//Acceso a la base de datos
+class CategoriaDAO { 
     public function __construct(private mysqli $conn) {}
 
-    public function findAll(): array
-    {
+    public function findAll(): array {
         $sql = "SELECT id, nombre, descripcion, imagen
                 FROM categorias
                 ORDER BY nombre ASC";
@@ -32,8 +30,7 @@ class CategoriaDAO
         return $res;
     }
 
-    public function findById(int $id): ?CategoriaDTO
-    {
+    public function findById(int $id): ?CategoriaDTO {
         $sql = "SELECT id, nombre, descripcion, imagen
                 FROM categorias
                 WHERE id = ?";
@@ -60,15 +57,14 @@ class CategoriaDAO
         );
     }
 
-    public function insert(string $nombre, ?string $descripcion, ?string $imagen): int
-    {
+    public function insert(string $nombre, ?string $descripcion, ?string $imagen): int {
         $sql = "INSERT INTO categorias (nombre, descripcion, imagen)
                 VALUES (?, ?, ?)";
 
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) throw new RuntimeException("Error prepare (insert categorias): " . $this->conn->error);
 
-        $stmt->bind_param('sss', $nombre, $descripcion, $imagen);
+        $stmt->bind_param('sss', $nombre, $descripcion, $imagen); //sss -> 3 strings
         if (!$stmt->execute()) {
             throw new RuntimeException("Error execute (insert categorias): " . $stmt->error);
         }
@@ -78,8 +74,7 @@ class CategoriaDAO
         return $id;
     }
 
-    public function update(int $id, string $nombre, ?string $descripcion, ?string $imagen): bool
-    {
+    public function update(int $id, string $nombre, ?string $descripcion, ?string $imagen): bool {
         $sql = "UPDATE categorias
                 SET nombre = ?, descripcion = ?, imagen = ?
                 WHERE id = ?";

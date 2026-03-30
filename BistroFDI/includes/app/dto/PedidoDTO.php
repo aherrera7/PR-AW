@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-
 // Representa una fila de la tabla 'pedidos'
 
 class PedidoDTO{
@@ -17,7 +16,7 @@ class PedidoDTO{
         private float $total
     ) {}
 
-    // ------ GETTERS ------
+    // Getters
     public function getId(): ?int { return $this->id; }
     public function getNumeroPedido(): int { return $this->numeroPedido; }
     public function getIdCliente(): ?int { return $this->idCliente; }
