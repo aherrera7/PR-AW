@@ -60,7 +60,7 @@ ob_start();
                         <?php foreach ($imagenes as $index => $ruta): ?>
                             <img
                                 src="<?= h(RUTA_IMGS . '/' . ltrim((string)$ruta, '/')) ?>"
-                                class="img-carrusel-<?= $id ?><?= $index === 0 ? '' : ' product-gallery-img is-hidden' ?>"
+                                class="img-carrusel-<?= $id ?> product-gallery-img<?= $index === 0 ? '' : ' is-hidden' ?>"
                                 alt=""
                             >
                         <?php endforeach; ?>
@@ -102,24 +102,36 @@ ob_start();
 function navImg(id, d) {
     const imgs = document.querySelectorAll('.img-carrusel-' + id);
     let cur = 0;
-    imgs.forEach((img, i) => { if (img.style.display === 'block') cur = i; });
-    imgs[cur].style.display = 'none';
-    imgs[(cur + d + imgs.length) % imgs.length].style.display = 'block';
+
+    imgs.forEach((img, i) => {
+        if (!img.classList.contains('is-hidden')) {
+            cur = i;
+        }
+    });
+
+    if (imgs[cur]) {
+        imgs[cur].classList.add('is-hidden');
+    }
+
+    imgs[(cur + d + imgs.length) % imgs.length].classList.remove('is-hidden');
 }
 
 function modCant(id, d) {
     const i = document.getElementById('cant-' + id);
-    let v = parseInt(i.value) + d;
-    if (v >= 1) i.value = v;
+    let v = parseInt(i.value, 10) + d;
+    if (v >= 1) {
+        i.value = v;
+    }
 }
 
 function addCarrito(id) {
     const logueado = <?= json_encode($estaLogueado) ?>;
     if (!logueado) {
-        alert("Debes iniciar sesión para añadir productos al carrito.");
+        alert('Debes iniciar sesión para añadir productos al carrito.');
         window.location.href = '<?= RUTA_VISTAS ?>/login.php';
         return;
     }
+
     const c = document.getElementById('cant-' + id).value;
     window.location.href = 'carrito_gestion.php?action=add&id=' + id + '&cant=' + c;
 }

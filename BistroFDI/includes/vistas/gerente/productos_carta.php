@@ -109,7 +109,7 @@ ob_start();
                         <?php foreach ($imagenes as $index => $ruta): ?>
                             <img
                                 src="<?= h(RUTA_IMGS . '/' . ltrim((string)$ruta, '/')) ?>"
-                                class="img-carrusel-<?= $id ?><?= $index === 0 ? '' : ' product-gallery-img is-hidden' ?>"
+                                class="img-carrusel-<?= $id ?> product-gallery-img<?= $index === 0 ? '' : ' is-hidden' ?>"
                                 alt=""
                             >
                         <?php endforeach; ?>

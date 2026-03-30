@@ -225,20 +225,24 @@ class ProductoSA
 
         $rutasImagenes = self::guardarImagenesDesdeUpload($uploadFiles);
 
-        $productoFinal = new ProductoDTO(
-            $id,
-            $producto->getIdCategoria(),
-            $producto->getNombre(),
-            $producto->getDescripcion(),
-            $producto->getPrecioBase(),
-            $producto->getIva(),
-            $producto->isDisponible(),
-            $producto->isOfertado(),
-            $rutasImagenes
-        );
-
         try {
-            return self::actualizar($productoFinal);
+            $ok = self::actualizar($producto);
+
+            if (!$ok) {
+                foreach ($rutasImagenes as $ruta) {
+                    self::borrarFicheroImagen($ruta);
+                }
+                return false;
+            }
+
+            foreach ($rutasImagenes as $ruta) {
+                $rutaNormalizada = self::normalizarRutaImagen((string)$ruta);
+                if ($rutaNormalizada !== '') {
+                    self::dao()->addImagen($id, $rutaNormalizada);
+                }
+            }
+
+            return true;
         } catch (Throwable $e) {
             foreach ($rutasImagenes as $ruta) {
                 self::borrarFicheroImagen($ruta);
