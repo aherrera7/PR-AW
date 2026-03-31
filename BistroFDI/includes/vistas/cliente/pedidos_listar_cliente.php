@@ -5,18 +5,15 @@ require_once __DIR__ . '/../../config.php';
 require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
 
-// Verificación de acceso: solo usuarios logueados
-if (!isset($_SESSION['login'])) {
-    header('Location: ' . RUTA_VISTAS . '/login.php');
-    exit;
-}
+// 1. Verificación de acceso: solo usuarios logueados
+requireLogin();
 
 $tituloPagina = "Mis Pedidos";
 
-// Recuperamos el ID de la sesión
+// 2. Recuperamos el ID de la sesión
 $idCliente = (int)($_SESSION['usuario_id'] ?? 0);
 
-// Obtenemos los pedidos reales de la base de datos
+// 3. Obtenemos los pedidos reales de la base de datos
 try {
     $listaPedidos = PedidoSA::listarPorCliente($idCliente);
 } catch (Exception $e) {

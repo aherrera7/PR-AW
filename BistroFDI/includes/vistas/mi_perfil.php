@@ -50,7 +50,6 @@ ob_start();
       <div><strong>Apellidos:</strong> <?= h((string)$usuario->getApellidos()) ?></div>
       <div><strong>Contraseña:</strong> ************</div>
       <div><strong>Rol:</strong> <?= h((string)$rolNombre) ?></div>
-      <div><strong>BistroCoins:</strong></div>
     </div>
 
   </div>

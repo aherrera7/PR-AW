@@ -67,12 +67,12 @@ if (isset($_SESSION['carrito'])) {
           onerror="this.onerror=null;this.src='<?= h(RUTA_IMGS . '/avatares/default.jpg') ?>';">
         <span class="nav-username"><?= $nombreUsuarioEsc ?></span>
       </a>
-
       <a class="nav-cta" href="<?= RUTA_VISTAS ?>/logout.php">Cerrar Sesión</a>
+       <button id="btnMenu" class="hamburger" type="button" aria-label="Menú">☰</button>
     <?php endif; ?>
   </span>
 
-  <button id="btnMenu" class="hamburger" type="button" aria-label="Menú">☰</button>
+ 
 
   <div id="desplegable">
     <?php if ($estaLogueado): ?>

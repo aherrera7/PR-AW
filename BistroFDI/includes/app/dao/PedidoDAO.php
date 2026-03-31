@@ -4,37 +4,12 @@ declare(strict_types=1);
 require_once RAIZ_APP . '/includes/app/dto/PedidoDTO.php';
 require_once RAIZ_APP . '/includes/app/dto/PedidoProductoDTO.php';
 
-// Habla con la BD -> INSERT, SELECT, UPDATE
-/*
-- Crear pedido -> insertPedido()
-- Insertar lineas pedido -> insertarLineaPeddido()
-- Obtener soiguiente nº de pedido del día -> getSiguienteNumeroPedidoHoy()
-- Buscar pedido por id -> findById()
-- Obtener detalle de productos del pedido -> findLineasByPedido()
-- Listar pedidos de un cliente -> findByCliente()
-- Actualizar estado -> updateEstado()
-*/
-
+//Acceso a la base de datos
 class PedidoDAO {
 
     public function __construct(private mysqli $conn) {}
 
-    // Obtener soiguiente nº de pedido del día -> getSiguienteNumeroPedidoHoy()
-    public function getSiguienteNumeroPedidoHoy(): int {
-        $sql = "SELECT MAX(numero_pedido) AS max_num
-                FROM pedidos
-                WHERE DATE(fecha_hora) = CURDATE()";
-
-        $rs = $this->conn->query($sql);
-        if (!$rs) throw new RuntimeException("Error obteniendo numero pedido: " . $this->conn->error);
-        
-        $row = $rs->fetch_assoc();
-        $max = $row['max_num'] ?? null;
-
-        return $max !== null ? ((int)$max + 1) : 1;
-    }
-
-    // Crear pedido -> insertPedido()
+    // Crear pedido
     public function insertPedido(int $numeroPedido, int $idCliente, ?int $idCocinero, string $estado, string $tipo, float $total): int{ 
         $sql = "INSERT INTO pedidos (numero_pedido, id_cliente, id_cocinero, estado, tipo, total)
                 VALUES (?, ?, ?, ?, ?, ?)";
@@ -42,48 +17,31 @@ class PedidoDAO {
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) throw new RuntimeException("Error prepare (insertPedido): " . $this->conn->error);        
     
-        $stmt->bind_param(
-            'iisssd',
-            $numeroPedido,
-            $idCliente,
-            $idCocinero,
-            $estado,
-            $tipo,
-            $total
-        );
+        $stmt->bind_param('iisssd', $numeroPedido, $idCliente, $idCocinero, $estado, $tipo, $total);
 
         if (!$stmt->execute()) throw new RuntimeException("Error execute (insertPedido): " . $stmt->error);
     
         $id = (int)$this->conn->insert_id;
-
         $stmt->close();
         return $id;
     }
 
-    // Insertar lineas pedido -> insertarLineaPedido()
+    // Insertar lineas pedido
     public function insertLineaPedido(int $idPedido, int $idProducto, int $cantidad, float $precioHistorico): bool{
-        
         $sql = "INSERT INTO pedidos_productos (id_pedido, id_producto, cantidad, precio_historico)
                 VALUES (?, ?, ?, ?)";   
 
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) throw new RuntimeException("Error prepare (insertLineaPedido): " . $this->conn->error);
 
-        $stmt->bind_param(
-            'iiid',
-            $idPedido,
-            $idProducto,
-            $cantidad,
-            $precioHistorico
-        );
+        $stmt->bind_param('iiid',$idPedido, $idProducto, $cantidad, $precioHistorico);
 
         if (!$stmt->execute())  throw new RuntimeException("Error execute (insertLineaPedido): " . $stmt->error);
- 
         $stmt->close();
         return true;
     }
 
-    // Buscar pedido por id -> findById()
+    // Buscar pedido por id | Devuelve PedidoDTO
     public function findById(int $id): ?PedidoDTO{
         $sql = "SELECT id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total
                 FROM pedidos
@@ -115,10 +73,9 @@ class PedidoDAO {
         );
     }
 
-    /** @return PedidoProductoDTO[] */
-    // Obtener detalle de productos del pedido -> findLineasByPedido()
+    
+    // Obtener detalle de productos del pedido
     public function findLineasByPedido(int $idPedido): array{
-        
         $sql = "SELECT id_pedido, id_producto, cantidad, precio_historico
                 FROM pedidos_productos
                 WHERE id_pedido = ?";
@@ -129,9 +86,7 @@ class PedidoDAO {
         $stmt->bind_param('i', $idPedido); 
 
         if (!$stmt->execute()) throw new RuntimeException("Error execute (findLineasByPedido): " . $stmt->error);
-
         $rs = $stmt->get_result();
-
         $res = [];
 
         while ($row = $rs->fetch_assoc()) {
@@ -142,15 +97,12 @@ class PedidoDAO {
                 (float)$row['precio_historico']
             );
         }
-
         $stmt->close();
         return $res;
     }
 
-    /** @return PedidoDTO[] */
-    // Listar pedidos de un cliente -> findByCliente()
+    // Listar pedidos de un cliente
      public function findByCliente(int $idCliente): array{
-
         $sql = "SELECT id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total
                 FROM pedidos
                 WHERE id_cliente = ?
@@ -161,13 +113,10 @@ class PedidoDAO {
         if (!$stmt) throw new RuntimeException("Error prepare (findByCliente): " . $this->conn->error);
 
         $stmt->bind_param('i', $idCliente);
-        
+    
         if (!$stmt->execute()) throw new RuntimeException("Error execute (findByCliente): " . $stmt->error);
-
         $rs = $stmt->get_result();
-
         $res = [];
-
         while ($row = $rs->fetch_assoc()) {
             $res[] = new PedidoDTO(
                 (int)$row['id'],
@@ -184,59 +133,66 @@ class PedidoDAO {
         return $res;
     }
     
-    //Actualizar estado -> updateEstado()
+    //Actualizar estado
      public function updateEstado(int $idPedido, string $estado): bool{
         $sql = "UPDATE pedidos
                 SET estado = ?
                 WHERE id = ?";
-
         $stmt = $this->conn->prepare($sql); 
-       
         if (!$stmt) throw new RuntimeException("Error prepare (updateEstado): " . $this->conn->error);
-
         $stmt->bind_param('si', $estado, $idPedido); 
-
         if (!$stmt->execute()) throw new RuntimeException("Error execute (updateEstado): " . $stmt->error);
-
         $stmt->close();
         return true;
     }
 
     public function findAll(): array {
-    // Los ordenamos por fecha, los más recientes primero
-    $sql = "SELECT * FROM pedidos ORDER BY fecha_hora DESC";
-    $rs = $this->conn->query($sql);
+        // Los ordenamos por fecha, los más recientes primero
+        $sql = "SELECT * FROM pedidos ORDER BY fecha_hora DESC";
+        $rs = $this->conn->query($sql);
 
-    if (!$rs) throw new RuntimeException("Error en findAll: " . $this->conn->error);
+        if (!$rs) throw new RuntimeException("Error en findAll: " . $this->conn->error);
 
-    $res = [];
-    while ($row = $rs->fetch_assoc()) {
-        $res[] = new PedidoDTO(
-            (int)$row['id'],
-            (int)$row['numero_pedido'],
-            (int)$row['id_cliente'],
-            (int)$row['id_cocinero'],
-            (string)$row['fecha_hora'],
-            (string)$row['estado'],
-            (string)$row['tipo'],
-            (float)$row['total']
-        );
-    }
-    return $res;
+        $res = [];
+        while ($row = $rs->fetch_assoc()) {
+            $res[] = new PedidoDTO(
+                (int)$row['id'],
+                (int)$row['numero_pedido'],
+                (int)$row['id_cliente'],
+                (int)$row['id_cocinero'],
+                (string)$row['fecha_hora'],
+                (string)$row['estado'],
+                (string)$row['tipo'],
+                (float)$row['total']
+            );
+        }
+        return $res;
     }   
 
     public function updateCocinero(int $idPedido, int $idCocinero): bool {
-    $sql = "UPDATE pedidos SET id_cocinero = ? WHERE id = ?";
-    
-    $stmt = $this->conn->prepare($sql);
-    if (!$stmt) throw new RuntimeException("Error prepare (updateCocinero): " . $this->conn->error);
-    
-    $stmt->bind_param('ii', $idCocinero, $idPedido);
-    
-    if (!$stmt->execute()) throw new RuntimeException("Error execute (updateCocinero): " . $stmt->error);
-    
-    $stmt->close();
-    return true;
-}
+        $sql = "UPDATE pedidos SET id_cocinero = ? WHERE id = ?";
+        
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) throw new RuntimeException("Error prepare (updateCocinero): " . $this->conn->error);
+        $stmt->bind_param('ii', $idCocinero, $idPedido);
+        if (!$stmt->execute()) throw new RuntimeException("Error execute (updateCocinero): " . $stmt->error);
+        
+        $stmt->close();
+        return true;
+    }
+
+    public function getSiguienteNumeroPedidoHoy(): int {
+            $sql = "SELECT MAX(numero_pedido) AS max_num
+                    FROM pedidos
+                    WHERE DATE(fecha_hora) = CURDATE()";
+
+            $rs = $this->conn->query($sql);
+            if (!$rs) throw new RuntimeException("Error obteniendo numero pedido: " . $this->conn->error);
+            
+            $row = $rs->fetch_assoc();
+            $max = $row['max_num'] ?? null;
+
+            return $max !== null ? ((int)$max + 1) : 1;
+    }
 
 }

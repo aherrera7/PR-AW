@@ -13,23 +13,19 @@ function requireLogin(): void
     }
 }
 
-function isGerente(): bool
-{
+function isGerente(): bool {
     return !empty($_SESSION['esGerente']) && $_SESSION['esGerente'] === true;
 }
 
-function isCamarero(): bool
-{
+function isCamarero(): bool {
     return !empty($_SESSION['esCamarero']) && $_SESSION['esCamarero'] === true;
 }
 
-function isCocinero(): bool
-{
+function isCocinero(): bool {
     return !empty($_SESSION['esCocinero']) && $_SESSION['esCocinero'] === true;
 }
 
-function requireGerente(): void
-{
+function requireGerente(): void {
     requireLogin();
     if (!isGerente()) {
         header('Location: ' . RUTA_APP . '/index.php');
@@ -37,10 +33,25 @@ function requireGerente(): void
     }
 }
 
-function requireStaff(): void
-{
+function requireStaff(): void {
     requireLogin();
     if (!(isGerente() || isCamarero() || isCocinero())) {
+        header('Location: ' . RUTA_APP . '/index.php');
+        exit;
+    }
+}
+
+function requireGerenteOCamarero(): void {
+    requireLogin();
+    if (!(isGerente() || isCamarero())) {
+        header('Location: ' . RUTA_APP . '/index.php');
+        exit;
+    }
+}
+
+function requireGerenteOCocinero(): void {
+    requireLogin();
+    if (!(isGerente() || isCocinero())) {
         header('Location: ' . RUTA_APP . '/index.php');
         exit;
     }

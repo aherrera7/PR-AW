@@ -5,18 +5,12 @@ require_once __DIR__ . '/../../config.php';
 require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
 
-// Control de acceso (Cocinero o Gerente)
-$esGerente = !empty($_SESSION['esGerente']);
-$esCocinero = !empty($_SESSION['esCocinero']);
-
-if (!isset($_SESSION['login']) || (!$esGerente && !$esCocinero)) {
-    header('Location: ' . RUTA_VISTAS . '/login.php');
-    exit;
-}
+//1. Verificación de acceso (Cocinero o Gerente)
+requireGerenteOCocinero();
 
 $tituloPagina = "Panel de Pedidos - Cocina";
 
-// CARGA DE DATOS REALES
+//2. Carga de datos reales
 try {
     $todosLosPedidos = PedidoSA::listarTodos(); 
     $pedidosCocina = [];

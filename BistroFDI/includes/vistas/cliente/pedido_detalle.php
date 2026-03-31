@@ -7,10 +7,7 @@ require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
 require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
 
 // 1. Verificación de acceso
-if (!isset($_SESSION['login'])) {
-    header('Location: ' . RUTA_VISTAS . '/login.php');
-    exit;
-}
+requireLogin();
 
 // 2. Obtener el ID del pedido desde la URL (método GET)
 $idPedido = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
@@ -26,18 +23,13 @@ $lineasPedido = [];
 try {
     // 3. Obtener el pedido
     $pedido = PedidoSA::obtener($idPedido);
-    
-    if (!$pedido) {
-        throw new Exception("El pedido solicitado no existe.");
-    }
+    if (!$pedido) { throw new Exception("El pedido solicitado no existe."); }
 
     // 4. Comprobación de seguridad
     $usuarioIdActual = (int)$_SESSION['usuario_id'];
     $esEmpleado = !empty($_SESSION['esGerente']) || !empty($_SESSION['esCocinero']) || !empty($_SESSION['esCamarero']);
     
-    if ($pedido->getIdCliente() !== $usuarioIdActual && !$esEmpleado) {
-        throw new Exception("No tienes permiso para ver los detalles de este pedido.");
-    }
+    if ($pedido->getIdCliente() !== $usuarioIdActual && !$esEmpleado) { throw new Exception("No tienes permiso para ver los detalles de este pedido."); }
 
     // 5. Obtener las líneas del pedido
     $lineasPedido = PedidoSA::obtenerDetalle($idPedido);

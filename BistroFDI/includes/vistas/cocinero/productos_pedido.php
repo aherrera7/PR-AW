@@ -7,22 +7,13 @@ require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
 require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
 require_once RAIZ_APP . '/includes/app/sa/UsuarioSA.php';
 
-if (!isset($_SESSION['login'])) {
-    header('Location: ' . RUTA_VISTAS . '/login.php');
-    exit;
-}
+// Verificación de acceso (Cocinero o Gerente)
+requireGerenteOCocinero();
 
-$esGerente = (!empty($_SESSION['esGerente']) && $_SESSION['esGerente'] === true);
-$esCocinero = (!empty($_SESSION['esCocinero']) && $_SESSION['esCocinero'] === true);
 $idCocineroActual = (int)$_SESSION['usuario_id'];
 $nombreCocineroActual = $_SESSION['nombre'] ?? 'Cocinero';
 
-if (!$esGerente && !$esCocinero) {
-    header('Location: ' . RUTA_APP . '/index.php');
-    exit;
-}
-
-// --- LÓGICA DE ACTUALIZACIÓN DE ESTADO ---
+//Actualización de estado del pedido (asignar a cocinero o marcar como listo cocina)
 $idPedido = (int)($_GET['id_pedido'] ?? 0);
 
 if (isset($_GET['asignar']) && $_GET['asignar'] == 1) {
@@ -37,7 +28,7 @@ if (isset($_GET['finalizar']) && (int)$_GET['finalizar'] > 0) {
     exit;
 }
 
-// --- CARGA DE DATOS REALES ---
+//Carga de datos para mostrar en la vista
 $pedidoDTO = PedidoSA::obtener($idPedido);
 if (!$pedidoDTO) {
     die("Pedido no encontrado.");
@@ -65,11 +56,9 @@ foreach ($lineasDTO as $linea) {
         ];
     }
 }
-
 $tituloPagina = "Preparando Pedido #" . $pedidoDTO->getNumeroPedido();
 ob_start();
 ?>
-
 <section class="ger-wrap">
     <div class="kitchen-detail-head">
         <a href="pedidos_listar_cocineros.php" class="btn btn-light">← Volver</a>
