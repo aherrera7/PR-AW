@@ -2848,4 +2848,65 @@ main figcaption{
   .qty-box .btn{
     font-size: 0.9rem;
   }
+
+
 }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Contenedor Sticky Nav */
+  .category-sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(230, 230, 230, 0.9); /* Un poco de transparencia con el fondo de tu body */
+      backdrop-filter: blur(8px);
+      padding: 12px 5px;
+      margin: 10px 0 30px;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      border-bottom: 2px solid #ccc;
+      scrollbar-width: none;
+  }
+
+  .category-sticky-nav::-webkit-scrollbar { display: none; }
+
+  .nav-link-item {
+      text-decoration: none;
+      color: #333;
+      font-size: 0.9rem;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 25px;
+      background: #fff;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: transform 0.2s, background 0.2s;
+  }
+
+  .nav-link-item:hover {
+      background: #111;
+      color: #fff;
+      transform: translateY(-2px);
+      text-decoration: none;
+  }
+
+  /* Ajuste para que el título no quede pegado al nav al scrollear */
+  .category-group {
+      scroll-margin-top: 100px; 
+      margin-bottom: 4rem;
+  }
+
+  .category-divider {
+      font-size: 1.6rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-left: 4px solid #d32f2f;
+      padding-left: 15px;
+      margin-bottom: 20px;
+  }
+
+  .stack-l { display: flex; flex-direction: column; gap: 10px; }
