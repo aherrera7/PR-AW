@@ -14,7 +14,8 @@ class ProductoDTO
         private int $iva,
         private bool $disponible,
         private bool $ofertado,
-        private array $imagenes = []
+        private array $imagenes = [],
+        private bool $esCocina = true
     ) {}
 
     // Getters
@@ -28,4 +29,5 @@ class ProductoDTO
     public function isOfertado(): bool { return $this->ofertado; }
     public function getImagenes(): array { return $this->imagenes; }
     public function getPrecioFinal(): float { return round($this->precioBase * (1.0 + ($this->iva / 100.0)), 2);}
+    public function getEsCocina(): bool {return $this->esCocina; }
 }

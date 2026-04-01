@@ -55,6 +55,7 @@ CREATE TABLE productos (
     iva INT NOT NULL,
     disponible BOOLEAN DEFAULT TRUE,
     ofertado BOOLEAN DEFAULT TRUE,
+    es_cocina BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (id_categoria) REFERENCES categorias(id) ON DELETE RESTRICT
 );
 

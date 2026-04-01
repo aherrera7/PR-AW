@@ -8,7 +8,7 @@ class ProductoDAO
     public function __construct(private mysqli $conn) {}
 
     public function findAll(?int $idCategoria = null, bool $soloOfertados = false): array {
-        $sql = "SELECT p.id, p.id_categoria, p.nombre, p.descripcion, p.precio_base, p.iva, p.disponible, p.ofertado
+        $sql = "SELECT p.id, p.id_categoria, p.nombre, p.descripcion, p.precio_base, p.iva, p.disponible, p.ofertado, p.es_cocina
                 FROM productos p";
         $types = '';
         $params = [];
@@ -47,7 +47,8 @@ class ProductoDAO
                 (int)$row['iva'],
                 (bool)$row['disponible'],
                 (bool)$row['ofertado'],
-                $imagenes
+                $imagenes,
+                (bool)$row['es_cocina']
             );
         }
         $stmt->close();
@@ -56,7 +57,7 @@ class ProductoDAO
 
     public function findById(int $id): ?ProductoDTO
     {
-        $sql = "SELECT id, id_categoria, nombre, descripcion, precio_base, iva, disponible, ofertado
+        $sql = "SELECT id, id_categoria, nombre, descripcion, precio_base, iva, disponible, ofertado, es_cocina
                 FROM productos
                 WHERE id = ?";
 
@@ -82,7 +83,8 @@ class ProductoDAO
             (int)$row['iva'],
             (bool)$row['disponible'],
             (bool)$row['ofertado'],
-            $imagenes
+            $imagenes,
+            (bool)$row['es_cocina'],
         );
     }
 
@@ -93,18 +95,20 @@ class ProductoDAO
         float $precioBase,
         int $iva,
         bool $disponible,
-        bool $ofertado
+        bool $ofertado,
+        bool $esCocina
     ): int {
-        $sql = "INSERT INTO productos (id_categoria, nombre, descripcion, precio_base, iva, disponible, ofertado)
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO productos (id_categoria, nombre, descripcion, precio_base, iva, disponible, ofertado, es_cocina)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) throw new RuntimeException("Error prepare (insert productos): " . $this->conn->error);
 
         $disp = $disponible ? 1 : 0;
         $ofer = $ofertado ? 1 : 0;
+        $cocina = $esCocina ? 1 : 0 ;
 
-        $stmt->bind_param('issdiii', $idCategoria, $nombre, $descripcion, $precioBase, $iva, $disp, $ofer);
+        $stmt->bind_param('issdiiii', $idCategoria, $nombre, $descripcion, $precioBase, $iva, $disp, $ofer, $cocina);
 
         if (!$stmt->execute()) {
             throw new RuntimeException("Error execute (insert productos): " . $stmt->error);
@@ -115,16 +119,17 @@ class ProductoDAO
         return $id;
     }
 
-    public function update(int $id, int $idCategoria, string $nombre, ?string $descripcion, float $precioBase, int $iva, bool $disponible): bool {
+    public function update(int $id, int $idCategoria, string $nombre, ?string $descripcion, float $precioBase, int $iva, bool $disponible, bool $esCocina): bool {
         $sql = "UPDATE productos
-                SET id_categoria = ?, nombre = ?, descripcion = ?, precio_base = ?, iva = ?, disponible = ?
+                SET id_categoria = ?, nombre = ?, descripcion = ?, precio_base = ?, iva = ?, disponible = ?, es_cocina = ?
                 WHERE id = ?";
 
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) throw new RuntimeException("Error prepare (update productos): " . $this->conn->error);
 
         $disp = $disponible ? 1 : 0;
-        $stmt->bind_param('issdiii', $idCategoria, $nombre, $descripcion, $precioBase, $iva, $disp, $id);
+        $cocina = $esCocina ? 1 : 0;
+        $stmt->bind_param('issdiiii', $idCategoria, $nombre, $descripcion, $precioBase, $iva, $disp, $cocina, $id);
         if (!$stmt->execute()) { throw new RuntimeException("Error execute (update productos): " . $stmt->error); }
 
         $stmt->close();

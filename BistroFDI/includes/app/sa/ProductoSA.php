@@ -157,7 +157,8 @@ class ProductoSA
             $producto->getPrecioBase(),
             $producto->getIva(),
             $producto->isDisponible(),
-            $producto->isOfertado()
+            $producto->isOfertado(),
+            $producto->getEsCocina()
         );
 
         foreach ($producto->getImagenes() as $ruta) {
@@ -183,7 +184,8 @@ class ProductoSA
             $producto->getIva(),
             $producto->isDisponible(),
             $producto->isOfertado(),
-            $rutasImagenes
+            $rutasImagenes,
+            $producto->getEsCocina()
         );
 
         try {
@@ -212,7 +214,8 @@ class ProductoSA
         $producto->getDescripcion(),
         $producto->getPrecioBase(),
         $producto->getIva(),
-        $producto->isDisponible()
+        $producto->isDisponible(),
+        $producto->getEsCocina()
     );
 }
 

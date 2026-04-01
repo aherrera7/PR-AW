@@ -47,7 +47,7 @@ $lineasDTO = PedidoSA::obtenerDetalle($idPedido);
 $productosMostrar = [];
 foreach ($lineasDTO as $linea) {
     $prod = ProductoSA::obtener($linea->getIdProducto());
-    if ($prod) {
+    if ($prod && $prod->getEsCocina()) {
         $productosMostrar[] = [
             'id' => $prod->getId(),
             'nombre' => $prod->getNombre(),
@@ -97,7 +97,7 @@ ob_start();
                 <?php foreach ($productosMostrar as $item): ?>
                 <tr id="fila-<?= $item['id'] ?>" data-estado="pendiente" class="kitchen-product-row">
                     <td class="kitchen-product-main">
-                        <img src="<?= h(RUTA_IMGS . '/' . ltrim((string)$item['img'], '/')) ?>"" class="kitchen-product-thumb" alt="<?= h($item['nombre']) ?>">
+                        <img src="<?= h(RUTA_IMGS . '/' . ltrim((string)$item['img'], '/')) ?>" class="kitchen-product-thumb" alt="<?= h($item['nombre']) ?>">
                         <span class="kitchen-product-name"><?= h($item['nombre']) ?></span>
                     </td>
                     <td class="cell-center kitchen-product-qty">
@@ -112,6 +112,18 @@ ob_start();
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <?php if (empty($productosMostrar)): ?>
+            <div style="padding: 2rem; text-align: center; color: #666;">
+                <p>🥤 Este pedido solo contiene bebidas o productos que no requieren cocina.</p>
+                <script>
+                    // Forzamos que el botón se active si no hay nada que cocinar
+                    document.addEventListener("DOMContentLoaded", () => {
+                        pendientes = 0;
+                        actualizarBotonMaestro();
+                    });
+                </script>
+            </div>
+        <?php endif; ?>
     </div>
 
     <div class="kitchen-finish-wrap">

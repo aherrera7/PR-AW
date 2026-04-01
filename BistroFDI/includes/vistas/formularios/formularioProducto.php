@@ -67,6 +67,7 @@ class FormularioProducto extends FormularioBase
         $precioBase = '0.00';
         $iva = '10';
         $disponible = true;
+        $esCocina = true;
         $imagenesActuales = [];
 
         if ($this->producto !== null) {
@@ -76,10 +77,12 @@ class FormularioProducto extends FormularioBase
             $precioBase = number_format($this->producto->getPrecioBase(), 2, '.', '');
             $iva = (string) $this->producto->getIva();
             $disponible = $this->producto->isDisponible();
+            $esCocina = $this->producto->getEsCocina();
             $imagenesActuales = $this->producto->getImagenes();
         }
 
         $disponibleEnviado = $datos['disponible'] ?? null;
+        $esCocinaEnviado = $datos['es_cocina'] ?? null;
         $borrarFotos = $datos['borrar_fotos'] ?? [];
 
         return [
@@ -89,6 +92,7 @@ class FormularioProducto extends FormularioBase
             'precio_base' => $datos['precio_base'] ?? $precioBase,
             'iva' => $datos['iva'] ?? $iva,
             'disponible' => $disponibleEnviado !== null ? true : $disponible,
+            'es_cocina' => $esCocinaEnviado !== null ? true : $esCocina,
             'imagenesActuales' => $imagenesActuales,
             'borrar_fotos' => is_array($borrarFotos) ? $borrarFotos : [],
         ];
@@ -251,7 +255,15 @@ class FormularioProducto extends FormularioBase
                 >
                 <label for="disponible">Disponible para la venta inmediatamente</label>
             </div>
-
+            <div class="check-row">
+                <input
+                    id="es_cocina"
+                    name="es_cocina"
+                    type="checkbox"
+                    <?= $valores['es_cocina'] ? 'checked' : '' ?>
+                >
+                <label for="es_cocina">¿Es un producto de cocina? (Se enviará al panel del cocinero)</label>
+            </div>
             <div class="form-actions">
                 <button class="btn" type="submit"><?= $this->h($this->getTextoBoton()) ?></button>
                 <a class="btn btn-light" href="<?= $this->h($this->urlVolver) ?>">Cancelar</a>
@@ -298,8 +310,8 @@ class FormularioProducto extends FormularioBase
         $precioBaseTexto = trim((string) ($datos['precio_base'] ?? ''));
         $ivaTexto = trim((string) ($datos['iva'] ?? ''));
         $disponible = array_key_exists('disponible', $datos);
+        $esCocina = array_key_exists('es_cocina', $datos);
         $ofertado = true;
-
         $descripcion = $descripcionTexto === '' ? null : $descripcionTexto;
 
         $idCategoria = filter_var($idCategoriaTexto, FILTER_VALIDATE_INT);
@@ -367,7 +379,8 @@ class FormularioProducto extends FormularioBase
                     $iva,
                     $disponible,
                     $this->producto?->isOfertado() ?? true,
-                    []
+                    [],
+                    $esCocina
                 );
 
                 $ok = ProductoSA::actualizarConUpload($producto, $imagenesSubidas);
@@ -390,7 +403,8 @@ class FormularioProducto extends FormularioBase
                     $iva,
                     $disponible,
                     $ofertado,
-                    []
+                    [],
+                    $esCocina
                 );
 
                 ProductoSA::crearConUpload($producto, $imagenesSubidas);
