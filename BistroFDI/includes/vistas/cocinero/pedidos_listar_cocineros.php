@@ -17,7 +17,7 @@ try {
 
     foreach ($todosLosPedidos as $p) {
         $estado = $p->getEstado();
-        if (in_array($estado, ['en preparación', 'cocinando', 'listo cocina'])) {
+        if (in_array($estado, ['en preparación', 'cocinando', 'listo cocina']) && PedidoSA::tieneProductosCocina($p->getId())) {
             $pedidosCocina[] = $p;
         }
     }

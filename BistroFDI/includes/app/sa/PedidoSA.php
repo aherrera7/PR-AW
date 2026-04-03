@@ -106,10 +106,19 @@ class PedidoSA {
         $pedido = self::dao()->findById($idPedido);
         if ($pedido === null) throw new InvalidArgumentException('El pedido no existe.');
 
+
         // Si ya está pagado/recibido, lo pasamos a preparación
         if ($pedido->getEstado() !== self::ESTADO_RECIBIDO) return false;
 
-        return self::dao()->updateEstado($idPedido, self::ESTADO_EN_PREPARACION);
+        $result = self::dao()->updateEstado($idPedido, self::ESTADO_EN_PREPARACION);
+    
+        // Si solo tiene bebidas, pasar directamente a LISTO_COCINA
+        if ($result && self::soloBebidas($idPedido)) {
+            self::dao()->updateEstado($idPedido, self::ESTADO_LISTO_COCINA);
+        }
+    
+        return $result;
+        
     }
 
     private static function validarTipo(string $tipo): void {
@@ -171,6 +180,21 @@ class PedidoSA {
     if ($idPedido <= 0 || $idCocinero <= 0) return false;
     
     return self::dao()->updateCocinero($idPedido, $idCocinero);
+}
+
+public static function soloBebidas(int $idPedido): bool {
+    $lineas = self::obtenerDetalle($idPedido);
+    foreach ($lineas as $linea) {
+        $producto = ProductoSA::obtener($linea->getIdProducto());
+        if ($producto && $producto->getEsCocina()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+public static function tieneProductosCocina(int $idPedido): bool {
+    return !self::soloBebidas($idPedido);
 }
 
 }
