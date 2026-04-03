@@ -116,7 +116,6 @@ ob_start();
             <div style="padding: 2rem; text-align: center; color: #666;">
                 <p>🥤 Este pedido solo contiene bebidas o productos que no requieren cocina.</p>
                 <script>
-                    // Forzamos que el botón se active si no hay nada que cocinar
                     document.addEventListener("DOMContentLoaded", () => {
                         pendientes = 0;
                         actualizarBotonMaestro();

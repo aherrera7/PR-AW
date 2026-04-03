@@ -5,12 +5,12 @@ require_once __DIR__ . '/../../config.php';
 require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
 
-//1. Verificación de acceso (Cocinero o Gerente)
+//Verificación de acceso (Cocinero o Gerente)
 requireGerenteOCocinero();
 
 $tituloPagina = "Panel de Pedidos - Cocina";
 
-//2. Carga de datos reales
+//Carga de datos reales
 try {
     $todosLosPedidos = PedidoSA::listarTodos(); 
     $pedidosCocina = [];

@@ -6,7 +6,7 @@ require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
 require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
 
-//1. Verificación de acceso (Camarero o Gerente)
+//Verificación de acceso (Camarero o Gerente)
 requireGerenteOCamarero();
 
 $nombreCamarero = $_SESSION['nombre'] ?? 'Camarero';
@@ -15,7 +15,7 @@ $avatarCamareroUrl = RUTA_IMGS . '/' . ltrim((string)$avatarCamarero, '/');
 
 $tituloPagina = "Estado de los pedidos (Camarero)";
 
-//2. Procesamiento de acciones
+//Procesamiento de acciones
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idPedido = filter_input(INPUT_POST, 'id_pedido', FILTER_VALIDATE_INT);
     $accion = $_POST['accion'] ?? '';
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-//3. Carga de datos
+//Carga de datos
 try {
     $todosLosPedidos = PedidoSA::listarTodos();
     $pedidosCamarero = [];
@@ -125,7 +125,7 @@ ob_start();
                         </a>
                     <?php elseif ($p['estado'] === 'listo cocina'): ?>
                         <a href="productos_pedido_camarero.php?id_pedido=<?= h((string) $p['id']) ?>" class="btn w-100 text-center">
-                            🥤 PREPARAR BEBIDAS
+                            🥤 PREPARAR BEBIDAS //no estoy segura si esto es necesario cuando no hay bebidas pero bueno 
                         </a>
                     <?php elseif ($p['estado'] === 'terminado'): ?>
                         <form method="POST" action="" class="inline-form" style="width: 100%;">
