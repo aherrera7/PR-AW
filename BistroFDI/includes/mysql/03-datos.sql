@@ -41,11 +41,11 @@ INSERT INTO categorias (id, nombre, descripcion, imagen) VALUES
 (3, 'Bebidas', 'Refrescos y bebidas', 'categorias/bebida.png');
 
 -- 5. PRODUCTOS
-INSERT INTO productos (id, id_categoria, nombre, descripcion, precio_base, iva, disponible, ofertado) VALUES
-(1, 2, 'Nachos', 'Nachos con queso y guacamole', 6.50, 10, 1, 1),
-(2, 1, 'Tostada de tomate', 'Pan tostado con aceite y tomate', 1.30, 10, 1, 1),
-(3, 3, 'Agua Mineral', 'Botella de 50cl', 1.50, 10, 1, 1),
-(4, 3, 'Coca-Cola', 'Refresco de cola 33cl', 2.00, 10, 1, 1);
+INSERT INTO productos (id, id_categoria, nombre, descripcion, precio_base, iva, disponible, ofertado, es_cocina) VALUES
+(1, 2, 'Nachos', 'Nachos con queso y guacamole', 6.50, 10, 1, 1, 1),
+(2, 1, 'Tostada de tomate', 'Pan tostado con aceite y tomate', 1.30, 10, 1, 1, 1),
+(3, 3, 'Agua Mineral', 'Botella de 50cl', 1.50, 10, 1, 1, 0),
+(4, 3, 'Coca-Cola', 'Refresco de cola 33cl', 2.00, 10, 1, 1, 0);
 
 INSERT INTO productos_imagenes (id_producto, ruta) VALUES
 (1, 'productos/nachos.png'),
