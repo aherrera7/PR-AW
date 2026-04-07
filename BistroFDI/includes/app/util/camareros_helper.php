@@ -1,16 +1,14 @@
 <?php
 declare(strict_types=1);
 
-final class CamareroHelper
+require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
+
+class CamarerosHelper
 {
     private const ESTADOS_VISIBLES = ['recibido', 'listo cocina', 'terminado'];
 
     public static function esEstadoVisibleParaCamarero(string $estado): bool {
         return in_array($estado, self::ESTADOS_VISIBLES, true);
-    }
-
-    public static function filtrarPedidosParaCamarero(array $pedidos): array {
-        return array_values(array_filter($pedidos, static fn($pedido) => self::esEstadoVisibleParaCamarero($pedido->getEstado())));
     }
 
     public static function obtenerMetaEstado(string $estado): array {
@@ -25,7 +23,7 @@ final class CamareroHelper
             'listo cocina' => [
                 'cardClass' => 'order-card order-card--listo',
                 'accion' => 'preparar_entrega',
-                'textoBoton' => '📦 PREPARAR ENTREGA',
+                'textoBoton' => '🥤 PREPARAR BEBIDAS',
                 'btnClass' => 'btn-order btn-order--listo',
                 'mostrarRevision' => true,
             ],
@@ -49,16 +47,18 @@ final class CamareroHelper
     public static function formatearPedidoParaVista(object $pedido): array {
         $estado = $pedido->getEstado();
         $meta = self::obtenerMetaEstado($estado);
+        $soloBebidas = PedidoSA::soloBebidas($pedido->getId());
 
         return [
             'id' => $pedido->getId(),
             'numeroPedido' => $pedido->getNumeroPedido(),
-            'tipoTexto' => $pedido->getTipo() === 'local' ? 'LOCAL' : 'LLEVAR',
+            'tipoTexto' => $pedido->getTipo() === 'local' ? '🏠 LOCAL' : '🥡 LLEVAR',
             'hora' => date('H:i', strtotime($pedido->getFechaHora())),
             'idCliente' => $pedido->getIdCliente(),
             'totalFormateado' => number_format((float) $pedido->getTotal(), 2) . '€',
             'estado' => $estado,
-            'cardClass' => $meta['cardClass'],
+            'soloBebidas' => $soloBebidas,
+            'cardClass' => $soloBebidas ? 'order-card order-card--solo-bebidas' : $meta['cardClass'],
             'accion' => $meta['accion'],
             'textoBoton' => $meta['textoBoton'],
             'btnClass' => $meta['btnClass'],
@@ -67,10 +67,31 @@ final class CamareroHelper
     }
 
     public static function formatearPedidosParaVista(array $pedidos): array {
-        $pedidosFiltrados = self::filtrarPedidosParaCamarero($pedidos);
-        return array_map(
-            static fn($pedido) => self::formatearPedidoParaVista($pedido),
-            $pedidosFiltrados
-        );
+        $pedidosFiltrados = array_filter($pedidos, fn($p) => self::esEstadoVisibleParaCamarero($p->getEstado()));
+        return array_values(array_map(fn($p) => self::formatearPedidoParaVista($p), $pedidosFiltrados));
+    }
+
+    public static function procesarAccionPost(): ?string {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $idPedido = filter_input(INPUT_POST, 'id_pedido', FILTER_VALIDATE_INT);
+            $accion = $_POST['accion'] ?? '';
+            
+            if ($idPedido) {
+                try {
+                    switch ($accion) {
+                        case 'cobrar':
+                            PedidoSA::registrarPago($idPedido);
+                            break;
+                        case 'entregar':
+                            PedidoSA::cambiarEstado($idPedido, PedidoSA::ESTADO_ENTREGADO);
+                            break;
+                    }
+                    return null;
+                } catch (Exception $e) {
+                    return $e->getMessage();
+                }
+            }
+        }
+        return null;
     }
 }
