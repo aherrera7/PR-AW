@@ -89,7 +89,7 @@ class ProdPedidosCocineroHelper
         }
     }
 
-    
+    //muestra los pedidos que tiene la cocina ordenados por estado 
     public static function generarTablaProductosCocina(array $productos): string {
         if (empty($productos)) {
             return '';
@@ -147,7 +147,7 @@ class ProdPedidosCocineroHelper
                 </div>';
     }
 
-    //marcar listo y finalizar pedido para pasar a listococina
+    //marcar los pedidos como listo y finalizar pedido para pasar a listococina
     public static function generarScriptCocinero(int $numProductos, int $idPedido): string {
         return <<<JS
         <script>

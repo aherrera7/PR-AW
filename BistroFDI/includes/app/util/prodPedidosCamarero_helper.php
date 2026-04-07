@@ -66,6 +66,7 @@ class CamareroPedidosHelper
     }
 
 
+     //muestra las bebidas que hay que preparar 
     public static function generarTablaBebidasCamarero(array $productos): string {
         if (empty($productos)) {
             return '';
@@ -110,7 +111,7 @@ HTML;
         return $html;
     }
 
-  
+  //marcar el listo de las bebidas, saber si falta alguna y poner el pedido a finalizado 
     public static function generarScriptCamareroBebidas(int $numProductos, int $idPedido): string {
         return <<<JS
         <script>

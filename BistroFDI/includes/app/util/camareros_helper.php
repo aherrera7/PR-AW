@@ -71,6 +71,8 @@ class CamarerosHelper
         return array_values(array_map(fn($p) => self::formatearPedidoParaVista($p), $pedidosFiltrados));
     }
 
+
+    //control sobre las acciones del camarero 
     public static function procesarAccionPost(): ?string {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $idPedido = filter_input(INPUT_POST, 'id_pedido', FILTER_VALIDATE_INT);
