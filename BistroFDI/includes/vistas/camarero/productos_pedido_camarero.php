@@ -105,7 +105,7 @@ ob_start();
 
     <div class="kitchen-finish-wrap">
         <button id="btnFinalizarPedido" class="btn kitchen-finish-btn kitchen-finish-btn-disabled" onclick="finalizarPedido(<?= $idPedido ?>)" disabled>
-            BEBIDAS LISTAS
+            LISTO
         </button>
     </div>
 </section>

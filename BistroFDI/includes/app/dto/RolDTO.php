@@ -1,8 +1,7 @@
 <?php
 declare(strict_types=1);
 
-class RolDTO implements JsonSerializable
-{
+class RolDTO implements JsonSerializable {
     // Atributos
     public function __construct(
         private int $idRol,

@@ -33,33 +33,6 @@ if ($idCliente <= 0) {
     exit;
 }
 
-function validarTarjetaLuhn(string $numero): bool
-{
-    $numero = preg_replace('/\D+/', '', $numero);
-    if ($numero === null || $numero === '' || strlen($numero) < 13 || strlen($numero) > 19) {
-        return false;
-    }
-
-    $suma = 0;
-    $alternar = false;
-
-    for ($i = strlen($numero) - 1; $i >= 0; $i--) {
-        $digito = (int)$numero[$i];
-
-        if ($alternar) {
-            $digito *= 2;
-            if ($digito > 9) {
-                $digito -= 9;
-            }
-        }
-
-        $suma += $digito;
-        $alternar = !$alternar;
-    }
-
-    return $suma % 10 === 0;
-}
-
 $productosCarrito = [];
 $total = 0.0;
 $errores = [];
@@ -95,12 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pagar'])) {
                 throw new InvalidArgumentException('Debes introducir el nombre del titular.');
             }
 
-            if (!validarTarjetaLuhn($numeroTarjeta)) {
-                throw new InvalidArgumentException('El número de tarjeta no es válido.');
-            }
+            $numeroLimpio = preg_replace('/\D+/', '', $numeroTarjeta);
 
-            if (!preg_match('/^(0[1-9]|1[0-2])\/([0-9]{2})$/', $caducidad)) {
-                throw new InvalidArgumentException('La fecha de caducidad debe tener formato MM/AA.');
+            if ($numeroLimpio === null || !preg_match('/^[0-9]{16}$/', $numeroLimpio)) {
+                throw new InvalidArgumentException('El número de tarjeta debe tener 16 dígitos.');
             }
 
             if (!preg_match('/^[0-9]{3,4}$/', $cvv)) {

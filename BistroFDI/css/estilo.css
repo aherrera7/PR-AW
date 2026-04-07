@@ -1031,12 +1031,19 @@ main figcaption{
 }
 
 .qty-input{
-  width: 40px;
+  width: 52px;
+  min-width: 52px;
   margin: 0;
+  padding: 0 4px;
   border: none;
-  background: transparent;
+  background: #fff;
+  color: #111;
   text-align: center;
   font-weight: bold;
+  font-size: 1rem;
+  line-height: 1.2;
+  -webkit-appearance: none;
+  appearance: textfield;
 }
 
 .ger-wrap{
@@ -1956,6 +1963,16 @@ main figcaption{
   min-width: 240px;
 }
 
+.alert-exito{
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
 .pedido-cell-strong{
   font-weight: bold;
 }
@@ -2431,6 +2448,8 @@ main figcaption{
   }
 }
 /*RESPONSIVE*/
+
+
 @media (max-width: 1024px) {
   #contenedor{
     width: min(100vw - 16px, 1400px);
@@ -2751,8 +2770,11 @@ main figcaption{
   }
 
   .qty-input{
-    width: 38px;
-    font-size: 0.95rem;
+    width: 52px;
+    min-width: 52px;
+    font-size: 1rem;
+    color: #111;
+    background: #fff;
   }
 
   .qty-box .btn{
@@ -2800,9 +2822,6 @@ main figcaption{
   }
 }
 
-/* =========================
-   MOVIL PEQUEÑO
-   ========================= */
 @media (max-width: 480px) {
   nav#menu{
     justify-content: flex-start;

@@ -2,8 +2,7 @@
 declare(strict_types=1);
 
 
-class ProductoDTO
-{
+class ProductoDTO {
     // Atributos
     public function __construct(
         private ?int $id,

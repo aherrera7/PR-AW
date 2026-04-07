@@ -3,7 +3,6 @@ declare(strict_types=1);
 // Representa una fila de 'pedidos_productos' 
 
 class PedidoProductoDTO{
-
     // Atributos
     public function __construct(
         private int $idPedido,

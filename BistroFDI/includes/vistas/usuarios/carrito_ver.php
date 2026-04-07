@@ -56,6 +56,13 @@ ob_start();
 <section class="ger-wrap">
     <h1>Mi Carrito</h1>
 
+    <?php if (!empty($_SESSION['mensaje_exito'])): ?>
+        <div class="alert-exito">
+            <?= h((string)$_SESSION['mensaje_exito']) ?>
+        </div>
+        <?php unset($_SESSION['mensaje_exito']); ?>
+    <?php endif; ?>
+
     <?php if (!empty($errores)): ?>
         <div class="alert-error cart-error-box">
             <?php foreach ($errores as $e): ?>
