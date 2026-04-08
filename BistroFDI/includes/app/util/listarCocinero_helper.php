@@ -6,7 +6,7 @@ require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
 class ListarCocineroHelper
 {
     //estados visibles en la cocina NO ESTOY SEGURA SI LISTO COCINA ES TOTALMENTE NECESARIO 
-    private const ESTADOS_COCINA = ['en preparación', 'cocinando', 'listo cocina'];
+    private const ESTADOS_COCINA = ['en preparación', 'cocinando'];
 
     
     public static function obtenerPedidosCocina(): array {
