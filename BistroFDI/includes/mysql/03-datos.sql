@@ -10,7 +10,7 @@ DELETE FROM roles;
 DELETE FROM usuarios;
 
 SET FOREIGN_KEY_CHECKS = 1;
-
+// Datos de ejemplo para el Bistro FDI
 -- 1. ROLES
 INSERT INTO roles (id_rol, nombre_rol) VALUES
 (1, 'cliente'),
