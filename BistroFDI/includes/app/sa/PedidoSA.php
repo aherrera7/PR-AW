@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once RAIZ_APP . '/includes/app/dao/PedidoDAO.php';
 require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
+require_once RAIZ_APP . '/includes/app/sa/OfertaSA.php';
 
 class PedidoSA {
     // Estados según definición en 02-tablas.sql
@@ -58,14 +59,33 @@ class PedidoSA {
 
         $numeroPedido = self::dao()->getSiguienteNumeroPedidoHoy();
         $lineas = self::construirLineasPedido($carrito);
-        $total = self::calcularTotal($lineas);
+        
+        $subtotalSinDescuento = self::calcularTotal($lineas);
+        $mejorOferta = OfertaSA::obtenerMejorOfertaAplicable($carrito);
+
+        $idOfertaAplicada = null;
+        $descuentoTotal = 0.0;
+
+        if ($mejorOferta !== null) {
+            $idOfertaAplicada = intval(strval($mejorOferta['id_oferta'] ?? '0'));
+            $descuentoTotal = round(floatval(strval($mejorOferta['descuento_total'] ?? '0')), 2);
+        }
+
+        $total = round($subtotalSinDescuento - $descuentoTotal, 2);
+
+        if ($total < 0) {
+            $total = 0.0;
+        }
 
         $idPedido = self::dao()->insertPedido(
             $numeroPedido,
             $idCliente,
             $idCocinero, 
+            $idOfertaAplicada,
             self::ESTADO_RECIBIDO, // El pedido entra como recibido tras crearse
             $tipo,
+            $subtotalSinDescuento,
+            $descuentoTotal,
             $total
         );
 
@@ -80,6 +100,7 @@ class PedidoSA {
 
         return $idPedido;
     }
+
 
     /**
      * NUEVO: Cambia el estado de un pedido (útil para el flujo de cocina)
@@ -105,7 +126,6 @@ class PedidoSA {
 
         $pedido = self::dao()->findById($idPedido);
         if ($pedido === null) throw new InvalidArgumentException('El pedido no existe.');
-
 
         // Si ya está pagado/recibido, lo pasamos a preparación
         if ($pedido->getEstado() !== self::ESTADO_RECIBIDO) return false;
@@ -166,7 +186,6 @@ class PedidoSA {
     public static function listarTodos(): array {
         return self::dao()->findAll();
     }
-
 
 
     public static function actualizarEstado(int $idPedido, string $nuevoEstado): bool {
