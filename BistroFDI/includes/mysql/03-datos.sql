@@ -4,13 +4,14 @@ DELETE FROM pedidos_productos;
 DELETE FROM pedidos;
 DELETE FROM productos_imagenes;
 DELETE FROM productos;
+DELETE FROM ofertas_productos;
+DELETE FROM ofertas;
 DELETE FROM categorias;
 DELETE FROM roles_usuarios;
 DELETE FROM roles;
 DELETE FROM usuarios;
 
 SET FOREIGN_KEY_CHECKS = 1;
-// Datos de ejemplo para el Bistro FDI
 -- 1. ROLES
 INSERT INTO roles (id_rol, nombre_rol) VALUES
 (1, 'cliente'),
@@ -45,7 +46,10 @@ INSERT INTO productos (id, id_categoria, nombre, descripcion, precio_base, iva, 
 (1, 2, 'Nachos', 'Nachos con queso y guacamole', 6.50, 10, 1, 1, 1),
 (2, 1, 'Tostada de tomate', 'Pan tostado con aceite y tomate', 1.30, 10, 1, 1, 1),
 (3, 3, 'Agua Mineral', 'Botella de 50cl', 1.50, 10, 1, 1, 0),
-(4, 3, 'Coca-Cola', 'Refresco de cola 33cl', 2.00, 10, 1, 1, 0);
+(4, 3, 'Coca-Cola', 'Refresco de cola 33cl', 2.00, 10, 1, 1, 0),
+(5, 3, 'Café', 'Café solo', 1.20, 10, 1, 1, 0),
+(6, 2, 'Hamburguesa', 'Hamburguesa completa', 8.50, 10, 1, 1, 1),
+(7, 2, 'Patatas fritas', 'Ración de patatas fritas', 3.00, 10, 1, 1, 1);
 
 INSERT INTO productos_imagenes (id_producto, ruta) VALUES
 (1, 'productos/nachos.png'),
