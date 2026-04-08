@@ -52,6 +52,21 @@ ob_start();
         </div>
     </div>
 
+    <?php if ($idCat === null): ?>
+        <div class="carta-ofertas-banner">
+            <div class="carta-ofertas-banner__icono" aria-hidden="true">🎁</div>
+            <div class="carta-ofertas-banner__contenido">
+                <h2 class="carta-ofertas-banner__titulo">Ofertas disponibles</h2>
+                <p class="carta-ofertas-banner__texto">
+                    Descubre nuestros packs y promociones activas antes de hacer tu pedido.
+                </p>
+            </div>
+            <div class="carta-ofertas-banner__acciones">
+                <a class="btn" href="<?= h(RUTA_APP . '/ofertas.php') ?>">Mostrar ofertas</a>
+            </div>
+        </div>
+    <?php endif; ?>
+
     <?php if (empty($productos)): ?>
         <p class="muted">No hay productos en esta sección.</p>
     <?php else: ?>
@@ -76,15 +91,21 @@ ob_start();
                             <?php
                                 $id = (int)$p->getId();
                                 $imagenes = $p->getImagenes();
-                                if (empty($imagenes)) $imagenes = ['productos/default_producto.jpg'];
+                                if (empty($imagenes)) {
+                                    $imagenes = ['productos/default_producto.jpg'];
+                                }
                             ?>
 
                             <div class="card stack product-card2">
                                 <div class="product-gallery2">
                                     <?php foreach ($imagenes as $index => $ruta): ?>
-                                        <img src="<?= h(RUTA_IMGS . '/' . ltrim((string)$ruta, '/')) ?>"
-                                             class="img-carrusel-<?= $id ?> product-gallery-img<?= $index === 0 ? '' : ' is-hidden' ?>" alt="">
+                                        <img
+                                            src="<?= h(RUTA_IMGS . '/' . ltrim((string)$ruta, '/')) ?>"
+                                            class="img-carrusel-<?= $id ?> product-gallery-img<?= $index === 0 ? '' : ' is-hidden' ?>"
+                                            alt=""
+                                        >
                                     <?php endforeach; ?>
+
                                     <?php if (count($imagenes) > 1): ?>
                                         <button type="button" onclick="navImg(<?= $id ?>, -1)" class="gallery-btn prev">&#10094;</button>
                                         <button type="button" onclick="navImg(<?= $id ?>, 1)" class="gallery-btn next">&#10095;</button>
@@ -96,7 +117,9 @@ ob_start();
                                         <h3 class="title-reset"><?= h($p->getNombre()) ?></h3>
                                         <span class="price-red"><?= number_format($p->getPrecioFinal(), 2) ?>€</span>
                                     </div>
+
                                     <p class="muted product-text"><?= h($p->getDescripcion() ?? '') ?></p>
+
                                     <div class="product-footer">
                                         <div class="qty-box">
                                             <div class="qty-picker">
@@ -117,19 +140,19 @@ ob_start();
     <?php endif; ?>
 </section>
 
-<style>
-/* Forzamos el scroll suave en todo el documento */
-
-
-</style>
-
 <script>
 // Manejo de imágenes
 function navImg(id, d) {
     const imgs = document.querySelectorAll('.img-carrusel-' + id);
     let cur = 0;
-    imgs.forEach((img, i) => { if (!img.classList.contains('is-hidden')) cur = i; });
-    if (imgs[cur]) imgs[cur].classList.add('is-hidden');
+    imgs.forEach((img, i) => {
+        if (!img.classList.contains('is-hidden')) {
+            cur = i;
+        }
+    });
+    if (imgs[cur]) {
+        imgs[cur].classList.add('is-hidden');
+    }
     imgs[(cur + d + imgs.length) % imgs.length].classList.remove('is-hidden');
 }
 
@@ -137,7 +160,9 @@ function navImg(id, d) {
 function modCant(id, d) {
     const i = document.getElementById('cant-' + id);
     let v = parseInt(i.value, 10) + d;
-    if (v >= 1) i.value = v;
+    if (v >= 1) {
+        i.value = v;
+    }
 }
 
 // Carrito
@@ -156,7 +181,7 @@ function addCarrito(id) {
 window.addEventListener('scroll', () => {
     const sections = document.querySelectorAll('.category-group');
     const navLinks = document.querySelectorAll('.nav-link-item');
-    
+
     let current = "";
     sections.forEach(section => {
         const sectionTop = section.offsetTop;

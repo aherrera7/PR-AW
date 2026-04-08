@@ -11,6 +11,16 @@ if (!isset($_SESSION['login'])) {
     exit;
 }
 
+function imagenOferta(string $nombreOferta): string {
+    $mapa = [
+        'Combo Burger' => 'productos/combo_hamburguesa.png',
+        'Pack Refresco' => 'productos/pack_refresco.png',
+        'Desayuno Andaluz' => 'productos/pack_desayuno_andaluz.png',
+    ];
+
+    return $mapa[$nombreOferta] ?? 'productos/default_producto.jpg';
+}
+
 $id = (int)($_GET['id'] ?? 0);
 $oferta = OfertaSA::obtener($id);
 
@@ -23,6 +33,7 @@ $lineas = OfertaSA::obtenerProductosOferta($id);
 $precioPack = OfertaSA::calcularPrecioPack($id);
 $precioFinal = round($precioPack * (1 - $oferta->getDescuento()), 2);
 $ahorro = round($precioPack - $precioFinal, 2);
+$rutaImagen = imagenOferta($oferta->getNombre());
 
 $tituloPagina = 'Detalle de oferta';
 
@@ -38,6 +49,14 @@ ob_start();
     </div>
 
     <div class="card p-30">
+        <div style="margin-bottom:20px;">
+            <img
+                src="<?= h(RUTA_IMGS . '/' . $rutaImagen) ?>"
+                alt="<?= h($oferta->getNombre()) ?>"
+                style="width:220px; height:220px; object-fit:cover; border-radius:10px; border:1px solid #ccc;"
+            >
+        </div>
+
         <p><?= h($oferta->getDescripcion()) ?></p>
 
         <div class="summary-row">
