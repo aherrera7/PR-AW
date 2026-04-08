@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../config.php';
 require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
 require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
+require_once RAIZ_APP . '/includes/app/sa/OfertaSA.php';
 
 if (!isset($_SESSION['login'])) {
     header('Location: ' . RUTA_VISTAS . '/login.php');
@@ -36,6 +37,9 @@ if ($idCliente <= 0) {
 $productosCarrito = [];
 $total = 0.0;
 $errores = [];
+$mejorOferta = null;
+$descuentoOferta = 0.0;
+$totalFinal = 0.0;
 
 foreach ($carrito as $id => $cantidad) {
     $p = ProductoSA::obtener((int)$id);
@@ -49,6 +53,18 @@ foreach ($carrito as $id => $cantidad) {
         ];
     }
 }
+
+if (!empty($carrito)) {
+    $mejorOferta = OfertaSA::obtenerMejorOfertaAplicable($carrito);
+
+    if ($mejorOferta !== null) {
+        $descuentoOferta = (float)($mejorOferta['descuento_total'] ?? 0);
+    }
+}
+
+$totalFinal = max(0, round($total - $descuentoOferta, 2));
+
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pagar'])) {
     try {
@@ -142,14 +158,40 @@ ob_start();
                 <hr>
 
                 <div class="summary-row text-small">
-                    <span>Subtotal (sin IVA):</span>
-                    <span><?= number_format($total / 1.10, 2) ?>€</span>
+                    <span>Subtotal (sin descuento):</span>
+                    <span><?= number_format($total, 2) ?>€</span>
                 </div>
 
-                <div class="summary-row text-small">
-                    <span>IVA (10%):</span>
-                    <span><?= number_format($total - ($total / 1.10), 2) ?>€</span>
-                </div>
+                <?php if ($mejorOferta !== null): ?>
+                    <div class="summary-row text-small">
+                        <span>Oferta aplicada:</span>
+                        <span><?= h((string)$mejorOferta['nombre_oferta']) ?></span>
+                    </div>
+
+                    <div class="summary-row text-small">
+                        <span>Veces que se aplica:</span>
+                        <span>x<?= h((string)$mejorOferta['veces']) ?></span>
+                    </div>
+
+                    <div class="summary-row text-small">
+                        <span>Descuento:</span>
+                        <span>-<?= number_format($descuentoOferta, 2) ?>€</span>
+                    </div>
+
+                    <div class="card p-20" style="margin: 15px 0; background: #f8fff3; border: 1px solid #d7ebc8;">
+                        <p style="margin: 0 0 8px 0;"><strong>🎁 Oferta aplicada</strong></p>
+                        <p style="margin: 0 0 6px 0;"><?= h((string)$mejorOferta['nombre_oferta']) ?></p>
+                        <p style="margin: 0; font-size: 0.95em;">
+                            Ahorro total: <strong><?= number_format($descuentoOferta, 2) ?>€</strong>
+                        </p>
+                    </div>
+
+                <?php else: ?>
+                    <div class="summary-row text-small">
+                        <span>Oferta:</span>
+                        <span>No hay ofertas aplicables</span>
+                    </div>
+                <?php endif; ?>
 
                 <div class="summary-total">
                     <span>Total:</span>
