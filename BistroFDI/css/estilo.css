@@ -2800,4 +2800,63 @@ body.staff .fig-desc p{
     flex-direction: column;
     align-items: flex-start;
   }
+
+  .oferta-detalle-img-wrap{
+  margin-bottom: 20px;
+  }
+
+  .oferta-detalle-img{
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background: #fff;
+  }
+
+  .oferta-ahorro{
+    color: green;
+  }
+
+  .ofertas-banner{
+    margin-bottom: 20px;
+    background: #fff8e8;
+    border: 1px solid #f0d98a;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .ofertas-banner__content{
+    align-items: center;
+    gap: 15px;
+  }
+
+  .ofertas-banner__title{
+    margin: 0 0 6px 0;
+  }
+
+  .ofertas-banner__text{
+    margin: 0;
+  }
+
+  .oferta-aplicada{
+    margin: 15px 0;
+    background: #f8fff3;
+    border: 1px solid #d7ebc8;
+    padding: 15px;
+    border-radius: 8px;
+  }
+
+  .oferta-aplicada__titulo{
+    margin: 0 0 8px 0;
+  }
+
+  .oferta-aplicada__nombre{
+    margin: 0 0 6px 0;
+  }
+
+  .oferta-aplicada__ahorro{
+    margin: 0;
+    font-size: 0.95em;
+  }
 }
