@@ -51,7 +51,24 @@ INSERT INTO productos_imagenes (id_producto, ruta) VALUES
 (1, 'productos/nachos.png'),
 (2, 'productos/tostada.png'),
 (3, 'productos/agua.png'),
-(4, 'productos/cocacola.png');
+(4, 'productos/cocacola.png'),
+(5, 'productos/cafe.png'),
+(6, 'productos/hamburguesa.png'),
+(7, 'productos/patatas.png');
+
+-- OFERTAS
+INSERT INTO ofertas (id, nombre, descripcion, fecha_inicio, fecha_fin, descuento, activa) VALUES
+(1, 'Desayuno Andaluz', 'Incluye 1 café y 1 tostada de tomate', '2026-03-01', '2026-12-31', 0.2157, 1),
+(2, 'Pack Refresco', 'Incluye 2 Coca-Cola con descuento', '2026-03-01', '2026-06-30', 0.1500, 1),
+(3, 'Combo Burger', 'Incluye 1 hamburguesa, 1 Coca-Cola y 1 ración de patatas fritas', '2026-03-01', '2026-12-31', 0.2000, 1);
+
+INSERT INTO ofertas_productos (id_oferta, id_producto, cantidad) VALUES
+(1, 5, 1),
+(1, 2, 1),
+(2, 4, 2),
+(3, 6, 1),
+(3, 4, 1),
+(3, 7, 1);
 
 -- Pedido 1: RECIBIDO (para cobrar camarero)
 INSERT INTO pedidos (id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total) VALUES

@@ -67,6 +67,29 @@ CREATE TABLE productos_imagenes (
     FOREIGN KEY (id_producto) REFERENCES productos(id) ON DELETE CASCADE
 );
 
+-- 8. Gestion ofertas
+CREATE TABLE ofertas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT NOT NULL,
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE NOT NULL,
+    descuento DECIMAL(5,4) NOT NULL,
+    activa TINYINT(1) NOT NULL DEFAULT 1
+);
+
+-- 9. Relaciona cada oferta con sus productos
+CREATE TABLE ofertas_productos (
+    id_oferta INT NOT NULL,
+    id_producto INT NOT NULL,
+    cantidad INT NOT NULL,
+    PRIMARY KEY (id_oferta, id_producto),
+    CONSTRAINT fk_oferta_producto_oferta
+        FOREIGN KEY (id_oferta) REFERENCES ofertas(id),
+    CONSTRAINT fk_oferta_producto_producto
+        FOREIGN KEY (id_producto) REFERENCES productos(id)
+);
+
 -- 6. Tabla de Pedidos
 CREATE TABLE pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -77,8 +100,13 @@ CREATE TABLE pedidos (
     estado ENUM('nuevo', 'recibido', 'en preparación', 'cocinando', 'listo cocina', 'terminado', 'entregado') DEFAULT 'nuevo',
     tipo ENUM('local', 'llevar') NOT NULL,
     total DECIMAL(10, 2) NOT NULL,
+    -- para la oferta
+    subtotal_sin_descuento DECIMAL(10,2) NOT NULL DEFAULT 0,
+    descuento_total DECIMAL(10,2) NOT NULL DEFAULT 0,
+    id_oferta_aplicada INT NULL,
     FOREIGN KEY (id_cliente) REFERENCES usuarios(id),
-    FOREIGN KEY (id_cocinero) REFERENCES usuarios(id)
+    FOREIGN KEY (id_cocinero) REFERENCES usuarios(id), 
+    FOREIGN KEY (id_oferta_aplicada) REFERENCES ofertas(id)
 );
 
 -- 7. Detalle del Pedido
