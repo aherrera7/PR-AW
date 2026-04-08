@@ -35,6 +35,13 @@ ob_start();
         </a>
     </div>
 
+    <?php if (!empty($_SESSION['mensaje_exito'])): ?>
+        <div class="alert-exito">
+            <?= h($_SESSION['mensaje_exito']) ?>
+        </div>
+        <?php unset($_SESSION['mensaje_exito']); ?>
+    <?php endif; ?>
+
     <?php if (empty($ofertas)): ?>
         <div class="card p-30">
             <p>No hay ofertas disponibles en este momento.</p>
@@ -43,50 +50,59 @@ ob_start();
 
         <div class="stack">
             <?php foreach ($ofertas as $oferta): ?>
-
                 <?php
-                    $precioPack  = OfertaSA::calcularPrecioPack($oferta->getId());
+                    $precioPack = OfertaSA::calcularPrecioPack($oferta->getId());
                     $precioFinal = round($precioPack * (1 - $oferta->getDescuento()), 2);
-                    $ahorro      = round($precioPack - $precioFinal, 2);
-
+                    $ahorro = round($precioPack - $precioFinal, 2);
                     $imagen = imagenOferta($oferta->getNombre());
                 ?>
 
-                <a
-                    href="<?= h(RUTA_APP . '/includes/vistas/ofertas/oferta_detalle.php?id=' . $oferta->getId()) ?>"
-                    class="card oferta-card"
-                >
+                <div class="card oferta-card">
+                    <a
+                        href="<?= h(RUTA_APP . '/includes/vistas/ofertas/oferta_detalle.php?id=' . $oferta->getId()) ?>"
+                        class="oferta-card__media-link"
+                    >
+                        <div class="oferta-card__media">
+                            <img
+                                src="<?= h(RUTA_IMGS . '/' . $imagen) ?>"
+                                alt="<?= h($oferta->getNombre()) ?>"
+                                class="oferta-card__img"
+                            >
+                        </div>
+                    </a>
 
-                    <!-- IMAGEN -->
-                    <div class="oferta-card__media">
-                        <img
-                            src="<?= h(RUTA_IMGS . '/' . $imagen) ?>"
-                            alt="<?= h($oferta->getNombre()) ?>"
-                            class="oferta-card__img"
-                        >
-                    </div>
-
-                    <!-- TEXTO -->
                     <div class="oferta-card__body">
-                        <h3 class="oferta-card__title">
-                            <?= h($oferta->getNombre()) ?>
-                        </h3>
+                        <a
+                            href="<?= h(RUTA_APP . '/includes/vistas/ofertas/oferta_detalle.php?id=' . $oferta->getId()) ?>"
+                            class="oferta-card__title-link"
+                        >
+                            <h3 class="oferta-card__title"><?= h($oferta->getNombre()) ?></h3>
+                        </a>
 
                         <p class="oferta-card__desc">
                             <?= h($oferta->getDescripcion()) ?>
                         </p>
                     </div>
 
-                    <!-- PRECIOS -->
-                    <div class="oferta-card__price">
-                        <div>Precio normal: <?= number_format($precioPack, 2) ?>€</div>
-                        <div><strong>Oferta: <?= number_format($precioFinal, 2) ?>€</strong></div>
-                        <div class="oferta-card__save">
-                            <strong>Ahorras <?= number_format($ahorro, 2) ?>€</strong>
+                    <div class="oferta-card__side">
+                        <div class="oferta-card__price">
+                            <div>Precio normal: <?= number_format($precioPack, 2) ?>€</div>
+                            <div><strong>Oferta: <?= number_format($precioFinal, 2) ?>€</strong></div>
+                            <div class="oferta-card__save">
+                                <strong>Ahorras <?= number_format($ahorro, 2) ?>€</strong>
+                            </div>
+                        </div>
+
+                        <div class="oferta-card__actions">
+                            <a
+                                class="btn oferta-card__buy-btn"
+                                href="<?= h(RUTA_APP . '/includes/vistas/ofertas/oferta_carrito.php?id=' . $oferta->getId()) ?>"
+                            >
+                                Comprar
+                            </a>
                         </div>
                     </div>
-
-                </a>
+                </div>
 
             <?php endforeach; ?>
         </div>
