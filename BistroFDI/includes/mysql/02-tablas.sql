@@ -4,10 +4,12 @@ DROP TABLE IF EXISTS pedidos_productos;
 DROP TABLE IF EXISTS pedidos;
 DROP TABLE IF EXISTS productos_imagenes;
 DROP TABLE IF EXISTS productos;
+DROP TABLE IF EXISTS ofertas; 
+DROP TABLE IF EXISTS ofertas_productos;
 DROP TABLE IF EXISTS categorias;
 DROP TABLE IF EXISTS roles_usuarios;
 DROP TABLE IF EXISTS roles;
-DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS usuarios; 
 
 SET FOREIGN_KEY_CHECKS = 1;
 
