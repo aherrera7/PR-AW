@@ -10,14 +10,14 @@ class PedidoDAO {
     public function __construct(private mysqli $conn) {}
 
     // Crear pedido
-    public function insertPedido(int $numeroPedido, int $idCliente, ?int $idCocinero, string $estado, string $tipo, float $total): int{ 
-        $sql = "INSERT INTO pedidos (numero_pedido, id_cliente, id_cocinero, estado, tipo, total)
-                VALUES (?, ?, ?, ?, ?, ?)";
+    public function insertPedido(int $numeroPedido, int $idCliente, ?int $idCocinero, ?int $idOferta, string $estado, string $tipo, float $subtotal, float $descuento,   float $total): int{ 
+        $sql = "INSERT INTO pedidos (numero_pedido, id_cliente, id_cocinero, id_oferta, estado, tipo, subtotal, descuento, total)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) throw new RuntimeException("Error prepare (insertPedido): " . $this->conn->error);        
     
-        $stmt->bind_param('iisssd', $numeroPedido, $idCliente, $idCocinero, $estado, $tipo, $total);
+        $stmt->bind_param('iisssdddd', $numeroPedido, $idCliente, $idCocinero, $idOferta, $estado, $tipo, $subtotal, $descuento, $total);
 
         if (!$stmt->execute()) throw new RuntimeException("Error execute (insertPedido): " . $stmt->error);
     
@@ -43,7 +43,7 @@ class PedidoDAO {
 
     // Buscar pedido por id | Devuelve PedidoDTO
     public function findById(int $id): ?PedidoDTO{
-        $sql = "SELECT id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total
+        $sql = "SELECT id, numero_pedido, id_cliente, id_cocinero, id_oferta, fecha_hora, estado, tipo, subtotal, descuento, total
                 FROM pedidos
                 WHERE id = ?";
 
@@ -66,9 +66,12 @@ class PedidoDAO {
             (int)$row['numero_pedido'],
             (int)$row['id_cliente'],
             $row['id_cocinero'] !== null ? (int)$row['id_cocinero'] : null,
+            $row['id_oferta'] !== null ? (int)$row['id_oferta'] : null,
             (string)$row['fecha_hora'],
             (string)$row['estado'],
             (string)$row['tipo'],
+            (float)$row['subtotal'],
+            (float)$row['descuento'],
             (float)$row['total']
         );
     }
@@ -103,7 +106,7 @@ class PedidoDAO {
 
     // Listar pedidos de un cliente
      public function findByCliente(int $idCliente): array{
-        $sql = "SELECT id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total
+        $sql = "SELECT id, numero_pedido, id_cliente, id_cocinero, id_oferta, fecha_hora, estado, tipo, subtotal, descuento, total
                 FROM pedidos
                 WHERE id_cliente = ?
                 ORDER BY fecha_hora DESC";
@@ -123,9 +126,12 @@ class PedidoDAO {
                 (int)$row['numero_pedido'],
                 (int)$row['id_cliente'],
                 (int)$row['id_cocinero'],
+                (int)$row['id_oferta'] !== null ? (int)$row['id_oferta'] : null,
                 (string)$row['fecha_hora'],
                 (string)$row['estado'],
                 (string)$row['tipo'],
+                (float)$row['subtotal'],
+                (float)$row['descuento'],
                 (float)$row['total']
             );
         }
@@ -160,9 +166,12 @@ class PedidoDAO {
                 (int)$row['numero_pedido'],
                 (int)$row['id_cliente'],
                 (int)$row['id_cocinero'],
+                $row['id_oferta'] !== null ? (int)$row['id_oferta'] : null,
                 (string)$row['fecha_hora'],
                 (string)$row['estado'],
                 (string)$row['tipo'],
+                (float)$row['subtotal'],
+                (float)$row['descuento'],
                 (float)$row['total']
             );
         }
