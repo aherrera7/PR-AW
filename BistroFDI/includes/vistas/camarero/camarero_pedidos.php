@@ -93,17 +93,19 @@ ob_start();
                         </form>
                         
                     <?php elseif ($p['estado'] === 'listo cocina'): ?>
-                        <!-- PREPARAR BEBIDAS - solo cuando la comida está lista -->
+                        <!-- PREPARAR BEBIDAS -->
                         <a href="productos_pedido_camarero.php?id_pedido=<?= htmlspecialchars((string) $p['id']) ?>" class="btn w-100 text-center">
                             <?= $p['textoBoton'] ?>
                         </a>
                         
                     <?php elseif ($p['estado'] === 'terminado'): ?>
-                        <!-- ENTREGAR -->
+                        <!-- VER DETALLE + ENTREGAR -->
+                        <a class="btn btn-light" href="../cliente/pedido_detalle.php?id=<?= htmlspecialchars((string) $p['id']) ?>">👁️ DETALLES</a>
+                        
                         <form method="POST" action="" class="inline-form" style="width: 100%;">
                             <input type="hidden" name="id_pedido" value="<?= htmlspecialchars((string) $p['id']) ?>">
                             <input type="hidden" name="accion" value="entregar">
-                            <button type="submit" class="btn w-100 text-center">
+                            <button type="submit" class="btn w-100 text-center"> 
                                 <?= $p['textoBoton'] ?>
                             </button>
                         </form>
