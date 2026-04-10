@@ -1,167 +1,198 @@
 @media (max-width: 768px){
 
-  body{
-    font-size: 15px;
-  }
+body{
+font-size: 15px;
+}
 
-  h1{ font-size: 28px; }
-  h2{ font-size: 22px; }
-  h3{ font-size: 18px; }
+h1{ font-size: 28px; }
+h2{ font-size: 22px; }
+h3{ font-size: 18px; }
 
-  /* 🔥 CONTENEDOR SIN GRID */
-  #contenedor{
-    width: 100%;
-    min-height: 100vh;
-    margin: 0;
-    border: none;
-    border-radius: 0;
-    display: block;
-  }
+#contenedor{
+width: 100%;
+min-height: 100vh;
+margin: 0;
+border: none;
+border-radius: 0;
+display: block;
+}
 
-  /* 🔥 QUITAR GRID INTERNO */
-  #contenedor > .contenido{
-    display: block;
-  }
+#contenedor > .contenido{
+display: block;
+}
 
-  /* 🔥 ELIMINAR SCROLL INTERNO */
-  main,
-  aside{
-    overflow: visible !important;
-    height: auto !important;
-    max-height: none !important;
-    padding-left: 12px;
-    padding-right: 12px;
-  }
+main,
+aside{
+overflow: visible !important;
+height: auto !important;
+max-height: none !important;
+padding-left: 12px;
+padding-right: 12px;
+}
 
-  /* HEADER */
-  header#top{
-    padding: 8px 10px;
-    justify-content: center;
-  }
+header#top{
+padding: 8px 10px;
+justify-content: center;
+}
 
-  #marca img{
-    height: 36px;
-  }
+#marca img{
+height: 36px;
+}
 
-  /* NAV */
-  nav#menu{
-    padding: 8px 10px;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
+nav#menu{
+padding: 8px 10px;
+gap: 6px;
+flex-wrap: wrap;
+}
 
-  nav#menu > a{
-    font-size: 0.92rem;
-  }
+nav#menu > a{
+font-size: 0.92rem;
+}
 
-  .nav-right{
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 6px;
-  }
+.nav-right{
+width: 100%;
+justify-content: center;
+flex-wrap: wrap;
+margin-top: 6px;
+}
 
-  .nav-avatar{
-    width: 24px;
-    height: 24px;
-  }
+.nav-avatar{
+width: 24px;
+height: 24px;
+}
 
-  .nav-username{
-    max-width: 110px;
-    font-size: 0.9rem;
-  }
+.nav-username{
+max-width: 110px;
+font-size: 0.9rem;
+}
 
-  .hamburger{
-    width: 40px;
-    height: 32px;
-  }
+.hamburger{
+width: 40px;
+height: 32px;
+}
 
-  #desplegable{
-    top: 42px;
-    right: 10px;
-    width: 180px;
-  }
+#desplegable{
+top: 42px;
+right: 10px;
+width: 180px;
+}
 
-  /* 🔥 PRODUCTOS / PEDIDOS */
-  .product-grid{
-    grid-template-columns: 1fr;
-  }
+.product-grid{
+grid-template-columns: 1fr;
+}
 
-  .order-card,
-  .pedido-list-card,
-  .product-card{
-    width: 100%;
-  }
+.order-card,
+.pedido-list-card,
+.product-card{
+width: 100%;
+}
 
-  /* 🔥 TABLAS SIN SCROLL */
-  table{
-    width: 100%;
-    min-width: unset !important;
-  }
+table{
+width: 100%;
+min-width: unset !important;
+}
 
-  .table-wrap{
-    overflow: visible !important;
-  }
+.table-wrap{
+overflow: visible !important;
+}
 
-/* ===== COCINA (modo tarjetas) ===== */
 .kitchen-products-table{
-  display: block;
+display: block;
 }
 
 .kitchen-products-table thead{
-  display: none;
+display: none;
 }
 
 .kitchen-products-table tr{
-  display: block;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+display: block;
+margin-bottom: 10px;
+border: 1px solid #ddd;
+border-radius: 8px;
 }
 
 .kitchen-products-table td{
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
+display: flex;
+justify-content: space-between;
+padding: 10px;
 }
 
 .order-table{
-  display: table;
-  width: 100%;
-  border-collapse: collapse;
+display: table;
+width: 100%;
+border-collapse: collapse;
 }
 
 .order-table thead{
-  display: table-header-group;
+display: table-header-group;
 }
 
 .order-table tr{
-  display: table-row;
+display: table-row;
 }
 
 .order-table th,
 .order-table td{
-  display: table-cell;
-  padding: 10px;
-  text-align: left;
+display: table-cell;
+padding: 10px;
+text-align: left;
 }
 
-  .btn,
-  button,
-  input[type="submit"]{
-    width: 100%;
-  }
+.btn,
+button,
+input[type="submit"]{
+width: 100%;
+}
 
-  /* 🔥 QUITAR STICKY */
-  .summary-card,
-  .cart-summary{
-    position: static !important;
-  }
+.summary-card,
+.cart-summary{
+position: static !important;
+}
 
-  /* 🔥 CARRITO */
-  .cart-item{
-    flex-direction: column;
-    align-items: flex-start;
-  }
+.cart-item{
+flex-direction: column;
+align-items: flex-start;
+}
 
+
+.oferta-card{
+display: flex !important;
+flex-direction: column !important;
+gap: 15px;
+}
+
+.oferta-card__media{
+width: 100%;
+}
+
+.oferta-card__img{
+width: 100% !important;
+height: auto;
+display: block;
+border-radius: 10px;
+}
+
+.oferta-card__body{
+width: 100% !important;
+}
+
+.oferta-card__desc{
+white-space: normal !important;
+line-height: 1.4;
+}
+
+.oferta-card__side{
+width: 100% !important;
+display: flex !important;
+flex-direction: column !important;
+gap: 10px;
+}
+
+.oferta-card__actions{
+width: 100%;
+}
+
+.oferta-card__buy-btn{
+width: 100%;
+}
 }

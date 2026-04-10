@@ -17,7 +17,7 @@ class PedidoDAO {
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) throw new RuntimeException("Error prepare (insertPedido): " . $this->conn->error);        
     
-        $stmt->bind_param('iisssdddd', $numeroPedido, $idCliente, $idCocinero, $idOferta, $estado, $tipo, $subtotal, $descuento, $total);
+        $stmt->bind_param('iiiissddd', $numeroPedido, $idCliente, $idCocinero, $idOferta, $estado, $tipo, $subtotal, $descuento, $total);
 
         if (!$stmt->execute()) throw new RuntimeException("Error execute (insertPedido): " . $stmt->error);
     

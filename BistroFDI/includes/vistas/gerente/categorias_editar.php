@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../config.php';
 require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 requireGerente();
 
-require_once RAIZ_APP . '/includes/vistas/formularios/FormularioCategoria.php';
+require_once RAIZ_APP . '/includes/vistas/formularios/formularioCategoria.php';
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if ($id === false || $id === null) {

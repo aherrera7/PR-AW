@@ -60,32 +60,32 @@ class PedidoSA {
         $numeroPedido = self::dao()->getSiguienteNumeroPedidoHoy();
         $lineas = self::construirLineasPedido($carrito);
         
-        $subtotalSinDescuento = self::calcularTotal($lineas);
+        $subtotal = self::calcularTotal($lineas);
         $mejorOferta = OfertaSA::obtenerMejorOfertaAplicable($carrito);
 
-        $idOfertaAplicada = null;
-        $descuentoTotal = 0.0;
+        $idOferta = null;
+        $descuento = 0.0;
 
         if ($mejorOferta !== null) {
-            $idOfertaAplicada = intval(strval($mejorOferta['id_oferta'] ?? '0'));
-            $descuentoTotal = round(floatval(strval($mejorOferta['descuento_total'] ?? '0')), 2);
+            $idOferta = intval(strval($mejorOferta['id_oferta'] ?? '0'));
+            $descuento = round(floatval(strval($mejorOferta['descuento'] ?? '0')), 2);
         }
 
-        $total = round($subtotalSinDescuento - $descuentoTotal, 2);
+        $total = round($subtotal - $descuento, 2);
 
         if ($total < 0) {
             $total = 0.0;
         }
-
+        
         $idPedido = self::dao()->insertPedido(
             $numeroPedido,
             $idCliente,
-            $idCocinero, 
-            $idOfertaAplicada,
-            self::ESTADO_RECIBIDO, // El pedido entra como recibido tras crearse
+            $idCocinero,
+            $idOferta,
+            self::ESTADO_RECIBIDO,
             $tipo,
-            $subtotalSinDescuento,
-            $descuentoTotal,
+            $subtotal,
+            $descuento,
             $total
         );
 

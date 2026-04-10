@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config.php';
-require_once RAIZ_APP . '/includes/vistas/formularios/FormularioEditarPerfil.php';
+require_once RAIZ_APP . '/includes/vistas/formularios/formularioEditarPerfil.php';
 
 if (empty($_SESSION['login']) || empty($_SESSION['usuario_id'])) {
     header('Location: ' . RUTA_APP . '/includes/vistas/login.php');

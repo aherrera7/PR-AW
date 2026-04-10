@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once RAIZ_APP . '/includes/vistas/common/FormularioBase.php';
+require_once RAIZ_APP . '/includes/vistas/common/formularioBase.php';
 require_once RAIZ_APP . '/includes/app/sa/CategoriaSA.php';
 require_once RAIZ_APP . '/includes/app/dto/CategoriaDTO.php';
 

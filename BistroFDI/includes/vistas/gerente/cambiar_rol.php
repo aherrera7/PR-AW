@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../config.php';
 require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 requireGerente();
 
-require_once RAIZ_APP . '/includes/vistas/formularios/FormularioCambiarRol.php';
+require_once RAIZ_APP . '/includes/vistas/formularios/formularioCambiarRol.php';
 
 $id = (int)($_GET['id'] ?? 0);
 if ($id <= 0) {

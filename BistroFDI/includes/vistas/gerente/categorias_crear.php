@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../config.php';
 require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 requireGerente();
 
-require_once RAIZ_APP . '/includes/vistas/formularios/FormularioCategoria.php';
+require_once RAIZ_APP . '/includes/vistas/formularios/formularioCategoria.php';
 
 $form = new FormularioCategoria();
 
