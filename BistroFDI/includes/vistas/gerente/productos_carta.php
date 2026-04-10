@@ -73,6 +73,7 @@ ob_start();
             <p class="muted">Panel de control de disponibilidad y precios.</p>
         </div>
         <div class="catalog-actions" style="display: flex; gap: 10px;">
+            <a class="btn btn-primary" href="productos_crear.php"> Añadir Producto</a>
             <?php if ($idCat !== null): ?>
                 <a class="btn" href="productos_carta.php">Ver toda la carta</a>
             <?php endif; ?>
