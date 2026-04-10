@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     CategoriaSA::borrar($id);
 
     $app->putAtributoPeticion('msg', 'Categoría borrada.');
-    header('Location: ' . $baseUsuarios . '/categorias_listar.php');
+    header('Location: ' . $base . '/categorias_listar.php');
     exit;
   } catch (Throwable $e) {
     $errores[] = $e->getMessage();

@@ -22,7 +22,7 @@ class FormularioCategoria extends FormularioBase
         $this->idCategoria = $idCategoria;
         $this->categoria = null;
         $this->urlCancelar = RUTA_APP . '/includes/vistas/gerente/categorias_listar.php';
-        $this->urlRedireccionFinal = RUTA_APP . '/includes/vistas/usuarios/categorias_listar.php';
+        $this->urlRedireccionFinal = RUTA_APP . '/includes/vistas/gerente/categorias_listar.php';
 
         if ($this->idCategoria !== null) {
             $categoria = CategoriaSA::obtener($this->idCategoria);
