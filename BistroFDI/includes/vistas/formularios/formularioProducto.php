@@ -24,8 +24,21 @@ class FormularioProducto extends FormularioBase
         $this->idProducto = $idProducto;
         $this->producto = null;
         $this->categorias = CategoriaSA::listar();
-        $this->urlVolver = RUTA_APP . '/includes/vistas/gerente/productos_listar.php';
-        $this->urlRedireccionFinal = RUTA_APP . '/includes/vistas/gerente/productos_listar.php';
+
+        // --- LÓGICA DE RETORNO DINÁMICO ---
+        // Capturamos la categoría de la URL para saber a dónde volver
+        $idCatUrl = filter_input(INPUT_GET, 'id_cat', FILTER_VALIDATE_INT);
+        
+        if ($idCatUrl) {
+            // Si venimos de una categoría específica en la carta
+            $this->urlVolver = "productos_carta.php?id_cat=$idCatUrl";
+            $this->urlRedireccionFinal = "productos_carta.php?id_cat=$idCatUrl";
+        } else {
+            // Por defecto si no hay categoría (toda la carta)
+            $this->urlVolver = "productos_carta.php";
+            $this->urlRedireccionFinal = "productos_carta.php";
+        }
+        // ----------------------------------
 
         if ($this->idProducto !== null) {
             $producto = ProductoSA::obtener($this->idProducto);
@@ -410,7 +423,9 @@ class FormularioProducto extends FormularioBase
                 ProductoSA::crearConUpload($producto, $imagenesSubidas);
             }
 
+            // Al terminar con éxito, usamos la redirección final configurada en el constructor
             $this->urlRedireccion = $this->urlRedireccionFinal;
+            
         } catch (Throwable $e) {
             $this->errores[] = $e->getMessage();
         }
