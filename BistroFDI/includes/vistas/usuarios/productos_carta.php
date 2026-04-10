@@ -62,7 +62,7 @@ ob_start();
                 </p>
             </div>
             <div class="carta-ofertas-banner__acciones">
-                <a class="btn" href="<?= h(RUTA_APP . '/ofertas.php') ?>">Mostrar ofertas</a>
+                <a class="btn" href="<?= h(RUTA_VISTAS . '/ofertas/ofertas_listar.php') ?>">Mostrar ofertas</a>
             </div>
         </div>
     <?php endif; ?>

@@ -12,6 +12,7 @@ DELETE FROM roles;
 DELETE FROM usuarios;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
 -- 1. ROLES
 INSERT INTO roles (id_rol, nombre_rol) VALUES
 (1, 'cliente'),
@@ -29,11 +30,11 @@ INSERT INTO usuarios (id, nombre_usuario, email, password, nombre, apellidos, av
 
 -- 3. ROLES-USUARIOS
 INSERT INTO roles_usuarios (id_usuario, id_rol) VALUES
-(1, 4), -- gerente
-(2, 3), -- cocinero
-(3, 2), -- camarero
-(4, 1), -- cliente
-(5, 1); -- cliente
+(1, 4),
+(2, 3),
+(3, 2),
+(4, 1),
+(5, 1);
 
 -- 4. CATEGORÍAS
 INSERT INTO categorias (id, nombre, descripcion, imagen) VALUES
@@ -51,6 +52,7 @@ INSERT INTO productos (id, id_categoria, nombre, descripcion, precio_base, iva, 
 (6, 2, 'Hamburguesa', 'Hamburguesa completa', 8.50, 10, 1, 1, 1),
 (7, 2, 'Patatas fritas', 'Ración de patatas fritas', 3.00, 10, 1, 1, 1);
 
+-- IMÁGENES
 INSERT INTO productos_imagenes (id_producto, ruta) VALUES
 (1, 'productos/nachos.png'),
 (2, 'productos/tostada.png'),
@@ -74,58 +76,33 @@ INSERT INTO ofertas_productos (id_oferta, id_producto, cantidad) VALUES
 (3, 4, 1),
 (3, 7, 1);
 
--- Pedido 1: RECIBIDO (para cobrar camarero)
-INSERT INTO pedidos (id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total) VALUES
-(1, 1, 4, NULL, '2026-03-13 09:30:00', 'recibido', 'local', 10.00);
+INSERT INTO pedidos 
+(id, numero_pedido, id_cliente, id_cocinero, id_oferta, fecha_hora, estado, tipo, subtotal, descuento, total)
+VALUES
+(1, 1, 4, NULL, 1, '2026-03-13 09:30:00', 'recibido', 'local', 8.00, 1.72, 6.28),
+(2, 2, 4, NULL, NULL, '2026-03-13 09:40:00', 'en preparación', 'llevar', 11.80, 0.00, 11.80),
+(3, 3, 5, 2, NULL, '2026-03-13 10:00:00', 'cocinando', 'local', 12.00, 0.00, 12.00),
+(4, 4, 4, 2, NULL, '2026-03-13 10:10:00', 'listo cocina', 'llevar', 9.80, 0.00, 9.80),
+(5, 5, 5, 2, NULL, '2026-03-13 10:20:00', 'terminado', 'local', 3.30, 0.00, 3.30),
+(6, 6, 4, 2, NULL, '2026-03-12 13:15:00', 'entregado', 'local', 10.50, 0.00, 10.50);
 
--- Pedido 2: EN PREPARACIÓN
-INSERT INTO pedidos (id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total) VALUES
-(2, 2, 4, NULL, '2026-03-13 09:40:00', 'en preparación', 'llevar', 11.80);
-
--- Pedido 3: COCINANDO
-INSERT INTO pedidos (id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total) VALUES
-(3, 3, 5, 2, '2026-03-13 10:00:00', 'cocinando', 'local', 12.00);
-
--- Pedido 4: LISTO COCINA
-INSERT INTO pedidos (id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total) VALUES
-(4, 4, 4, 2, '2026-03-13 10:10:00', 'listo cocina', 'llevar', 9.80);
-
--- Pedido 5: TERMINADO
-INSERT INTO pedidos (id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total) VALUES
-(5, 5, 5, 2, '2026-03-13 10:20:00', 'terminado', 'local', 3.30);
-
--- Pedido 6: ENTREGADO
-INSERT INTO pedidos (id, numero_pedido, id_cliente, id_cocinero, fecha_hora, estado, tipo, total) VALUES
-(6, 6, 4, 2, '2026-03-12 13:15:00', 'entregado', 'local', 10.50);
-
--- Pedido 1
 INSERT INTO pedidos_productos VALUES
-(1, 1, 1, 6.50),
-(1, 3, 1, 1.50);
+(1, 5, 1, 1.20),
+(1, 2, 1, 1.30),
 
--- Pedido 2
-INSERT INTO pedidos_productos VALUES
 (2, 1, 1, 6.50),
 (2, 4, 1, 2.00),
-(2, 3, 1, 1.50);
+(2, 3, 1, 1.50),
 
--- Pedido 3
-INSERT INTO pedidos_productos VALUES
 (3, 1, 1, 6.50),
 (3, 4, 1, 2.00),
-(3, 3, 1, 1.50);
+(3, 3, 1, 1.50),
 
--- Pedido 4
-INSERT INTO pedidos_productos VALUES
 (4, 1, 1, 6.50),
-(4, 3, 1, 1.50);
+(4, 3, 1, 1.50),
 
--- Pedido 5
-INSERT INTO pedidos_productos VALUES
 (5, 2, 1, 1.30),
-(5, 4, 1, 2.00);
+(5, 4, 1, 2.00),
 
--- Pedido 6
-INSERT INTO pedidos_productos VALUES
 (6, 1, 1, 6.50),
 (6, 4, 1, 2.00);

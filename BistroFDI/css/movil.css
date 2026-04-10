@@ -1,0 +1,167 @@
+@media (max-width: 768px){
+
+  body{
+    font-size: 15px;
+  }
+
+  h1{ font-size: 28px; }
+  h2{ font-size: 22px; }
+  h3{ font-size: 18px; }
+
+  /* 🔥 CONTENEDOR SIN GRID */
+  #contenedor{
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    display: block;
+  }
+
+  /* 🔥 QUITAR GRID INTERNO */
+  #contenedor > .contenido{
+    display: block;
+  }
+
+  /* 🔥 ELIMINAR SCROLL INTERNO */
+  main,
+  aside{
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* HEADER */
+  header#top{
+    padding: 8px 10px;
+    justify-content: center;
+  }
+
+  #marca img{
+    height: 36px;
+  }
+
+  /* NAV */
+  nav#menu{
+    padding: 8px 10px;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  nav#menu > a{
+    font-size: 0.92rem;
+  }
+
+  .nav-right{
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+
+  .nav-avatar{
+    width: 24px;
+    height: 24px;
+  }
+
+  .nav-username{
+    max-width: 110px;
+    font-size: 0.9rem;
+  }
+
+  .hamburger{
+    width: 40px;
+    height: 32px;
+  }
+
+  #desplegable{
+    top: 42px;
+    right: 10px;
+    width: 180px;
+  }
+
+  /* 🔥 PRODUCTOS / PEDIDOS */
+  .product-grid{
+    grid-template-columns: 1fr;
+  }
+
+  .order-card,
+  .pedido-list-card,
+  .product-card{
+    width: 100%;
+  }
+
+  /* 🔥 TABLAS SIN SCROLL */
+  table{
+    width: 100%;
+    min-width: unset !important;
+  }
+
+  .table-wrap{
+    overflow: visible !important;
+  }
+
+/* ===== COCINA (modo tarjetas) ===== */
+.kitchen-products-table{
+  display: block;
+}
+
+.kitchen-products-table thead{
+  display: none;
+}
+
+.kitchen-products-table tr{
+  display: block;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.kitchen-products-table td{
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.order-table{
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.order-table thead{
+  display: table-header-group;
+}
+
+.order-table tr{
+  display: table-row;
+}
+
+.order-table th,
+.order-table td{
+  display: table-cell;
+  padding: 10px;
+  text-align: left;
+}
+
+  .btn,
+  button,
+  input[type="submit"]{
+    width: 100%;
+  }
+
+  /* 🔥 QUITAR STICKY */
+  .summary-card,
+  .cart-summary{
+    position: static !important;
+  }
+
+  /* 🔥 CARRITO */
+  .cart-item{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+}

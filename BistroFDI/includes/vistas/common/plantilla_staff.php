@@ -6,6 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="<?= RUTA_CSS . '/estilo.css' ?>" />
         <link rel="stylesheet" type="text/css" href="<?= RUTA_CSS . '/gerente.css' ?>" />
+        <link rel="stylesheet" type="text/css" href="<?= RUTA_CSS . '/movil.css' ?>" />
+        <link rel="stylesheet" type="text/css" href="<?= RUTA_CSS . '/tablet.css' ?>" />
         
     </head>
     <?php

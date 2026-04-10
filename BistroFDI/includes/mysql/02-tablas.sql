@@ -3,13 +3,13 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS pedidos_productos;
 DROP TABLE IF EXISTS pedidos;
 DROP TABLE IF EXISTS productos_imagenes;
+DROP TABLE IF EXISTS ofertas_productos; 
+DROP TABLE IF EXISTS ofertas;
 DROP TABLE IF EXISTS productos;
-DROP TABLE IF EXISTS ofertas; 
-DROP TABLE IF EXISTS ofertas_productos;
 DROP TABLE IF EXISTS categorias;
 DROP TABLE IF EXISTS roles_usuarios;
 DROP TABLE IF EXISTS roles;
-DROP TABLE IF EXISTS usuarios; 
+DROP TABLE IF EXISTS usuarios;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -98,17 +98,21 @@ CREATE TABLE pedidos (
     numero_pedido INT NOT NULL,
     id_cliente INT,
     id_cocinero INT,
+
+    id_oferta INT NULL,
+
     fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
     estado ENUM('nuevo', 'recibido', 'en preparación', 'cocinando', 'listo cocina', 'terminado', 'entregado') DEFAULT 'nuevo',
     tipo ENUM('local', 'llevar') NOT NULL,
+
+    subtotal DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    descuento DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+
     total DECIMAL(10, 2) NOT NULL,
-    -- para la oferta
-    subtotal_sin_descuento DECIMAL(10,2) NOT NULL DEFAULT 0,
-    descuento_total DECIMAL(10,2) NOT NULL DEFAULT 0,
-    id_oferta_aplicada INT NULL,
+
     FOREIGN KEY (id_cliente) REFERENCES usuarios(id),
-    FOREIGN KEY (id_cocinero) REFERENCES usuarios(id), 
-    FOREIGN KEY (id_oferta_aplicada) REFERENCES ofertas(id)
+    FOREIGN KEY (id_cocinero) REFERENCES usuarios(id),
+    FOREIGN KEY (id_oferta) REFERENCES ofertas(id)
 );
 
 -- 7. Detalle del Pedido
