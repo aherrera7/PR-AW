@@ -161,8 +161,8 @@ class FormularioCategoria extends FormularioBase
 
     protected function procesaFormulario(array &$datos): void
     {
-        $nombre = trim($datos['nombre'] ?? '');
-        $descripcionTexto = trim($datos['descripcion'] ?? '');
+        $nombre = trim((string) filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_SPECIAL_CHARS));
+        $descripcionTexto = trim((string) filter_input(INPUT_POST, 'descripcion', FILTER_SANITIZE_SPECIAL_CHARS));
         $descripcion = $descripcionTexto === '' ? null : $descripcionTexto;
 
         if ($nombre === '') {

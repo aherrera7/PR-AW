@@ -24,6 +24,7 @@ ob_start();
         <?= $form->gestiona() ?? '' ?>
     </div>
 </section>
+<script src="<?= RUTA_JS ?>/producto_form.js"></script>
 <?php
 $contenidoPrincipal = ob_get_clean();
 require RAIZ_APP . '/includes/vistas/common/plantilla.php';

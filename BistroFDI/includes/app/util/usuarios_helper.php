@@ -39,3 +39,28 @@ function usuarioViewData(UsuarioDTO $usuario): array {
         'esSesionActual' => usuarioEsSesionActual($usuario),
     ];
 }
+
+function renderUsuario($view, $iconEdit, $iconTrash) {
+    ob_start();
+    ?>
+    <li class="row">
+        <span><strong><?= h(ucfirst($view['rol'])) ?>:</strong></span>
+        <span>@<?= h($view['nombreUsuario']) ?></span>
+
+        <div class="actions">
+            <a class="icon-btn" href="<?= h($view['urlEditar']) ?>"><?= $iconEdit ?></a>
+
+            <form method="post">
+                <input type="hidden" name="borrar_id" value="<?= (int)$view['id'] ?>">
+                <button class="icon-btn" type="submit"
+                    onclick="return confirm('¿Eliminar este usuario?');"
+                    <?= !empty($view['esSesionActual']) ? 'disabled' : '' ?>
+                ><?= $iconTrash ?></button>
+            </form>
+
+            <a class="btn" href="<?= h($view['urlCambiarRol']) ?>">Cambiar rol</a>
+        </div>
+    </li>
+    <?php
+    return ob_get_clean();
+}

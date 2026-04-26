@@ -107,8 +107,8 @@ ob_start();
                                     <?php endforeach; ?>
 
                                     <?php if (count($imagenes) > 1): ?>
-                                        <button type="button" onclick="navImg(<?= $id ?>, -1)" class="gallery-btn prev">&#10094;</button>
-                                        <button type="button" onclick="navImg(<?= $id ?>, 1)" class="gallery-btn next">&#10095;</button>
+                                        <button type="button" data-nav-img data-id="<?= $id ?>" data-dir="-1" class="gallery-btn prev">&#10094;</button>
+                                        <button type="button" data-nav-img data-id="<?= $id ?>" data-dir="1" class="gallery-btn next">&#10095;</button>
                                     <?php endif; ?>
                                 </div>
 
@@ -123,11 +123,11 @@ ob_start();
                                     <div class="product-footer">
                                         <div class="qty-box">
                                             <div class="qty-picker">
-                                                <button type="button" class="btn-light qty-btn" onclick="modCant(<?= $id ?>, -1)">-</button>
+                                                <button type="button" class="btn-light qty-btn" data-cant data-id="<?= $id ?>" data-dir="-1">-</button>
                                                 <input type="text" id="cant-<?= $id ?>" value="1" readonly class="qty-input">
-                                                <button type="button" class="btn-light qty-btn" onclick="modCant(<?= $id ?>, 1)">+</button>
+                                                <button type="button" class="btn-light qty-btn" data-cant data-id="<?= $id ?>" data-dir="1">+</button>
                                             </div>
-                                            <button type="button" class="btn" onclick="addCarrito(<?= $id ?>)">Añadir</button>
+                                            <button type="button" class="btn" data-add data-id="<?= $id ?>" data-logueado="<?= $estaLogueado ? '1' : '0' ?>">Añadir</button>
                                         </div>
                                     </div>
                                 </div>
@@ -140,62 +140,7 @@ ob_start();
     <?php endif; ?>
 </section>
 
-<script>
-// Manejo de imágenes
-function navImg(id, d) {
-    const imgs = document.querySelectorAll('.img-carrusel-' + id);
-    let cur = 0;
-    imgs.forEach((img, i) => {
-        if (!img.classList.contains('is-hidden')) {
-            cur = i;
-        }
-    });
-    if (imgs[cur]) {
-        imgs[cur].classList.add('is-hidden');
-    }
-    imgs[(cur + d + imgs.length) % imgs.length].classList.remove('is-hidden');
-}
-
-// Cantidades
-function modCant(id, d) {
-    const i = document.getElementById('cant-' + id);
-    let v = parseInt(i.value, 10) + d;
-    if (v >= 1) {
-        i.value = v;
-    }
-}
-
-// Carrito
-function addCarrito(id) {
-    const logueado = <?= json_encode($estaLogueado) ?>;
-    if (!logueado) {
-        alert('Debes iniciar sesión para pedir.');
-        window.location.href = '<?= RUTA_VISTAS ?>/login.php';
-        return;
-    }
-    const c = document.getElementById('cant-' + id).value;
-    window.location.href = 'carrito_gestion.php?action=add&id=' + id + '&cant=' + c;
-}
-
-// Opcional: Resaltar botón activo al hacer scroll
-window.addEventListener('scroll', () => {
-    const sections = document.querySelectorAll('.category-group');
-    const navLinks = document.querySelectorAll('.nav-link-item');
-
-    let current = "";
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        if (pageYOffset >= sectionTop - 120) {
-            current = section.getAttribute('id');
-        }
-    });
-
-    navLinks.forEach(link => {
-        link.style.background = link.getAttribute('href').includes(current) ? "#111" : "#fff";
-        link.style.color = link.getAttribute('href').includes(current) ? "#fff" : "#333";
-    });
-});
-</script>
+<script src="<?= RUTA_JS ?>/productos.js"></script>
 
 <?php
 $contenidoPrincipal = ob_get_clean();

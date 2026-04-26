@@ -950,6 +950,41 @@ main figcaption{
 .gallery-btn.prev{ left: 10px; }
 .gallery-btn.next{ right: 10px; }
 
+.nav-link-item.active {
+    background: #111;
+    color: #fff;
+}
+
+.bloque-pago {
+    display: none;
+    margin-top: 20px;
+}
+
+.bloque-pago.activo {
+    display: block;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-top: 15px;
+}
+
+.summary-total-value {
+    color: #d33;
+}
 /* ============================================================
    CARRITO
    ============================================================ */

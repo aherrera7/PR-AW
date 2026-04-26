@@ -282,34 +282,6 @@ class FormularioProducto extends FormularioBase
                 <a class="btn btn-light" href="<?= $this->h($this->urlVolver) ?>">Cancelar</a>
             </div>
         </div>
-
-        <script>
-            (function () {
-                const pb = document.getElementById('precio_base');
-                const iv = document.getElementById('iva');
-                const pf = document.getElementById('precio_final');
-
-                function actualizarPVP() {
-                    const base = parseFloat(pb.value || <?= $precioBaseJs ?>) || 0;
-                    const iva = parseInt(iv.value || <?= $ivaJs ?>, 10) || 0;
-                    const total = base * (1 + (iva / 100));
-                    pf.textContent = total.toLocaleString('es-ES', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    }) + '€';
-                }
-
-                if (pb) {
-                    pb.addEventListener('input', actualizarPVP);
-                }
-
-                if (iv) {
-                    iv.addEventListener('change', actualizarPVP);
-                }
-
-                actualizarPVP();
-            })();
-        </script>
         <?php
 
         return ob_get_clean();
@@ -317,13 +289,17 @@ class FormularioProducto extends FormularioBase
 
     protected function procesaFormulario(array &$datos): void
     {
-        $nombre = trim((string) ($datos['nombre'] ?? ''));
-        $idCategoriaTexto = trim((string) ($datos['id_categoria'] ?? ''));
-        $descripcionTexto = trim((string) ($datos['descripcion'] ?? ''));
-        $precioBaseTexto = trim((string) ($datos['precio_base'] ?? ''));
-        $ivaTexto = trim((string) ($datos['iva'] ?? ''));
-        $disponible = array_key_exists('disponible', $datos);
-        $esCocina = array_key_exists('es_cocina', $datos);
+        $nombre = trim((string) filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_SPECIAL_CHARS));
+        $idCategoriaTexto = trim((string) filter_input(INPUT_POST, 'id_categoria', FILTER_SANITIZE_SPECIAL_CHARS));
+        $descripcionTexto = trim((string) filter_input(INPUT_POST, 'descripcion', FILTER_SANITIZE_SPECIAL_CHARS));
+        $precioBaseTexto = trim((string) filter_input(INPUT_POST, 'precio_base', FILTER_SANITIZE_SPECIAL_CHARS));
+        $ivaTexto = trim((string) filter_input(INPUT_POST, 'iva', FILTER_SANITIZE_SPECIAL_CHARS));
+
+        $disponible = filter_input(INPUT_POST, 'disponible') !== null;
+        $esCocina = filter_input(INPUT_POST, 'es_cocina') !== null;
+
+        $borrarFotos = filter_input(INPUT_POST, 'borrar_fotos', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY) ?? [];
+
         $ofertado = true;
         $descripcion = $descripcionTexto === '' ? null : $descripcionTexto;
 

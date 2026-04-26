@@ -6,6 +6,7 @@ require_once RAIZ_APP . '/includes/vistas/common/auth.php';
 require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
 require_once RAIZ_APP . '/includes/app/sa/PedidoSA.php';
 require_once RAIZ_APP . '/includes/app/sa/OfertaSA.php';
+require_once RAIZ_APP . '/includes/app/util/carrito_helper.php';
 
 if (!isset($_SESSION['login'])) {
     header('Location: ' . RUTA_VISTAS . '/login.php');
@@ -96,32 +97,7 @@ ob_start();
             <div class="cart-main">
                 <div class="stack cart-stack-tight">
                     <?php foreach ($productosCarrito as $item): ?>
-                        <?php
-                        $prod = $item['obj'];
-                        $img = $prod->getImagenes()[0] ?? 'productos/default_producto.jpg';
-                        ?>
-                        <div class="card cart-item2">
-                            <img
-                                src="<?= h(RUTA_IMGS . '/' . ltrim((string)$img, '/')) ?>"
-                                class="cart-thumb2"
-                                alt="<?= h($prod->getNombre()) ?>"
-                            >
-
-                            <div class="flex-1">
-                                <h4 class="title-reset"><?= h($prod->getNombre()) ?></h4>
-                                <small class="muted"><?= number_format($prod->getPrecioFinal(), 2) ?>€ / ud.</small>
-                            </div>
-
-                            <div class="cart-item-qty">
-                                <span>x<?= $item['cantidad'] ?></span>
-                            </div>
-
-                            <div class="cart-item-subtotal cart-item-subtotal-wide">
-                                <?= number_format($item['subtotal'], 2) ?>€
-                            </div>
-
-                            <a href="carrito_gestion.php?action=remove&id=<?= $prod->getId() ?>" class="cart-remove">✕</a>
-                        </div>
+                        <?= renderCarritoItem($item) ?>
                     <?php endforeach; ?>
                 </div>
             </div>

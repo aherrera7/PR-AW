@@ -62,28 +62,7 @@ $iconTrash = '<svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18" stroke="#11
     <ul class="userlist">
       <?php foreach ($usuarios as $u): ?>
         <?php $view = usuarioViewData($u); ?>
-
-        <li class="row">
-          <span><strong><?= h(ucfirst((string)$view['rol'])) ?>:</strong></span>
-          <span>@<?= h((string)$view['nombreUsuario']) ?></span>
-
-          <div class="actions">
-            <a class="icon-btn" href="<?= h((string)$view['urlEditar']) ?>" title="Editar usuario"><?= $iconEdit ?></a>
-
-            <form method="post">
-              <input type="hidden" name="borrar_id" value="<?= (int)$view['id'] ?>">
-              <button
-                class="icon-btn"
-                type="submit"
-                title="Eliminar"
-                onclick="return confirm('¿Eliminar este usuario?');"
-                <?= !empty($view['esSesionActual']) ? 'disabled' : '' ?>
-              ><?= $iconTrash ?></button>
-            </form>
-
-            <a class="btn" href="<?= h((string)$view['urlCambiarRol']) ?>">Cambiar rol</a>
-          </div>
-        </li>
+        <?= renderUsuario($view, $iconEdit, $iconTrash) ?>
       <?php endforeach; ?>
     </ul>
   </div>

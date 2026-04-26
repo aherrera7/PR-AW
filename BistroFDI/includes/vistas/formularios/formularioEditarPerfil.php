@@ -230,15 +230,15 @@ class FormularioEditarPerfil extends FormularioBase
 
     protected function procesaFormulario(array &$datos): void
     {
-        $nombreUsuario = trim((string)($datos['nombreUsuario'] ?? ''));
-        $email         = trim((string)($datos['email'] ?? ''));
-        $nombre        = trim((string)($datos['nombre'] ?? ''));
-        $apellidos     = trim((string)($datos['apellidos'] ?? ''));
-        $avatarPredef  = (string)($datos['avatar_predef'] ?? $this->getAvatarActual());
+        $nombreUsuario = trim((string) filter_input(INPUT_POST, 'nombreUsuario', FILTER_SANITIZE_SPECIAL_CHARS));
+        $email         = trim((string) filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
+        $nombre        = trim((string) filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_SPECIAL_CHARS));
+        $apellidos     = trim((string) filter_input(INPUT_POST, 'apellidos', FILTER_SANITIZE_SPECIAL_CHARS));
+        $avatarPredef = (string) filter_input(INPUT_POST, 'avatar_predef', FILTER_SANITIZE_SPECIAL_CHARS) ?: $this->getAvatarActual();
 
-        $passwordActual = (string)($datos['password_actual'] ?? '');
-        $passwordNueva  = (string)($datos['password_nueva'] ?? '');
-        $passwordNueva2 = (string)($datos['password_nueva_2'] ?? '');
+        $passwordActual = (string) filter_input(INPUT_POST, 'password_actual', FILTER_SANITIZE_SPECIAL_CHARS);
+        $passwordNueva  = (string) filter_input(INPUT_POST, 'password_nueva', FILTER_SANITIZE_SPECIAL_CHARS);
+        $passwordNueva2 = (string) filter_input(INPUT_POST, 'password_nueva_2', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if (mb_strlen($nombreUsuario) < 4) {
             $this->errores['nombreUsuario'] = 'Usuario mínimo 4 caracteres.';
