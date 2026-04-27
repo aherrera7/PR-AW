@@ -2038,3 +2038,26 @@ html {
     border-radius: 8px;
     text-align: right;
 }
+
+.cart-item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.btn-qty {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.input-qty {
+    width: 40px;
+    text-align: center;
+    border: 1px solid #ddd;
+    -moz-appearance: textfield; /* Quita flechas default de HTML */
+}
+.input-qty::-webkit-inner-spin-button, 
+.input-qty::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+}

@@ -40,6 +40,22 @@ switch ($action) {
         header('Location: carrito_ver.php');
         exit;
 
+    case 'update':
+        if ($id > 0) {
+            if ($cant > 0) {
+                $_SESSION['carrito'][$id] = $cant;
+            } else {
+                unset($_SESSION['carrito'][$id]);
+            }
+        }
+        // Si la petición es AJAX, respondemos con JSON, si no, redirigimos
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            echo json_encode(['status' => 'ok']);
+            exit;
+        }
+        header('Location: carrito_ver.php');
+        exit;
+
     default:
         header('Location: ../../index.php');
         exit;

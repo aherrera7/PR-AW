@@ -191,6 +191,8 @@ ob_start();
     <?php endif; ?>
 </section>
 
+<script src="<?= RUTA_APP ?>/js/carrito.js"></script>
+
 <?php
 $contenidoPrincipal = ob_get_clean();
 require RAIZ_APP . '/includes/vistas/common/plantilla.php';
