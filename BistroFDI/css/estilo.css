@@ -1987,3 +1987,54 @@ html {
 .oferta-aplicada__nombre{ margin: 0 0 6px 0; }
 .oferta-aplicada__ahorro{ margin: 0; font-size: 0.95em; }
 
+
+/* Gestión de Ofertas - Administrador */
+.ofertas-admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+}
+
+.ofertas-admin-table th, .ofertas-admin-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.estado-tag {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+.estado-tag.activa { background-color: #d4edda; color: #155724; }
+.estado-tag.inactiva { background-color: #f8d7da; color: #721c24; }
+
+/* Formulario Dinámico de Productos en Oferta */
+.oferta-productos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0 10px;
+}
+
+.linea-producto {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.resumen-precios {
+    margin-top: 20px;
+    padding: 15px;
+    background: #e9ecef;
+    border-radius: 8px;
+    text-align: right;
+}

@@ -96,6 +96,10 @@ if (isset($_SESSION['carrito'])) {
             <a href="<?= RUTA_VISTAS ?>/gerente/categorias_listar.php?modo=1">Gestionar Carta</a>
             <a href="<?= RUTA_VISTAS ?>/gerente/usuarios.php">Usuarios</a>
             <a href="<?= RUTA_VISTAS ?>/gerente/pedidos_listar_gerente.php">Listado Pedidos</a>
+            
+            <hr class="menu-divider-dark">
+            <strong class="menu-section-title">Ofertas</strong>
+            <a href="<?= RUTA_VISTAS ?>/gerente/ofertas_admin.php">Gestionar Ofertas</a>
         <?php endif; ?>
     <?php endif; ?>
   </div>
