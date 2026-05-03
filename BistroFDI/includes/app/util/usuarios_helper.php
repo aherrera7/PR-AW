@@ -15,7 +15,6 @@ function usuarioUrlEditar(UsuarioDTO $usuario): string {
 function usuarioUrlCambiarRol(UsuarioDTO $usuario): string {
     return RUTA_VISTAS . '/gerente/cambiar_rol.php?id=' . (int)$usuario->getId();
 }
-
 function usuarioNombreVisible(UsuarioDTO $usuario): string {
     return (string)$usuario->getNombreUsuario();
 }
@@ -39,6 +38,10 @@ function usuarioViewData(UsuarioDTO $usuario): array {
         'esSesionActual' => usuarioEsSesionActual($usuario),
     ];
 }
+
+/* si quisieramos usar el sa aqui arriba,$rolDTO = RolSA::getRolDTO((int)$usuario->getId());
+y dentro del array 'rol' => $rolDTO ? $rolDTO->getNombre() : 'cliente'
+*/
 
 function renderUsuario($view, $iconEdit, $iconTrash) {
     ob_start();

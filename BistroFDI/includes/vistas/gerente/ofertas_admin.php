@@ -49,3 +49,22 @@ ob_start();
 <?php
 $contenidoPrincipal = ob_get_clean();
 require RAIZ_APP . '/includes/vistas/common/plantilla.php';
+
+/*
+Para eliminar oferta:
+En el foreach:
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="id" value="<?= $o->getId() ?>">
+                            <button type="submit" name="eliminar" onclick="return confirm('¿Seguro que quieres eliminar esta oferta?')">
+                                🗑️ Eliminar
+                            </button>
+                        </form>
+
+Y al principio del archivo, antes de listarTodas():
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar'])) {
+    $id = $_POST['id'] ?? null;
+    if ($id) {OfertaSA::delete((int)$id);}
+    header("Location: ofertas_admin.php");
+    exit();
+}
+*/

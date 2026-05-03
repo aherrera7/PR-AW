@@ -19,6 +19,14 @@ class RolDAO
         $stmt->bind_param("i", $idUsuario);
         if (!$stmt->execute()) { throw new RuntimeException("Error execute (findRolesByUsuarioId): " . $stmt->error); }
         $res = $stmt->get_result();
+
+        /* Si fuera un único rol por user (en sql se haría con LIMIT 1):
+        $row = $res->fetch_assoc();
+        $stmt->close();
+        if (!$row) {return null;}
+        return new RolDTO((int)$row['id_rol'],(string)$row['nombre_rol']);
+        */
+
         $roles = [];
 
         while ($row = $res->fetch_assoc()) {
@@ -60,7 +68,7 @@ class RolDAO
 
     public function assignRolToUsuario(int $idUsuario, int $idRol): void {
         $sql = "INSERT IGNORE INTO roles_usuarios(id_usuario, id_rol) VALUES (?, ?)";
-
+        /*  */
         $stmt = $this->conn->prepare($sql);
         if (!$stmt) { throw new RuntimeException("Error prepare (assignRolToUsuario): " . $this->conn->error); }
 
@@ -88,4 +96,16 @@ class RolDAO
 
         $stmtIns->close();
     }
+
+    /*
+    Se podria hacer un update directo del tipo del rol
+    public function updateRoldeUsuarioId(int $idUsuario, string $nuevoRol): bool {
+        $sql = "UPDATE roles_usuarios SET id_rol = (SELECT id_rol FROM roles WHERE nombre_rol = ?) WHERE id_usuario = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("si", $nuevoRol, $idUsuario);
+        $ok = $stmt->execute();
+        $stmt->close();
+        return $ok;
+    } */
+
 }

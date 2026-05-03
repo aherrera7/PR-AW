@@ -113,6 +113,12 @@ class UsuarioSA {
         return $u;
     }
 
+    /* Si fuera el rol unico
+    private static function dao(): RolDAO { $conn = Aplicacion::getInstance()->getConexionBd(); return new RolDAO($conn); }
+    public static function getRolDTO(int $idUsuario): ?RolDTO { $rol = self::dao()->findRolByUsuarioId($idUsuario); return $rol;}
+    public static function cambiarRolUsuario(int $idUsuario, string $nuevoRol): void { return self::dao()->updateRolByUsuarioId($idUsuario, $nuevoRol);}
+    */
+
     public function verificarPassword(int $idUsuario, string $passwordPlano): bool
     {
         $u = $this->usuarioDAO->findById($idUsuario);
