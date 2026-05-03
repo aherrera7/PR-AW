@@ -144,3 +144,13 @@ ob_start();
 <?php
 $contenidoPrincipal = ob_get_clean();
 require RAIZ_APP . '/includes/vistas/common/plantilla.php';
+/* Otra forma de mostrar productos
+<?php if (!empty($productos)): ?>
+                        <h2 class="detail-title">Productos</h2>
+                        <ul class="product-list">
+                            <?php foreach ($productos as $producto): ?>
+                                <li><?= h($producto->getNombre()) ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+*/

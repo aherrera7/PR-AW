@@ -287,6 +287,32 @@ class FormularioProducto extends FormularioBase
         return ob_get_clean();
     }
 
+    /* Para poner productos en el pedido via checkbox (debajo de descripción)
+        <div>
+            <label for="productos">Productos</label>
+            <div class="productos-list">
+                <?php
+                $productosDisponibles = ProductoSA::findAll();
+                $productosSeleccionados = $this->producto ? PedidoProductoSA::pedidoPorIdProducto($this->producto->getId()) : [];
+                $idsSeleccionados = array_map(fn($prod) => $prod->getId(), $productosSeleccionados);
+                ?>
+                <?php foreach ($productosDisponibles as $producto): ?>
+                    <?php
+                    $idProd = $producto->getId();
+                    $idProdTexto = $idProd !== null ? (string) $idProd : '';
+                    ?>
+                    <label class="producto-item">
+                        <input
+                            type="checkbox"
+                            name="productos[]"
+                            value="<?= $this->h($idProdTexto) ?>"
+                            <?= in_array($idProd, $idsSeleccionados, true) ? 'checked' : '' ?>
+                        >
+                        <?= $this->h($producto->getNombre()) ?>
+                    </label>
+                <?php endforeach; ?>
+        </div>
+    */
     protected function procesaFormulario(array &$datos): void
     {
         $nombre = trim((string) filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_SPECIAL_CHARS));
@@ -356,6 +382,15 @@ class FormularioProducto extends FormularioBase
         }
 
         $idProducto = $this->producto?->getId();
+        /* Para poder colocar los productos por cada pedido via checkbox
+            $productosSeleccionados = filter_input(INPUT_POST,'productos',FILTER_DEFAULT,FILTER_REQUIRE_ARRAY) ?? [];
+            $productosActuales = PedidoProductoSA::productosPorIdPedido($idPedido);
+            $idsActuales = array_map(fn($prod) => $prod->getId(), $productosActuales);
+            $paraInsertar = array_diff($productosSeleccionados, $idsActuales);
+            $paraBorrar = array_diff($idsActuales, $productosSeleccionados);
+            foreach ($paraInsertar as $idProducto) { PedidoProductoSA::insertProductoPedido($idProducto, (int)$idPedido);}
+            foreach ($paraBorrar as $idPedido) {  PedidoProductoSA::deleteProductoPedido($idProducto, (int)$idPedido);}  
+        */
 
         try {
             if ($this->estaEditando()) {
