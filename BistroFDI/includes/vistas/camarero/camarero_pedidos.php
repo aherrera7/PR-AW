@@ -83,6 +83,7 @@ ob_start();
 
                 <div class="order-actions">
                     <?php if ($p['estado'] === 'recibido'): ?>
+                        <a class="btn btn-light" href="../cliente/pedido_detalle.php?id=<?= htmlspecialchars((string) $p['id']) ?>">👁️ DETALLES</a>
                         <!-- COBRAR - formulario POST -->
                         <form method="POST" action="" class="inline-form" style="width: 100%;">
                             <input type="hidden" name="id_pedido" value="<?= htmlspecialchars((string) $p['id']) ?>">
@@ -93,6 +94,7 @@ ob_start();
                         </form>
                         
                     <?php elseif ($p['estado'] === 'listo cocina'): ?>
+                        <a class="btn btn-light" href="../cliente/pedido_detalle.php?id=<?= htmlspecialchars((string) $p['id']) ?>">👁️ DETALLES</a>
                         <!-- PREPARAR BEBIDAS -->
                         <a href="productos_pedido_camarero.php?id_pedido=<?= htmlspecialchars((string) $p['id']) ?>" class="btn w-100 text-center">
                             <?= $p['textoBoton'] ?>

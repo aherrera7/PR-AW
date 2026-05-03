@@ -103,6 +103,14 @@ class ListarCocineroHelper {
                                 {$p['estado']}
                             </span>
                         </p>
+
+                        <div class="catalog-actions mt-15">
+                        
+                        <a class="btn btn-light w-100 text-center" 
+                           href="../cliente/pedido_detalle.php?id={$p['id']}" 
+                           style="margin-bottom: 10px;">
+                            👁️ DETALLES
+                        </a>
                         
                         <div class="catalog-actions mt-15">
                             <a href="productos_pedido.php?id_pedido={$p['id']}" class="btn w-100 text-center">
