@@ -2061,3 +2061,107 @@ html {
 .input-qty::-webkit-outer-spin-button { 
     -webkit-appearance: none; 
 }
+
+
+/* Contenedor principal: ahora más estrecho y centrado */
+.product-detail-card {
+    max-width: 700px; /* Reducido para que no ocupe toda la pantalla */
+    margin: 20px auto;
+    padding: 25px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* Rejilla: Imagen pequeña a la izquierda (300px) y resto a la derecha */
+.product-detail-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr; /* Columna de imagen fija */
+    gap: 30px;
+    align-items: start;
+}
+
+.product-main-img {
+    width: 100%;
+    height: 280px; /* Forzamos altura para que sea cuadrada/proporcional */
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.detail-title {
+    margin: 0 0 10px 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.detail-description {
+    font-size: 1rem; /* Tamaño de fuente más estándar */
+    line-height: 1.5;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.price-info-box {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.price-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+/* Ajuste móvil */
+@media (max-width: 600px) {
+    .product-detail-grid {
+        grid-template-columns: 1fr;
+    }
+    .product-main-img {
+        height: auto;
+    }
+}
+
+
+.ger-detail-card {
+    max-width: 750px;
+    margin-top: 20px;
+    padding: 20px;
+}
+
+/* Imagen a la izquierda pequeña, datos a la derecha */
+.ger-detail-grid {
+    display: grid;
+    grid-template-columns: 200px 1fr; /* Imagen aún más pequeña para gestión */
+    gap: 25px;
+}
+
+.ger-product-img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.info-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 3px;
+}
+
+.info-desc {
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+}
+
+.tech-details-list {
+    background: #fcfcfc;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}

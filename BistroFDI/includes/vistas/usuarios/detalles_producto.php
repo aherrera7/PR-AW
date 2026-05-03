@@ -6,11 +6,9 @@ require_once RAIZ_APP . '/includes/app/sa/ProductoSA.php';
 
 $app = Aplicacion::getInstance();
 
-// Capturar ID
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 $producto = ($id !== false && $id !== null) ? ProductoSA::obtener($id) : null;
 
-// Si el producto no existe o no está en carta (ofertado), volvemos a la carta
 if (!$producto || !$producto->isOfertado()) {
     header('Location: productos_carta.php');
     exit;
@@ -33,8 +31,8 @@ ob_start();
         </div>
     </div>
 
-    <div class="card" style="max-width: 900px; margin-top: 20px; padding: 30px; border-radius: 12px;">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;">
+    <div class="card product-detail-card">
+        <div class="product-detail-grid">
             
             <div class="stack">
                 <?php 
@@ -43,13 +41,13 @@ ob_start();
                 ?>
                 <img src="<?= h(RUTA_IMGS . '/' . ltrim((string)$imagenes[0], '/')) ?>" 
                      alt="<?= h($producto->getNombre()) ?>" 
-                     style="width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                     class="product-main-img">
                 
                 <?php if(count($imagenes) > 1): ?>
-                    <div style="display: flex; gap: 10px; margin-top: 10px; overflow-x: auto;">
+                    <div class="product-thumbnails">
                         <?php foreach($imagenes as $img): ?>
                             <img src="<?= h(RUTA_IMGS . '/' . ltrim((string)$img, '/')) ?>" 
-                                 style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px; cursor: pointer;">
+                                 class="thumb-img">
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
@@ -57,31 +55,29 @@ ob_start();
 
             <div class="stack-l">
                 <div>
-                    <h2 style="margin-bottom: 10px; color: #333;">Descripción</h2>
-                    <p style="font-size: 1.2rem; line-height: 1.8; color: #555;">
+                    <h2 class="detail-title">Descripción</h2>
+                    <p class="detail-description">
                         <?= nl2br(h($producto->getDescripcion() ?? 'Este producto no tiene una descripción detallada todavía.')) ?>
                     </p>
                 </div>
 
-                <div style="background: #fdfdfd; padding: 20px; border-radius: 8px; border: 1px solid #eee;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 1.1rem; font-weight: 500;">Precio por unidad:</span>
-                        <span class="price-red" style="font-size: 2rem; font-weight: 800;">
+                <div class="price-info-box">
+                    <div class="price-row">
+                        <span class="price-label">Precio por unidad:</span>
+                        <span class="price-red price-value">
                             <?= number_format($producto->getPrecioFinal(), 2) ?>€
                         </span>
                     </div>
-                    <p class="muted" style="font-size: 0.85rem; margin-top: 5px;">* IVA incluido en el precio final.</p>
+                    <p class="muted vat-notice">* IVA incluido en el precio final.</p>
                 </div>
 
-                <div class="qty-box" style="margin-top: 20px; justify-content: flex-start; gap: 15px;">
+                <div class="qty-box actions-container">
                     <div class="qty-picker">
                         <button type="button" class="btn-light qty-btn" onclick="let i = document.getElementById('cant-p'); if(i.value > 1) i.value--">-</button>
                         <input type="text" id="cant-p" value="1" readonly class="qty-input">
                         <button type="button" class="btn-light qty-btn" onclick="document.getElementById('cant-p').value++">+</button>
                     </div>
-                    <button type="button" class="btn" 
-                            style="padding: 12px 30px;"
-                            onclick="window.location.href='productos_carta.php'">
+                    <button type="button" class="btn btn-order" onclick="window.location.href='productos_carta.php'">
                         Pedir ahora
                     </button>
                 </div>
