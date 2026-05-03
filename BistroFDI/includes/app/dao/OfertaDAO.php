@@ -159,6 +159,26 @@ class OfertaDAO {
         return $id;
     }
 
+        /*
+    public function ofertasPorIdProducto(int $idProducto) : array{
+        $sql = "SELECT o.id, o.nombre //el resto de atributos
+                FROM ofertas o
+                INNER JOIN producto_ofertas po ON o.id = po.id_oferta
+                WHERE po.id_producto = ?";
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) throw new RuntimeException("Error prepare (findByCliente): " . $this->conn->error);
+        $stmt->bind_param('i', $idProducto);
+        if (!$stmt->execute()) throw new RuntimeException("Error execute (findByCliente): " . $stmt->error);
+        $rs = $stmt->get_result();
+        $res = [];
+        while ($row = $rs->fetch_assoc()) {
+            $res[] = new OfertaDTO( (int)$row['id'], (int)$row['nombre'] ); //falta el resto de atributos
+        }
+        $stmt->close();
+        return $res;
+    }
+    */
+
     public function insertOfertaProducto(int $idOferta, int $idProducto, int $cantidad): bool {
         $sql = "INSERT INTO ofertas_productos (id_oferta, id_producto, cantidad)
                 VALUES (?, ?, ?)";

@@ -18,7 +18,7 @@ class FormularioCambiarRol extends FormularioBase
             'urlRedireccion' => RUTA_VISTAS . '/gerente/usuarios.php',
         ]);
 
-        $this->usuarioSA = new UsuarioSA();
+        $this->usuarioSA = new UsuarioSA(); //SA 
         $this->idUsuario = $idUsuario;
 
         $usuario = $this->usuarioSA->getById($this->idUsuario);
@@ -39,6 +39,7 @@ class FormularioCambiarRol extends FormularioBase
     {
         $roles = $this->usuario->getRoles();
         return (count($roles) > 0) ? (string)$roles[0]->getNombre() : 'cliente';
+        /*  $rolDTO = $this->rolSA->getRolDTO($this->usuario->getId()); return $rolDTO ? $rolDTO->getNombre() : 'cliente';*/
     }
 
     protected function generaCamposFormulario(array &$datos): string

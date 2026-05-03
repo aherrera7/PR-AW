@@ -21,7 +21,7 @@ $errores = [];
 $mejorOferta = null;
 $descuentoOferta = 0.0;
 $totalFinal = 0.0;
-
+//$ds = UsuarioSA:getUsuarioDTO((int)$_SESSION['usuario_id'])->getDescuento();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmar'])) {
     try {
         if (empty($_SESSION['carrito'])) {
