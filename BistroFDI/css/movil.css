@@ -195,4 +195,13 @@ width: 100%;
 .oferta-card__buy-btn{
 width: 100%;
 }
+
+.order-table td,
+.order-table th {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+.order-table td:last-child {
+  white-space: nowrap;
+}
 }
