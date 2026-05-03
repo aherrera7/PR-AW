@@ -148,6 +148,11 @@ ob_start();
                                                     <button type="submit" class="btn btn-primary">Ofertar</button>
                                                 <?php endif; ?>
                                             </form>
+                                            
+                                            <a class="btn btn-light" href="detalles_producto_gestion.php?id=<?= $id ?>">Detalles</a>
+
+                                            <form action="" method="post" class="inline-form" style="margin:0;">
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

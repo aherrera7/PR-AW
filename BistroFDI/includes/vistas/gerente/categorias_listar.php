@@ -27,6 +27,10 @@ ob_start();
     <?php if ($esGerente): ?>
       <a class="btn" href="<?= h($baseGerente . '/categorias_crear.php') ?>">+ Nueva categoría</a>
     <?php endif; ?>
+
+    <?php if ($esGerente): ?>
+      <a class="btn" href="<?= h($baseGerente . '/productos_carta.php') ?>">Ver toda la carta</a>
+    <?php endif; ?>
   </div>
 
   <?php if (!empty($mensaje)): ?>
