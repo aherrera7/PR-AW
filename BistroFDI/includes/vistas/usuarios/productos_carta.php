@@ -127,6 +127,9 @@ ob_start();
                                                 <input type="text" id="cant-<?= $id ?>" value="1" readonly class="qty-input">
                                                 <button type="button" class="btn-light qty-btn" data-cant data-id="<?= $id ?>" data-dir="1">+</button>
                                             </div>
+
+                                            <a href="detalles_producto.php?id=<?= $id ?>" class="btn btn-light" title="Ver detalles">Detalles</a>
+
                                             <button type="button" class="btn" data-add data-id="<?= $id ?>" data-logueado="<?= $estaLogueado ? '1' : '0' ?>">Añadir</button>
                                         </div>
                                     </div>
